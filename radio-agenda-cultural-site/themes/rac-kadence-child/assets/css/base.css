@@ -1,0 +1,214 @@
+/* =========================================================
+   Rádio Agenda Cultural — base do tema (Fase 1)
+   Reset leve, tipografia, header, footer e chave de tema.
+   Só usa cores via var(--token) de tema.css.
+   Tudo escopado em .rac-body para vencer o CSS global do Kadence.
+   Ponto de quebra desktop/mobile: 900px.
+   ========================================================= */
+
+.rac-body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text-body);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color .25s ease;
+}
+.rac-body *, .rac-body *::before, .rac-body *::after { box-sizing: border-box; }
+.rac-body a { color: var(--accent-text); text-decoration: none; }
+.rac-body a:hover { color: var(--accent); }
+.rac-body img { max-width: 100%; height: auto; }
+
+/* Títulos: Outfit leve (300–400), nunca 700/800 */
+.rac-body h1, .rac-body h2, .rac-body h3, .rac-body h4 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 0 0 .5em;
+}
+.rac-body h1 { font-size: clamp(28px, 4vw, 40px); }
+.rac-body h2 { font-size: clamp(22px, 3vw, 28px); }
+.rac-body strong, .rac-body b { font-weight: 500; }
+
+.rac-skip {
+  position: absolute; left: -9999px; top: 8px; z-index: 100;
+  background: var(--text); color: var(--bg); padding: 8px 14px; border-radius: 999px; font-size: 14px;
+}
+.rac-skip:focus { left: 8px; }
+
+.rac-body :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ---------- Área de conteúdo (#primary) ---------- */
+.rac-main { display: block; min-height: 50vh; }
+.rac-container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+.rac-meta { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+.rac-item-lista { padding: 20px 0; border-bottom: 1px solid var(--line); }
+.rac-item-lista h2 { margin-bottom: 4px; }
+.rac-item-lista h2 a { color: var(--text); }
+.rac-item-lista h2 a:hover { color: var(--accent-text); }
+.rac-conteudo { color: var(--text-body); }
+.rac-conteudo > * + * { margin-top: 1.2em; }
+
+/* ---------- Logo ---------- */
+.rac-logo { display: block; height: 34px; width: auto; }
+.rac-logo--escuro { display: none; }
+[data-theme="dark"] .rac-logo--claro { display: none; }
+[data-theme="dark"] .rac-logo--escuro { display: block; }
+.rac-logo-texto { font-family: 'Outfit', sans-serif; font-weight: 400; font-size: 22px; letter-spacing: -0.02em; color: var(--text); }
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+.rac-header { position: relative; z-index: 30; }
+.rac-header__barra {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 40px; border-bottom: 1px solid var(--line); background: var(--surface);
+}
+.rac-header__logo { display: flex; align-items: center; }
+.rac-header__desktop { display: flex; align-items: center; gap: 28px; }
+.rac-header__mobile { display: none; align-items: center; gap: 4px; }
+.rac-header__divisor { width: 1px; height: 22px; background: var(--line); }
+
+.rac-nav { display: flex; align-items: center; gap: 28px; }
+.rac-body .rac-nav a {
+  position: relative; font-size: 14px; font-weight: 500; color: var(--text-body); padding: 4px 0;
+}
+.rac-body .rac-nav a::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -3px; height: 1.5px; border-radius: 1px; background: transparent;
+}
+.rac-body .rac-nav a:hover { color: var(--text); }
+.rac-body .rac-nav a.is-ativo { color: var(--text); }
+.rac-body .rac-nav a.is-ativo::after { background: var(--accent); }
+
+/* Botão ☰ (mobile) */
+.rac-menu-btn {
+  width: 44px; height: 44px; background: none; border: none; cursor: pointer; padding: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+}
+.rac-menu-btn span { width: 20px; height: 1.5px; background: var(--text); border-radius: 1px; }
+
+/* Painel do menu mobile */
+.rac-menu-mobile {
+  display: none;
+  position: absolute; left: 0; right: 0; top: 100%;
+  background: var(--surface); border-bottom: 1px solid var(--line);
+  box-shadow: 0 20px 30px -20px rgba(60, 40, 20, .3);
+  padding: 4px 18px 14px; flex-direction: column;
+}
+.rac-menu-mobile nav { display: flex; flex-direction: column; }
+.rac-body .rac-menu-mobile nav a {
+  display: flex; align-items: center; justify-content: space-between;
+  min-height: 48px; font-size: 15px; color: var(--text-body); border-bottom: 1px solid var(--line);
+}
+.rac-body .rac-menu-mobile nav a.is-ativo { color: var(--text); }
+.rac-menu-mobile nav a span { font-size: 13px; color: var(--muted); }
+.rac-menu-mobile__aparencia { display: flex; align-items: center; justify-content: space-between; min-height: 52px; }
+.rac-menu-mobile__aparencia > span { font-size: 13px; color: var(--muted); }
+
+/* =========================================================
+   CHAVE DE TEMA (ThemeToggle)
+   ========================================================= */
+.rac-toggle {
+  display: flex; align-items: center; gap: 8px; padding: 4px 0;
+  background: none; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif;
+}
+.rac-toggle__rotulo { font-size: 11px; font-weight: 500; }
+.rac-toggle__rotulo--claro { color: var(--text); }
+.rac-toggle__rotulo--escuro { color: var(--muted); }
+[data-theme="dark"] .rac-toggle__rotulo--claro { color: var(--muted); }
+[data-theme="dark"] .rac-toggle__rotulo--escuro { color: var(--text); }
+
+.rac-toggle__trilho {
+  position: relative; width: 52px; height: 28px; flex: none;
+  border-radius: 999px; background: var(--surface2); border: 1px solid var(--line);
+}
+.rac-toggle__icone { position: absolute; top: 6px; color: var(--muted); }
+.rac-toggle__icone--sol { left: 7px; }
+.rac-toggle__icone--lua { right: 7px; }
+.rac-toggle__botao {
+  position: absolute; top: 2px; left: 2px; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--surface); box-shadow: 0 1px 4px rgba(0, 0, 0, .25);
+  display: flex; align-items: center; justify-content: center;
+  transform: translateX(0);
+}
+[data-theme] .rac-toggle__botao { transition: transform .25s ease; }
+[data-theme="dark"] .rac-toggle__botao { transform: translateX(24px); }
+.rac-toggle__atual--sol { color: var(--accent); display: block; }
+.rac-toggle__atual--lua { color: var(--accent-text); display: none; }
+[data-theme="dark"] .rac-toggle__atual--sol { display: none; }
+[data-theme="dark"] .rac-toggle__atual--lua { display: block; }
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+.rac-footer { background: var(--surface); border-top: 1px solid var(--line); }
+.rac-footer__grade {
+  display: grid;
+  grid-template-columns: 280px 140px minmax(0, 1fr);
+  grid-template-rows: auto 1fr auto;
+  gap: 14px 48px;
+  padding: 44px 40px 28px;
+}
+.rac-footer__marca { grid-column: 1; grid-row: 1; display: flex; flex-direction: column; gap: 14px; align-self: start; }
+.rac-footer__sociais { grid-column: 1; grid-row: 2; display: flex; gap: 10px; margin-top: 4px; align-self: start; }
+.rac-footer__menu { grid-column: 2; grid-row: 1 / 3; display: flex; flex-direction: column; gap: 9px; align-self: start; }
+.rac-footer__estacoes { grid-column: 3; grid-row: 1 / 3; display: flex; flex-direction: column; gap: 9px; align-self: start; }
+.rac-footer__copy {
+  grid-column: 1 / -1; grid-row: 3; margin: 14px 0 0; padding-top: 16px;
+  border-top: 1px solid var(--line); font-size: 12px; color: var(--muted);
+}
+
+.rac-footer__logo { display: block; width: fit-content; }
+.rac-footer .rac-logo { height: 30px; }
+.rac-footer__texto { margin: 0; font-size: 13px; line-height: 1.6; color: var(--text-body); }
+.rac-body .rac-footer__email { font-size: 13px; font-weight: 500; }
+
+.rac-footer__titulo { font-size: 12px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.rac-body .rac-footer__menu a,
+.rac-body .rac-footer__estacoes a { font-size: 13px; color: var(--text-body); }
+.rac-body .rac-footer__menu a:hover,
+.rac-body .rac-footer__estacoes a:hover { color: var(--accent-text); }
+.rac-footer__estacoes-grade { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px 24px; }
+.rac-footer__estacoes-grade a { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.rac-body .rac-footer__sociais a {
+  width: 34px; height: 34px; border-radius: 50%; background: var(--surface2); border: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 500; color: var(--text-body);
+}
+.rac-body .rac-footer__sociais a:hover { color: var(--accent-text); border-color: var(--accent); }
+
+/* =========================================================
+   MOBILE (< 900px)
+   ========================================================= */
+@media (max-width: 899px) {
+  .rac-header__barra { padding: 7px 6px 7px 18px; }
+  .rac-header__desktop { display: none; }
+  .rac-header__mobile { display: flex; }
+  .rac-logo { height: 26px; }
+  .rac-menu-mobile:not([hidden]) { display: flex; }
+
+  .rac-footer__grade { display: flex; flex-direction: column; gap: 18px; padding: 26px 18px 22px; }
+  .rac-footer__marca { order: 1; }
+  .rac-footer__estacoes { order: 2; gap: 10px; }
+  .rac-footer__sociais { order: 3; margin-top: 0; }
+  .rac-footer__copy { order: 4; margin: 0; padding-top: 14px; font-size: 11px; }
+  .rac-footer__menu { display: none; }
+  .rac-footer .rac-logo { height: 26px; }
+  .rac-footer__texto { font-size: 12px; }
+  .rac-footer__titulo { font-size: 11px; }
+  .rac-footer__estacoes-grade { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 16px; }
+  .rac-body .rac-footer__estacoes a { font-size: 12px; }
+  .rac-body .rac-footer__sociais a { width: 36px; height: 36px; }
+
+  .rac-container { padding: 28px 18px; }
+}
+
+@media (min-width: 900px) {
+  .rac-menu-mobile { display: none !important; }
+}
