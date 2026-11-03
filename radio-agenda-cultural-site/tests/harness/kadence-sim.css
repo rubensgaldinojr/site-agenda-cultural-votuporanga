@@ -1,0 +1,6 @@
+/* Simula o estilo padrão de "campo de formulário" que o Kadence aplica a todo input
+   (inclusive type=range) — foi isso que quebrou a barra de volume no site real. */
+input:not([type]), input[type="text"], input[type="email"], input[type="range"], select, textarea {
+  -webkit-appearance: none; color: #444; border: 1px solid #cbd2d9; border-radius: 3px;
+  padding: .4em .5em; max-width: 100%; background: #fff; box-shadow: 0 0 0 -7px transparent;
+}

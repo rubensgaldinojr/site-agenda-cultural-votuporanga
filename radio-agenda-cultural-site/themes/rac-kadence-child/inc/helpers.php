@@ -136,12 +136,18 @@ function rac_logo_html( $prioritaria = false ) {
    ============================================================ */
 
 /**
- * Lista de estações para links. Reaproveita racr_obter_estacoes() do
- * plugin do player (já ordenada por "ordem_de_exibicao" e depois
- * alfabética, e só com estações que têm stream). Se o plugin estiver
- * desativado, cai numa consulta simples ao CPT "estacao".
+ * Lista de estações para links, cards e player. Reaproveita
+ * racr_obter_estacoes() do plugin do player (já ordenada por
+ * "ordem_de_exibicao" e depois alfabética, e só com estações que têm
+ * stream). Se o plugin estiver desativado, cai numa consulta simples ao
+ * CPT "estacao".
  *
- * @return array Lista de ['id' => int, 'nome' => string, 'url' => string].
+ * Cada estação é um gênero: o nome da estação faz o papel do "gênero"
+ * do mockup, então não existe campo de gênero separado.
+ *
+ * @return array Lista de ['id', 'nome', 'url', 'capa', 'indice'].
+ *               'indice' é a posição no player (null sem o plugin) e
+ *               'capa' é a imagem destacada em miniatura ('' se não houver).
  */
 function rac_listar_estacoes() {
     static $lista = null;
@@ -150,8 +156,14 @@ function rac_listar_estacoes() {
     $lista = array();
 
     if ( function_exists( 'racr_obter_estacoes' ) ) {
-        foreach ( racr_obter_estacoes() as $e ) {
-            $lista[] = array( 'id' => $e['id'], 'nome' => $e['nome'], 'url' => get_permalink( $e['id'] ) );
+        foreach ( racr_obter_estacoes() as $indice => $e ) {
+            $lista[] = array(
+                'id'     => $e['id'],
+                'nome'   => $e['nome'],
+                'url'    => get_permalink( $e['id'] ),
+                'capa'   => (string) get_the_post_thumbnail_url( $e['id'], 'thumbnail' ),
+                'indice' => $indice,
+            );
         }
         return $lista;
     }
@@ -165,7 +177,13 @@ function rac_listar_estacoes() {
         'no_found_rows'  => true,
     ) );
     foreach ( $posts as $p ) {
-        $lista[] = array( 'id' => $p->ID, 'nome' => get_the_title( $p ), 'url' => get_permalink( $p ) );
+        $lista[] = array(
+            'id'     => $p->ID,
+            'nome'   => get_the_title( $p ),
+            'url'    => get_permalink( $p ),
+            'capa'   => (string) get_the_post_thumbnail_url( $p->ID, 'thumbnail' ),
+            'indice' => null,
+        );
     }
     return $lista;
 }
