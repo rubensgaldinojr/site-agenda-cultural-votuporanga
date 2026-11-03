@@ -38,7 +38,7 @@
 
 | ID | Item | Fase | Status | Notas |
 |---|---|---|---|---|
-| B-10 | Campos da Estação: gênero (texto), grupo (taxonomia), ouvintes, "fixar como destaque" | 3 | ⏳ | Criar por ACF + CPT UI, em conjunto |
+| B-10 | Campos da Estação: grupo (taxonomia, para o filtro), ouvintes e "fixar como destaque" | 3 | ⏳ | Não é preciso campo de gênero: cada estação já é um gênero e o nome da estação faz esse papel |
 | B-11 | Investigar API do Zeno.fm para contagem de ouvintes | 3 | ⏳ | Se não houver API: campo manual, que no futuro pode ser alimentado por script que lê o dashboard do Zeno |
 | B-12 | Lógica "Descoberta do editor": o editor fixa uma estação ou deixa sortear uma por dia entre as que não estão no top 2 | 3 | ⏳ | Sempre exibida na Home. Top 2 = mais ouvintes |
 | B-13 | Formato de post (Texto, Poesia, Vídeo, Música, Tirinha, Imagem, Citação) | 4 | ⏳ | Hoje nenhum existe. Os templates devem funcionar sem o campo (cai em "Texto") e aceitar formatos novos depois. ACF a criar em conjunto |
@@ -76,6 +76,8 @@
 - Descoberta do editor: sempre visível, fixa ou sorteada diariamente entre as estações fora do top 2.
 - Ouvintes: tentar a API do Zeno.fm; se não der, campo manual atualizado por script no futuro (valor estático até a próxima atualização).
 - Endereços reais: `/estacoes/`, `/blog/`, `/literatura/`, `/sobre/`, `/category/podcasts/`.
+- Estações: cada estação é um gênero; o nome da estação substitui o "gênero" do mockup (sem campo novo).
+- PlayerFixo: o tema desenha o player com os mesmos IDs do plugin (`remove_action` do render antigo); o plugin não é editado. "Tocando agora" vem como "Artista - Música" e é dividido no primeiro " - ".
 - Textos do rodapé: Personalização do WordPress (ACF free); textos da Home: ACF na própria página Home.
 - Tema: pasta `radio-agenda-cultural-site/themes/rac-kadence-child/`; ambiente de teste simulado em `tests/harness/`.
 - Literatura: o plugin renderiza a página; o mockup do hero e do complemento entra no backlog.
