@@ -27,16 +27,21 @@ Versão 0.2.0 (Fases 1 e 2). Requer o tema **Kadence** instalado (é o tema pai)
   bottom sheet (mobile). O tema desliga o desenho antigo do plugin e desenha este, com os
   **mesmos IDs e classes** que o JS do plugin usa. O plugin `racr-player-radio` **não é
   alterado**: se o tema for desativado, o player antigo volta sozinho.
-- **CardEstacao** (`template-parts/card-estacao.php`): versão normal e `compact`. Clicar no
-  botão (ou no card compacto) aciona o player; o card da estação que está tocando fica
-  destacado. Cada estação já é um gênero, então o nome da estação faz o papel do "gênero".
+- **CardEstacao** (`template-parts/card-estacao.php`): versão normal e `compact`. Clicar em
+  **qualquer ponto do card** toca (ou pausa) a estação pelo player; o card da estação que
+  está tocando fica destacado. O título **não é link**, para ninguém sair da página sem
+  querer ao tentar dar play. O card completo tem um link pequeno "Ver estação" para a página
+  da estação; o compacto não tem link. Cada estação já é um gênero, então o nome da estação
+  faz o papel do "gênero".
 - **CardPost** (`template-parts/card-post.php`): imagem destacada (ou placeholder listrado),
   categoria, data, título em até 2 linhas e autor com link.
 - **Prévia com dados reais:** crie uma página com o slug `componentes` (ou escolha o
   template "Componentes (apenas para teste)") e deixe como Rascunho/Privada. Ela mostra os
   cards com suas estações e posts reais e sai dos buscadores (noindex). Pode ser apagada
   quando as Fases 3 a 5 estiverem prontas.
-- O volume fica escondido no iPhone (o Safari não permite mudar o volume por JS).
+- O volume fica escondido no iPhone (o Safari não permite mudar o volume por JS). O controle
+  tem reset próprio porque o Kadence aplica estilo de campo de formulário a todo `input`.
+- A pílula de play + volume ocupa ~1/3 da barra (máx. 640px) e fica centralizada.
 - "Tocando agora": o plugin escreve "Artista - Música"; o tema divide no primeiro " - ".
 
 ## Regras que não podem ser quebradas

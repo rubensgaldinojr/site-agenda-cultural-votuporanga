@@ -7,9 +7,9 @@
         #racr-status) em duas linhas, "faixa" e "artista";
      2. mantém a capa da estação atual no player;
      3. controla o volume (audio.volume) e lembra o valor;
-     4. liga os cards de estação ao player — clicar num card aciona o
-        botão correspondente do próprio plugin — e marca .is-tocando no
-        card da estação que está tocando;
+     4. liga os cards de estação ao player — clicar em qualquer ponto do
+        card (menos no link "Ver estação") aciona o botão correspondente do
+        próprio plugin — e marca .is-tocando no card da estação que toca;
      5. fecha o painel de estações (✕, clicar fora, Esc).
 
    O que o plugin controla, e este script apenas observa/aciona:
@@ -95,10 +95,12 @@
     try { salvo = localStorage.getItem('rac-volume'); } catch (e) {}
     var inicial = (salvo !== null && salvo !== '' && !isNaN(Number(salvo))) ? Math.min(100, Math.max(0, Number(salvo))) : 100;
     campo.value = inicial;
+    campo.style.setProperty('--vol', inicial + '%');   // parte preenchida da barra
     audio.volume = inicial / 100;
 
     campo.addEventListener('input', function () {
       var v = Number(campo.value);
+      campo.style.setProperty('--vol', v + '%');
       audio.volume = v / 100;
       try { localStorage.setItem('rac-volume', String(v)); } catch (e) {}
     });
@@ -137,12 +139,10 @@
   }
 
   document.addEventListener('click', function (e) {
-    // o link com o nome da estação navega normalmente
-    if (e.target.closest('.rac-card-est a')) return;
-    var alvo = e.target.closest('.rac-card-est [data-rac-tocar], .rac-card-est--compact');
-    if (!alvo) return;
-    var card = alvo.closest('.rac-card-est');
-    if (card) tocarEstacaoPorId(card.getAttribute('data-estacao-id'));
+    var card = e.target.closest('.rac-card-est');
+    if (!card) return;
+    if (e.target.closest('a')) return; // "Ver estação" navega normalmente
+    tocarEstacaoPorId(card.getAttribute('data-estacao-id'));
   });
 
   document.addEventListener('keydown', function (e) {

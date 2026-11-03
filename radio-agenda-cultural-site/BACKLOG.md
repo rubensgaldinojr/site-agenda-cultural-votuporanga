@@ -80,6 +80,7 @@
 - Endereços reais: `/estacoes/`, `/blog/`, `/literatura/`, `/sobre/`, `/category/podcasts/`.
 - Estações: cada estação é um gênero; o nome da estação substitui o "gênero" do mockup (sem campo novo).
 - PlayerFixo: o tema desenha o player com os mesmos IDs do plugin (`remove_action` do render antigo); o plugin não é editado. "Tocando agora" vem como "Artista - Música" e é dividido no primeiro " - ".
+- CardEstacao: o título não é link; o card inteiro toca e há um link "Ver estação" para a página (card compacto sem link).
 - Cards e player: `CardEstacao`, `CardPost` e `PlayerFixo` em `template-parts/`; prévia em uma página com o slug `componentes` (rascunho, noindex).
 - Textos do rodapé: Personalização do WordPress (ACF free); textos da Home: ACF na própria página Home.
 - Tema: pasta `radio-agenda-cultural-site/themes/rac-kadence-child/`; ambiente de teste simulado em `tests/harness/`.

@@ -9,9 +9,12 @@
  *   'genero'         string opcional. Cada estação já é um gênero, então
  *                           normalmente não é usado.
  *
- * Quem toca é o player: assets/js/player.js liga o botão (ou o card
- * compacto) ao player do plugin e marca .is-tocando no card da estação
- * que está tocando.
+ * Quem toca é o player: assets/js/player.js liga o card ao player do
+ * plugin e marca .is-tocando no card da estação que está tocando.
+ *
+ * O título NÃO é link: clicar em qualquer ponto do card toca/pausa a
+ * estação, para ninguém sair da página sem querer ao tentar dar play. Quem
+ * quer a página da estação usa o link "Ver estação" (só no card completo).
  */
 if ( ! defined( 'ABSPATH' ) ) exit;
 
@@ -24,17 +27,16 @@ $classes  = 'rac-card-est' . ( $compacto ? ' rac-card-est--compact' : '' );
 ?>
 <div class="<?php echo esc_attr( $classes ); ?>" data-estacao-id="<?php echo esc_attr( $e['id'] ); ?>"<?php echo $compacto ? ' role="button" tabindex="0" aria-label="' . esc_attr( 'Ouvir ' . $e['nome'] ) . '"' : ''; ?>>
     <div class="rac-card-est__txt">
-        <?php if ( $compacto ) : ?>
-            <span class="rac-card-est__nome"><?php echo esc_html( $e['nome'] ); ?></span>
-        <?php else : ?>
-            <a class="rac-card-est__nome" href="<?php echo esc_url( $e['url'] ); ?>"><?php echo esc_html( $e['nome'] ); ?></a>
-        <?php endif; ?>
+        <span class="rac-card-est__nome"><?php echo esc_html( $e['nome'] ); ?></span>
         <?php if ( $genero ) : ?>
             <span class="rac-card-est__genero"><?php echo esc_html( $genero ); ?></span>
         <?php endif; ?>
         <div class="rac-card-est__live">
             <span class="rac-card-est__dot" aria-hidden="true"><i></i><i></i></span>
             <span class="rac-card-est__rotulo">Ao vivo</span>
+            <?php if ( ! $compacto && ! empty( $e['url'] ) ) : ?>
+                <a class="rac-card-est__ver" href="<?php echo esc_url( $e['url'] ); ?>" aria-label="<?php echo esc_attr( 'Ver a página da estação ' . $e['nome'] ); ?>">Ver estação</a>
+            <?php endif; ?>
         </div>
     </div>
     <?php if ( ! $compacto ) : ?>

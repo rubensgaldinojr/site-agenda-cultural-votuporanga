@@ -16,6 +16,8 @@ $GLOBALS['mods'] += ['rac_logo_escuro'=>0];
 if ($uri==='/wp-admin/admin-ajax.php') { require PLUGIN_DIR.'/racr-player-radio.php'; do_action('wp_ajax_nopriv_'.($_POST['action']??'')); exit; }
 // plugin real do player
 require PLUGIN_DIR.'/racr-player-radio.php';
+// CSS do tema pai (simulado), enfileirado antes do CSS do tema filho
+add_action('wp_enqueue_scripts', function(){ wp_enqueue_style('kadence-sim','/h/kadence-sim.css'); }, 10);
 // tema real
 require THEME_DIR.'/functions.php';
 do_action('after_setup_theme');
@@ -26,6 +28,7 @@ $rotas = [
   '/sobre/'=>['Sobre','page'], '/contato/'=>['Contato','page'],
 ];
 if ($uri==='/componentes/') { $GLOBALS['title']='Componentes'; include THEME_DIR.'/page-componentes.php'; return; }
+if (preg_match('#^/estacao/(\d+)/$#',$uri,$m)) { $GLOBALS['title']='Estação '.$m[1]; $GLOBALS['loop']['posts']=[['title'=>'Estação '.$m[1],'url'=>$uri,'content'=>'<p>Página da estação '.$m[1].'.</p>']]; include THEME_DIR.'/page.php'; return; }
 if (isset($rotas[$uri]) || isset($rotas[rtrim($uri,'/').'/'])) {
   $k = isset($rotas[$uri]) ? $uri : rtrim($uri,'/').'/';
   [$titulo,$tpl] = $rotas[$k];

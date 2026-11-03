@@ -87,9 +87,50 @@ const esperar = (page, fn, arg, ms = 6000) => page.waitForFunction(fn, arg, { ti
   await page.click('#racr-botao-play');
   ok(await esperar(page, () => document.querySelectorAll('.rac-card-est.is-tocando').length === 1), 'cards acompanham o play feito no player');
 
-  // link do nome do card navega normalmente (e não toca)
-  const hrefNome = await page.getAttribute('#grade-estacoes .rac-card-est:nth-child(1) a.rac-card-est__nome', 'href');
-  ok(/^\/estacao\/\d+\/$/.test(hrefNome), `nome do card é link para a estação (${hrefNome})`);
+  // título do card NÃO é link; "Ver estação" é o link para a página
+  const linkInfo = await page.evaluate(() => { const c = document.querySelector('#grade-estacoes .rac-card-est'); return { tituloEhLink: !!c.querySelector('a.rac-card-est__nome') || c.querySelector('.rac-card-est__nome').closest('a') !== null, ver: c.querySelector('a.rac-card-est__ver')?.getAttribute('href'), verTexto: c.querySelector('a.rac-card-est__ver')?.textContent.trim(), compactTemLink: !!document.querySelector('#grade-compact .rac-card-est a') }; });
+  ok(linkInfo.tituloEhLink === false, 'título do card completo não é mais link');
+  ok(/^\/estacao\/\d+\/$/.test(linkInfo.ver) && linkInfo.verTexto === 'Ver estação', `card completo tem o link "Ver estação" (${linkInfo.ver})`);
+  ok(linkInfo.compactTemLink === false, 'card compacto continua sem nenhum link');
+
+  // clicar no TÍTULO do card toca/pausa e NÃO navega
+  const urlAntes = await page.evaluate(() => location.pathname);
+  await page.click('#grade-estacoes .rac-card-est:nth-child(4) .rac-card-est__nome');
+  ok(await esperar(page, () => document.getElementById('racr-nome-estacao').textContent.trim() === 'Vozes da Cidade' && !window.__audio.paused), 'clicar no título do card toca aquela estação');
+  ok(await page.evaluate(u => location.pathname === u && window.__marcador === 'mesma-pagina', urlAntes), 'clicar no título não navega nem recarrega a página');
+  await page.click('#grade-estacoes .rac-card-est:nth-child(4)', { position: { x: 12, y: 8 } });
+  ok(await esperar(page, () => window.__audio.paused), 'clicar de novo em qualquer ponto do card pausa');
+
+  // "Ver estação" navega (via AJAX, sem recarregar) e não dispara o play
+  await page.click('#grade-estacoes .rac-card-est:nth-child(1) a.rac-card-est__ver');
+  ok(await esperar(page, () => location.pathname === '/estacao/100/'), '"Ver estação" leva para a página da estação');
+  ok(await page.evaluate(() => window.__marcador === 'mesma-pagina' && window.__audio.paused), '"Ver estação" navega sem recarregar e sem tocar');
+  await page.goBack();
+  await esperar(page, () => location.pathname === '/componentes/');
+  await page.waitForTimeout(500);
+
+  // pílula (play + volume) com ~1/3 da barra e volume sem o estilo de campo do tema pai
+  const pil = async (w) => { await page.setViewportSize({ width: w, height: 800 }); return page.evaluate(() => { const c = document.querySelector('.rac-player__controles').getBoundingClientRect(); const r = document.getElementById('rac-volume').getBoundingClientRect(); const e = document.querySelector('.rac-player__esq').getBoundingClientRect(); const d = document.querySelector('.rac-player__trocar').getBoundingClientRect(); const s = getComputedStyle(document.getElementById('rac-volume')); return { pilula: Math.round(c.width), vw: window.innerWidth, slider: Math.round(r.width), centro: Math.round(c.left + c.width / 2), meio: Math.round(window.innerWidth / 2), bg: s.backgroundColor, borda: s.borderTopWidth, pad: s.paddingLeft, app: s.appearance || s.webkitAppearance, esqFim: Math.round(e.right), pilIni: Math.round(c.left), pilFim: Math.round(c.right), dirIni: Math.round(d.left) }; }); };
+  const p1280 = await pil(1280);
+  ok(p1280.pilula / p1280.vw >= 0.29 && p1280.pilula / p1280.vw <= 0.36, `1280px: pílula ocupa ~1/3 da barra (${p1280.pilula}px de ${p1280.vw}px = ${(100 * p1280.pilula / p1280.vw).toFixed(0)}%)`);
+  ok(Math.abs(p1280.centro - p1280.meio) <= 2, `1280px: pílula centralizada (centro ${p1280.centro}px, meio ${p1280.meio}px)`);
+  ok(p1280.slider >= 180, `1280px: barra de volume longa (${p1280.slider}px)`);
+  ok(p1280.bg === 'rgba(0, 0, 0, 0)' && p1280.borda === '0px' && p1280.pad === '0px' && p1280.app === 'none', `volume sem fundo/borda/padding do tema pai (bg=${p1280.bg}, borda=${p1280.borda}, padding=${p1280.pad}, appearance=${p1280.app})`);
+  ok(p1280.esqFim <= p1280.pilIni && p1280.pilFim <= p1280.dirIni, '1280px: esquerda, pílula e botão não se sobrepõem');
+  await page.screenshot({ path: 'capturas/f3-barra-1280.png', clip: { x: 0, y: 728, width: 1280, height: 72 } });
+  const p1920 = await pil(1920);
+  ok(p1920.pilula / p1920.vw >= 0.29 && p1920.pilula <= 640, `1920px: pílula proporcional, limitada a 640px (${p1920.pilula}px)`);
+  await page.screenshot({ path: 'capturas/f3-barra-1920.png', clip: { x: 0, y: 728, width: 1920, height: 72 } });
+  const p1000 = await pil(1000);
+  ok(p1000.esqFim <= p1000.pilIni && p1000.pilFim <= p1000.dirIni && p1000.slider >= 90, `1000px: sem sobreposição e volume utilizável (${p1000.slider}px)`);
+  const p900 = await pil(900);
+  ok(p900.esqFim <= p900.pilIni && p900.pilFim <= p900.dirIni, '900px: sem sobreposição');
+  await page.screenshot({ path: 'capturas/f3-barra-900.png', clip: { x: 0, y: 728, width: 900, height: 72 } });
+  await page.setViewportSize({ width: 1280, height: 800 });
+  // a parte preenchida da barra acompanha o valor
+  await page.fill('#rac-volume', '40'); await page.dispatchEvent('#rac-volume', 'input');
+  ok(await page.evaluate(() => document.getElementById('rac-volume').style.getPropertyValue('--vol') === '40%'), 'preenchimento da barra de volume acompanha o valor (--vol=40%)');
+  await page.fill('#rac-volume', '100'); await page.dispatchEvent('#rac-volume', 'input');
 
   // dropdown
   ok(await page.isHidden('.rac-player__painel'), 'dropdown fechado no início');
