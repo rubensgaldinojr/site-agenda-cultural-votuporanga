@@ -14,7 +14,7 @@
 | Fase | Escopo | Status |
 |---|---|---|
 | 0 | Leitura do README e levantamento de lacunas | ✅ |
-| 1 | Tema filho, tema claro/escuro, header e footer, navegação persistente | ⏳ aguardando aprovação do plano |
+| 1 | Tema filho, tema claro/escuro, header e footer, navegação persistente | 🔨 código pronto; aguardando teste manual no site |
 | 2 | CardEstacao, CardPost, PlayerFixo (visual), ThemeToggle | ⏳ |
 | 3 | Home, listagem de Estações, Estação individual | ⏳ |
 | 4 | Blog, Post, Autor | ⏳ |
@@ -30,7 +30,7 @@
 | B-02 | Enviar logo original e fotos (heros, avatares, capas) | ⏸️ | O repositório não tem nenhuma imagem; confirmar se vêm junto com o logo |
 | B-03 | Criar o mockup da página **Literatura** (hero + complemento ao que o plugin já renderiza) | ⏳ | O plugin de catálogo renderiza a maior parte da página |
 | B-04 | Decidir se existe página individual de livro (`/livro/slug`) | 💡 | Hoje o CPT é público e não tem template nem mockup |
-| B-05 | Informar se o ACF é Pro (para usar página de opções) ou free | 💡 | Define onde ficam os textos globais do rodapé |
+| B-05 | Informar se o ACF é Pro (para usar página de opções) ou free | ✅ | ACF free; textos globais do rodapé ficam na Personalização do WordPress |
 | B-06 | Definir a página fixa usada como "mural" dos recados da Home | 💡 | Precisa ter comentários abertos |
 | B-07 | Escolher o formulário de Contato (wp_mail nativo ou plugin leve) | 💡 | Opções serão apresentadas na Fase 5 |
 
@@ -48,7 +48,7 @@
 | B-17 | PlayerFixo: capa, volume, "Tocando agora" separado em faixa/artista, bottom sheet no mobile | 2 | ⏳ | Exige mexer na marcação e no CSS do plugin, sem alterar a lógica de áudio. Explicar o plano antes |
 | B-18 | Ajuste só visual do catálogo de livros para o modo escuro (cores fixas no CSS) | 2–3 | ⏳ | Sem mudar comportamento |
 | B-19 | Verificar se o catálogo de livros perde CSS/JS ao chegar por navegação AJAX | 1 | ⏳ | O plugin só carrega assets em `is_singular() \|\| is_page()` |
-| B-20 | Atualizar menu ativo e re-inicializar scripts no evento `racr:conteudo-trocado` | 1 | ⏳ | Parte do plano da Fase 1 |
+| B-20 | Atualizar menu ativo e re-inicializar scripts no evento `racr:conteudo-trocado` | 1 | ✅ | Feito em `assets/js/rac.js`; componentes novos usam `RAC.aoCarregar(fn)` |
 
 ### Plugin do player (pendências já conhecidas)
 
@@ -57,11 +57,14 @@
 | B-30 | Pageview no GA/GTM a cada navegação virtual | ⏸️ | Depende de instalar GA4/GTM no site |
 | B-31 | Testar em iPhone real | ⏳ | Baixa prioridade (~3% da audiência) |
 | B-32 | Revalidar tudo no domínio final | ⏸️ | Quando sair do domínio de desenvolvimento |
+| B-33 | Link para URL que dá HTTP 404 recarrega a página inteira (e para o áudio), porque o plugin só troca o conteúdo se a resposta for 2xx | 💡 | Comportamento do plugin; só afeta links quebrados. Corrigir no plugin só se você quiser |
 
 ### Limpeza e ideias
 
 | ID | Item | Status | Notas |
 |---|---|---|---|
+| B-34 | Confirmar os endereços reais das páginas (/estacoes/, /blog/, /literatura/, /podcasts/, /sobre/, /contato/) ou montar o menu em Aparência → Menus | 💡 | O menu padrão do tema usa esses endereços como suposição |
+| B-35 | Testar o tema no site real (Kadence, LiteSpeed, ACF): ver `themes/rac-kadence-child/README.md` | ⏳ | Fase 1 só foi testada em ambiente simulado |
 | B-40 | `catalogo-livros-rac.php` está duplicado na raiz do repositório (idêntico ao de `plugins/`) | 💡 | Remover a cópia da raiz? |
 
 ## Decisões tomadas
@@ -72,4 +75,6 @@
 - Formatos de post: nenhum existe hoje; o campo será criado depois, deixando espaço para novos formatos.
 - Descoberta do editor: sempre visível, fixa ou sorteada diariamente entre as estações fora do top 2.
 - Ouvintes: tentar a API do Zeno.fm; se não der, campo manual atualizado por script no futuro (valor estático até a próxima atualização).
+- Textos do rodapé: Personalização do WordPress (ACF free); textos da Home: ACF na própria página Home.
+- Tema: pasta `radio-agenda-cultural-site/themes/rac-kadence-child/`; ambiente de teste simulado em `tests/harness/`.
 - Literatura: o plugin renderiza a página; o mockup do hero e do complemento entra no backlog.

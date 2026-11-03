@@ -1,0 +1,79 @@
+/* =========================================================
+   Rádio Agenda Cultural — Tema claro / escuro
+   Fonte única de cores do site. Todas as páginas e componentes
+   usam apenas var(--token). Trocar de tema = trocar o atributo
+   data-theme="light|dark" no <html> (feito por assets/js/rac.js,
+   e aplicado antes da página aparecer por um script inline no <head>).
+
+   Baseado em docs/mockups/tema.css. Ficaram de fora as partes que
+   eram só do canvas de apresentação do mockup (--canvas, o fundo do
+   body e o seletor "image-slot").
+   ========================================================= */
+
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+  --bg: #fbf8f3;            /* fundo da página (creme) */
+  --surface: #ffffff;       /* cards, header, footer */
+  --surface2: #f5efe6;      /* seções alternadas, hover, chips */
+  --bar: #ffffff;           /* player fixo */
+  --line: #ebe4d9;          /* bordas e divisórias */
+  --text: #1f1b17;          /* títulos */
+  --ink: #1c1a17;
+  --text-body: #4d463e;     /* texto corrido */
+  --muted: #7f766b;         /* secundário, rótulos */
+  --accent: #ee8133;        /* laranja da marca (botões, play) */
+  --accent-dark: #d9722a;   /* hover do laranja */
+  --accent-text: #b2561a;   /* links/texto laranja */
+  --accent-soft: #fdeee2;   /* fundo de item ativo */
+  --live: #e2483d;          /* bolinha "ao vivo" */
+  --live-text: #c23c32;     /* texto "ao vivo" */
+  --ph1: #efe8dd;           /* placeholder listrado */
+  --ph2: #e8e0d3;
+  --av3: #e8efe6; --av4: #e9e6f2; --av5: #f6e6e2; /* avatares de comentário */
+}
+
+/* Modo escuro — boas práticas aplicadas:
+   • nada de preto puro: base grafite quente (#171411) para combinar com a marca
+   • elevação por luminosidade: quanto mais "alto" o elemento, mais claro o fundo
+   • texto off-white (#f3ece3), nunca branco puro, para reduzir ofuscamento
+   • laranja de texto mais claro (#f4a066) para manter contraste ≥ 4.5:1
+   • laranja dos botões preservado (identidade); hover clareia em vez de escurecer
+   • "ao vivo" em vermelho mais luminoso para manter legibilidade */
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #171411;
+  --surface: #211d19;
+  --surface2: #2a251f;
+  --bar: #1d1a16;
+  --line: #3a332c;
+  --text: #f3ece3;
+  --ink: #f3ece3;
+  --text-body: #cfc6ba;
+  --muted: #9b9187;
+  --accent: #ee8133;
+  --accent-dark: #f29551;
+  --accent-text: #f4a066;
+  --accent-soft: #3a2618;
+  --live: #ff5a4e;
+  --live-text: #ff8a7f;
+  --ph1: #2a251f;
+  --ph2: #241f1a;
+  --av3: #26302a; --av4: #2b2836; --av5: #352723;
+}
+
+.stripe-cover { background-image: repeating-linear-gradient(135deg, var(--ph1) 0 10px, var(--ph2) 10px 20px); }
+
+/* Logo no escuro: sem arquivo de logo próprio para fundo escuro
+   (Personalizar → Identidade do site), um filtro gera uma versão clara.
+   Com os dois arquivos, o tema troca entre eles (ver base.css). */
+[data-theme="dark"] .rac-logo--auto { filter: brightness(0) invert(.94); }
+
+/* Fotos reais ficam levemente menos brilhantes no escuro */
+[data-theme="dark"] .rac-foto img { filter: brightness(.92); }
+
+/* Transição suave na troca de tema. :where() deixa a especificidade em
+   zero, então a transição própria de qualquer componente tem prioridade. */
+@media (prefers-reduced-motion: no-preference) {
+  :where([data-theme] *) { transition-property: background-color, border-color, color; transition-duration: .2s; }
+}

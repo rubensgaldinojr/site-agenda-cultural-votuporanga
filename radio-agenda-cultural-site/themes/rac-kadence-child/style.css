@@ -1,0 +1,12 @@
+/*
+Theme Name:   Rádio Agenda Cultural (filho do Kadence)
+Theme URI:    https://github.com/rubensgaldinojr/site-agenda-cultural-votuporanga
+Description:  Tema filho do Kadence com os templates da Rádio Agenda Cultural (Votuporanga, SP). O visual vem de assets/css/tema.css (tokens claro/escuro) e assets/css/base.css.
+Author:       Rubens
+Template:     kadence
+Version:      0.1.0
+Text Domain:  rac-kadence-child
+*/
+
+/* O CSS real do tema fica em assets/css/. Este arquivo existe só para o
+   WordPress reconhecer o tema filho. */
