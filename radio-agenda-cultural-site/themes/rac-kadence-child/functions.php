@@ -4,6 +4,7 @@
  *
  * Fase 1: base do tema, tema claro/escuro, header/footer e compatibilidade
  * com a navegação persistente do plugin racr-player-radio.
+ * Fase 2: PlayerFixo, CardEstacao e CardPost (veja inc/player.php).
  *
  * REGRA CRÍTICA: o plugin troca via AJAX apenas o conteúdo de "#primary".
  * Todo template deste tema precisa ter exatamente UM <main id="primary">,
@@ -12,10 +13,11 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'RAC_TEMA_VERSAO', '0.1.0' );
+define( 'RAC_TEMA_VERSAO', '0.2.0' );
 
 require_once get_stylesheet_directory() . '/inc/helpers.php';
 require_once get_stylesheet_directory() . '/inc/customizer.php';
+require_once get_stylesheet_directory() . '/inc/player.php';
 
 /* ============================================================
    1. CONFIGURAÇÃO DO TEMA
@@ -85,7 +87,13 @@ function rac_enqueue_assets() {
     wp_enqueue_style( 'rac-tema', $uri . '/assets/css/tema.css', array( 'rac-fontes' ), filemtime( $dir . '/assets/css/tema.css' ) );
     wp_enqueue_style( 'rac-base', $uri . '/assets/css/base.css', array( 'rac-tema' ), filemtime( $dir . '/assets/css/base.css' ) );
 
+    wp_enqueue_style( 'rac-componentes', $uri . '/assets/css/componentes.css', array( 'rac-base' ), filemtime( $dir . '/assets/css/componentes.css' ) );
+
     wp_enqueue_script( 'rac-tema-js', $uri . '/assets/js/rac.js', array(), filemtime( $dir . '/assets/js/rac.js' ), true );
+    // Player fixo e cards de estação (Fase 2). Só quando há player na página.
+    if ( rac_tem_player() ) {
+        wp_enqueue_script( 'rac-player-js', $uri . '/assets/js/player.js', array(), filemtime( $dir . '/assets/js/player.js' ), true );
+    }
 }
 add_action( 'wp_enqueue_scripts', 'rac_enqueue_assets', 20 );
 

@@ -15,7 +15,7 @@
 |---|---|---|
 | 0 | Leitura do README e levantamento de lacunas | ✅ |
 | 1 | Tema filho, tema claro/escuro, header e footer, navegação persistente | ✅ testada pelo Rubens no site real (menus desktop e mobile, cabeçalho e rodapé) |
-| 2 | CardEstacao, CardPost, PlayerFixo (visual), ThemeToggle | ⏳ |
+| 2 | CardEstacao, CardPost, PlayerFixo (visual), ThemeToggle | 🔨 código pronto; aguardando teste manual no site |
 | 3 | Home, listagem de Estações, Estação individual | ⏳ |
 | 4 | Blog, Post, Autor | ⏳ |
 | 5 | Sobre, Contato, revisão geral | ⏳ |
@@ -45,7 +45,7 @@
 | B-14 | Campos de autor: papel, "escreve desde", citação favorita, origem da citação, foto, exibir no Sobre + ordem | 4–5 | ⏳ | Criar em conjunto |
 | B-15 | Podcasts como subcategorias da categoria Podcasts | 3–4 | 💡 | Descrição do termo e contagem de posts alimentam os cards da Home |
 | B-16 | Textos da Home editáveis direto na página Home (ACF na própria página) | 3 | ⏳ | Rodapé: textos globais (ver B-05) |
-| B-17 | PlayerFixo: capa, volume, "Tocando agora" separado em faixa/artista, bottom sheet no mobile | 2 | ⏳ | Exige mexer na marcação e no CSS do plugin, sem alterar a lógica de áudio. Explicar o plano antes |
+| B-17 | PlayerFixo: capa, volume, "Tocando agora" separado em faixa/artista, bottom sheet no mobile | 2 | ✅ | Feito no tema, sem alterar o plugin. Falta validar com o Zeno.fm real (B-36) |
 | B-18 | Ajuste só visual do catálogo de livros para o modo escuro (cores fixas no CSS) | 2–3 | ⏳ | Sem mudar comportamento |
 | B-19 | Verificar se o catálogo de livros perde CSS/JS ao chegar por navegação AJAX | 1 | ⏳ | O plugin só carrega assets em `is_singular() \|\| is_page()` |
 | B-20 | Atualizar menu ativo e re-inicializar scripts no evento `racr:conteudo-trocado` | 1 | ✅ | Feito em `assets/js/rac.js`; componentes novos usam `RAC.aoCarregar(fn)` |
@@ -65,6 +65,8 @@
 |---|---|---|---|
 | B-34 | Confirmar os endereços reais das páginas | ✅ | `/estacoes/`, `/blog/`, `/literatura/`, `/sobre/` e `/category/podcasts/` (Podcasts é categoria). `/contato/` ainda a confirmar na Fase 5 |
 | B-35 | Testar o tema no site real (Kadence, LiteSpeed, ACF) | ✅ | Menus e mobile funcionando. Falta só confirmar o catálogo de livros via navegação AJAX (B-19) |
+| B-36 | Validar no site real: player novo com os streams do Zeno.fm ("Artista - Música" dividido, capa, volume, dropdown, bottom sheet) e os cards na página `componentes` | ⏳ | Roteiro na seção "Componentes" do README do tema |
+| B-37 | Imagem destacada em cada Estação (capa do player e do dropdown) | 💡 | Sem imagem, aparece o placeholder listrado |
 | B-40 | `catalogo-livros-rac.php` está duplicado na raiz do repositório (idêntico ao de `plugins/`) | 💡 | Remover a cópia da raiz? |
 
 ## Decisões tomadas
@@ -78,6 +80,7 @@
 - Endereços reais: `/estacoes/`, `/blog/`, `/literatura/`, `/sobre/`, `/category/podcasts/`.
 - Estações: cada estação é um gênero; o nome da estação substitui o "gênero" do mockup (sem campo novo).
 - PlayerFixo: o tema desenha o player com os mesmos IDs do plugin (`remove_action` do render antigo); o plugin não é editado. "Tocando agora" vem como "Artista - Música" e é dividido no primeiro " - ".
+- Cards e player: `CardEstacao`, `CardPost` e `PlayerFixo` em `template-parts/`; prévia em uma página com o slug `componentes` (rascunho, noindex).
 - Textos do rodapé: Personalização do WordPress (ACF free); textos da Home: ACF na própria página Home.
 - Tema: pasta `radio-agenda-cultural-site/themes/rac-kadence-child/`; ambiente de teste simulado em `tests/harness/`.
 - Literatura: o plugin renderiza a página; o mockup do hero e do complemento entra no backlog.

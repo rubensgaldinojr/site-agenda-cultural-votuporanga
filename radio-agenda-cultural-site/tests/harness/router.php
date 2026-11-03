@@ -12,6 +12,8 @@ if (isset($_GET['semlogo'])) $GLOBALS['mods']['custom_logo']=0;
 if (isset($_GET['logoescuro'])) $GLOBALS['mods']['rac_logo_escuro']=8;
 $GLOBALS['mods'] += ['rac_logo_escuro'=>0];
 
+// endpoint AJAX do metadado (plugin real)
+if ($uri==='/wp-admin/admin-ajax.php') { require PLUGIN_DIR.'/racr-player-radio.php'; do_action('wp_ajax_nopriv_'.($_POST['action']??'')); exit; }
 // plugin real do player
 require PLUGIN_DIR.'/racr-player-radio.php';
 // tema real
@@ -23,6 +25,7 @@ $rotas = [
   '/'=>['Home','home'], '/estacoes/'=>['Estações','page'], '/blog/'=>['Blog','page'], '/blog/post-x/'=>['Post X','single'],
   '/sobre/'=>['Sobre','page'], '/contato/'=>['Contato','page'],
 ];
+if ($uri==='/componentes/') { $GLOBALS['title']='Componentes'; include THEME_DIR.'/page-componentes.php'; return; }
 if (isset($rotas[$uri]) || isset($rotas[rtrim($uri,'/').'/'])) {
   $k = isset($rotas[$uri]) ? $uri : rtrim($uri,'/').'/';
   [$titulo,$tpl] = $rotas[$k];

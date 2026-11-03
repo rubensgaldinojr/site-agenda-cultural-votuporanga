@@ -9,6 +9,9 @@ $GLOBALS['mods'] = ['custom_logo' => 7];
 $GLOBALS['loop'] = ['posts' => [], 'i' => -1];
 function add_action($t,$f,$p=10,$a=1){ $GLOBALS['hooks'][$t][$p][]=$f; return true; }
 function add_filter($t,$f,$p=10,$a=1){ return add_action($t,$f,$p,$a); }
+function remove_action($t,$f,$p=10){ if(isset($GLOBALS['hooks'][$t][$p])) { foreach($GLOBALS['hooks'][$t][$p] as $i=>$x) if($x===$f) unset($GLOBALS['hooks'][$t][$p][$i]); } return true; }
+function has_action($t,$f=false){ foreach(($GLOBALS['hooks'][$t]??[]) as $fs) foreach($fs as $x) if($x===$f) return true; return false; }
+function wp_dequeue_style($h){ unset($GLOBALS['styles'][$h]); }
 function do_action($t,...$args){ if(empty($GLOBALS['hooks'][$t])) return; $h=$GLOBALS['hooks'][$t]; ksort($h); foreach($h as $fs) foreach($fs as $f) call_user_func_array($f,$args); }
 function apply_filters($t,$v,...$args){ if(empty($GLOBALS['hooks'][$t])) return $v; $h=$GLOBALS['hooks'][$t]; ksort($h); foreach($h as $fs) foreach($fs as $f) $v=call_user_func_array($f,array_merge([$v],$args)); return $v; }
 function add_theme_support(...$a){} function register_nav_menus($a){}
@@ -43,7 +46,7 @@ function wp_date($f){ return date($f); }
 function get_theme_mod($k,$d=false){ return array_key_exists($k,$GLOBALS['mods']) ? $GLOBALS['mods'][$k] : $d; }
 function get_nav_menu_locations(){ return []; } function wp_get_nav_menu_items($m){ return []; }
 function get_option($k,$d=false){ return 0; }
-function get_permalink($p=null){ $id = is_object($p)?$p->ID:($p??($GLOBALS['loop']['posts'][$GLOBALS['loop']['i']]['url']??0)); return is_string($id)?$id:'/estacao/'.$id.'/'; }
+function get_permalink($p=null){ $id = is_object($p)?$p->ID:($p??($GLOBALS['loop']['posts'][$GLOBALS['loop']['i']]['url']??0)); if(is_int($id)&&isset($GLOBALS['posts_db'][$id])) return '/blog/post-'.$id.'/'; return is_string($id)?$id:'/estacao/'.$id.'/'; }
 function get_category_by_slug($s){ return false; } function get_category_link($c){ return '/'; }
 function wp_get_attachment_image($id,$size,$icon,$attr){ $src = ($id==7)?'/h/logo-claro.svg':'/h/logo-escuro.svg'; return '<img src="'.$src.'" class="'.esc_attr($attr['class']).'" alt="'.esc_attr($attr['alt']).'" height="34">'; }
 function get_template_part($slug,$name=null,$args=[]){ include THEME_DIR.'/'.$slug.'.php'; }
@@ -52,18 +55,34 @@ function wp_json_encode($d,$f=0){ return json_encode($d,$f); }
 function get_field($n,$id){ return $GLOBALS['fields'][$id][$n] ?? ''; }
 function get_the_title($p=null){ if(is_object($p)) return $p->post_title; return $GLOBALS['loop']['posts'][$GLOBALS['loop']['i']]['title']; }
 class WP_Query { public $posts=[]; function __construct($a){ $this->posts=$GLOBALS['estacoes_posts']; } }
-function get_posts($a){ return $GLOBALS['estacoes_posts']; }
-function get_transient($k){ return false; } function set_transient(...$a){} function wp_send_json_success($d){ echo json_encode(['success'=>true,'data'=>$d]); exit; } function wp_send_json_error(){ echo json_encode(['success'=>false]); exit; }
+function get_posts($a){ if(($a['post_type']??'')==='estacao') return $GLOBALS['estacoes_posts']; return array_map('get_post', array_keys($GLOBALS['posts_db'])); }
+function wp_robots_no_robots($r){ return $r; }
+function get_transient($k){ if(strpos($k,'racr_metadado_')===0){ return ((int)substr($k,14)%2===0)?'Willie Dixon - Save My Child':'Barry White - Just the Way You Are'; } return false; } function set_transient(...$a){} function wp_send_json_success($d){ echo json_encode(['success'=>true,'data'=>$d]); exit; } function wp_send_json_error(){ echo json_encode(['success'=>false]); exit; }
 function is_admin(){ return false; }
 // loop
 function have_posts(){ return $GLOBALS['loop']['i']+1 < count($GLOBALS['loop']['posts']); }
 function the_post(){ $GLOBALS['loop']['i']++; }
 function the_title(){ echo esc_html(get_the_title()); } function the_permalink(){ echo esc_url(get_permalink()); }
 function the_content(){ echo $GLOBALS['loop']['posts'][$GLOBALS['loop']['i']]['content']; }
-function the_excerpt(){ echo '<p>Resumo.</p>'; } function get_the_date(){ return '28 out 2026'; }
+function the_excerpt(){ echo '<p>Resumo.</p>'; } function get_the_date($f='',$p=null){ if($f==='c') return '2026-10-28T10:00:00-03:00'; if(is_object($p)&&isset($GLOBALS['posts_db'][$p->ID])) return $GLOBALS['posts_db'][$p->ID]['data']; return '28 out 2026'; }
 function the_author_posts_link(){ echo '<a href="/autor/marina/">Marina Alves</a>'; }
 function the_posts_pagination($a=[]){}
 // estações de teste
 $nomes=['Blues & Jazz Clube','Bossa & Violão','Clássicos Contemporâneos','Vozes da Cidade','Sons do Brasil','Poesia Falada','Noites de Ópera','Rock Progressivo BR','MPB de Ouro','Viola Caipira','Samba & Choro','Trilhas de Cinema'];
 $GLOBALS['estacoes_posts']=[]; $GLOBALS['fields']=[];
 foreach($nomes as $i=>$n){ $id=100+$i; $GLOBALS['estacoes_posts'][]=(object)['ID'=>$id,'post_title'=>$n]; $GLOBALS['fields'][$id]=['url_do_stream'=>'http://localhost:8099/h/silencio.wav','cor_de_destaque'=>'#ee8133','ordem_de_exibicao'=>$i]; }
+
+// posts de teste para os cards
+$GLOBALS['posts_db']=[
+ 501=>['title'=>'O jazz que ecoa nos becos do centro','cat'=>'Crônicas','data'=>'28 out 2026','aid'=>1,'thumb'=>'/h/foto1.svg'],
+ 502=>['title'=>'Cinco discos de choro para ouvir sem pressa, com um título bem longo que precisa quebrar em duas linhas e cortar','cat'=>'Descobertas Musicais','data'=>'25 out 2026','aid'=>2,'thumb'=>'/h/foto2.svg'],
+ 503=>['title'=>'Por que ainda ouvimos rádio (post sem imagem)','cat'=>'Reflexões','data'=>'22 out 2026','aid'=>3,'thumb'=>''],
+];
+$GLOBALS['autores']=[1=>'Marina Alves',2=>'Igor Bastos',3=>'Nome do Fundador'];
+function get_post($p=null){ if(is_object($p)) return $p; if(is_int($p)&&isset($GLOBALS['posts_db'][$p])) return (object)['ID'=>$p,'post_title'=>$GLOBALS['posts_db'][$p]['title'],'post_author'=>$GLOBALS['posts_db'][$p]['aid']]; return null; }
+function get_the_category($id){ return isset($GLOBALS['posts_db'][$id]) ? [(object)['name'=>$GLOBALS['posts_db'][$id]['cat']]] : []; }
+function is_wp_error($x){ return false; }
+function get_the_post_thumbnail($id,$size='',$attr=[]){ $t=$GLOBALS['posts_db'][$id]['thumb']??''; return $t ? '<img src="'.$t.'" alt="" loading="lazy">' : ''; }
+function get_the_post_thumbnail_url($id,$size=''){ if(isset($GLOBALS['posts_db'][$id])) return $GLOBALS['posts_db'][$id]['thumb']; $n=$id-100; return ($n>=0&&$n<4) ? '/h/capa-'.$n.'.svg' : ''; }
+function get_author_posts_url($aid){ return '/autor/'.$aid.'/'; }
+function get_the_author_meta($k,$aid=null){ return $GLOBALS['autores'][$aid]??''; }
