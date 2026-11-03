@@ -14,7 +14,7 @@
 | Fase | Escopo | Status |
 |---|---|---|
 | 0 | Leitura do README e levantamento de lacunas | ✅ |
-| 1 | Tema filho, tema claro/escuro, header e footer, navegação persistente | 🔨 código pronto; aguardando teste manual no site |
+| 1 | Tema filho, tema claro/escuro, header e footer, navegação persistente | ✅ testada pelo Rubens no site real (menus desktop e mobile, cabeçalho e rodapé) |
 | 2 | CardEstacao, CardPost, PlayerFixo (visual), ThemeToggle | ⏳ |
 | 3 | Home, listagem de Estações, Estação individual | ⏳ |
 | 4 | Blog, Post, Autor | ⏳ |
@@ -63,8 +63,8 @@
 
 | ID | Item | Status | Notas |
 |---|---|---|---|
-| B-34 | Confirmar os endereços reais das páginas (/estacoes/, /blog/, /literatura/, /podcasts/, /sobre/, /contato/) ou montar o menu em Aparência → Menus | 💡 | O menu padrão do tema usa esses endereços como suposição |
-| B-35 | Testar o tema no site real (Kadence, LiteSpeed, ACF): ver `themes/rac-kadence-child/README.md` | ⏳ | Fase 1 só foi testada em ambiente simulado |
+| B-34 | Confirmar os endereços reais das páginas | ✅ | `/estacoes/`, `/blog/`, `/literatura/`, `/sobre/` e `/category/podcasts/` (Podcasts é categoria). `/contato/` ainda a confirmar na Fase 5 |
+| B-35 | Testar o tema no site real (Kadence, LiteSpeed, ACF) | ✅ | Menus e mobile funcionando. Falta só confirmar o catálogo de livros via navegação AJAX (B-19) |
 | B-40 | `catalogo-livros-rac.php` está duplicado na raiz do repositório (idêntico ao de `plugins/`) | 💡 | Remover a cópia da raiz? |
 
 ## Decisões tomadas
@@ -75,6 +75,7 @@
 - Formatos de post: nenhum existe hoje; o campo será criado depois, deixando espaço para novos formatos.
 - Descoberta do editor: sempre visível, fixa ou sorteada diariamente entre as estações fora do top 2.
 - Ouvintes: tentar a API do Zeno.fm; se não der, campo manual atualizado por script no futuro (valor estático até a próxima atualização).
+- Endereços reais: `/estacoes/`, `/blog/`, `/literatura/`, `/sobre/`, `/category/podcasts/`.
 - Textos do rodapé: Personalização do WordPress (ACF free); textos da Home: ACF na própria página Home.
 - Tema: pasta `radio-agenda-cultural-site/themes/rac-kadence-child/`; ambiente de teste simulado em `tests/harness/`.
 - Literatura: o plugin renderiza a página; o mockup do hero e do complemento entra no backlog.
