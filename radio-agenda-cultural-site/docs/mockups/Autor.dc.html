@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="./tema.css">
+  <meta name="design_doc_mode" content="canvas">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&amp;display=swap" rel="stylesheet">
+  <script src="./image-slot.js"></script>
+  <style>
+    body { margin: 0; }
+    * { box-sizing: border-box; }
+  </style>
+</helmet>
+<div style="font-family:'DM Sans',sans-serif; padding:56px 40px 100px; display:flex; flex-direction:column; gap:56px; align-items:center; background:var(--canvas);">
+
+  <div style="width:100%; max-width:1280px; display:flex; flex-direction:column; gap:6px;">
+    <span style="font-family:'Outfit',sans-serif; font-size:14px; font-weight:500; letter-spacing:.06em; text-transform:uppercase; color:var(--muted);">Rádio Agenda Cultural</span>
+    <h1 style="margin:0; font-family:'Outfit',sans-serif; font-size:28px; letter-spacing:-.01em; font-weight:400; color:var(--text);">Página de autor</h1>
+  </div>
+
+  <div style="width:100%; max-width:1280px; display:flex; flex-direction:column; gap:14px;">
+    <span style="font-size:13px; font-weight:500; letter-spacing:.04em; text-transform:uppercase; color:var(--muted);">Desktop</span>
+    <div data-screen-label="Autor desktop" style="position:relative; width:1280px; border-radius:20px; overflow:clip; box-shadow:0 24px 60px -24px rgba(60,40,20,.25); background:var(--bg);">
+      <dc-import name="SiteHeader" active="Blog" hint-size="100%,71px"></dc-import>
+
+      <div style="padding:72px 40px 56px; display:flex; justify-content:center; border-bottom:1px solid var(--line);">
+        <div style="width:1080px; display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:56px; align-items:start;">
+          <div style="display:flow-root;">
+            <div style="float:left; width:168px; height:168px; border-radius:50%; overflow:hidden; margin:4px 40px 18px 0;"><image-slot id="autor-avatar" shape="circle" placeholder="Foto"></image-slot></div>
+            <span style="display:block; font-size:11px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-text);">{{ author.papel }}</span>
+            <h2 style="margin:10px 0 16px; font-family:'Outfit',sans-serif; font-size:46px; font-weight:400; letter-spacing:-.02em; color:var(--text); line-height:1.05;">{{ author.nome }}</h2>
+            <p style="margin:0 0 14px; font-size:16px; line-height:1.75; color:var(--text-body); text-wrap:pretty;">{{ author.bio }}</p>
+            <p style="margin:0; font-size:16px; line-height:1.75; color:var(--text-body); text-wrap:pretty;">{{ author.bio2 }}</p>
+            <div style="display:flex; align-items:center; gap:14px; margin-top:18px; font-size:13px; color:var(--muted);">
+              <span>{{ countLabel }}</span>
+              <span style="width:3px; height:3px; border-radius:50%; background:var(--muted);"></span>
+              <span>{{ author.desde }}</span>
+            </div>
+          </div>
+          <figure style="position:relative; margin:28px 0 0; padding:28px 26px 22px; background:var(--surface); border:1px solid var(--line); border-radius:18px; display:flex; flex-direction:column; gap:12px; box-shadow:0 18px 40px -30px rgba(60,40,20,.35);">
+            <span style="position:absolute; left:-8px; top:44px; width:14px; height:14px; background:var(--surface); border-left:1px solid var(--line); border-bottom:1px solid var(--line); transform:rotate(45deg);"></span>
+            <span style="font-size:10px; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--muted);">Citação favorita</span>
+            <span style="font-family:'Outfit',sans-serif; font-size:52px; line-height:.5; height:22px; color:var(--accent);">“</span>
+            <blockquote style="margin:0; font-family:'Outfit',sans-serif; font-size:21px; font-weight:300; line-height:1.4; letter-spacing:-.01em; color:var(--text);">{{ author.quote }}</blockquote>
+            <figcaption style="font-size:13px; color:var(--text-body);">— {{ author.quoteBy }}</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div style="padding:48px 40px 72px; display:flex; flex-direction:column; gap:22px;">
+        <h2 style="margin:0; font-family:'Outfit',sans-serif; font-size:28px; letter-spacing:-.01em; font-weight:400; color:var(--text);">Posts de {{ firstName }}</h2>
+        <div style="display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px 20px;">
+          <sc-for list="{{ shown }}" as="post" hint-placeholder-count="4">
+            <dc-import name="CardPost" post="{{ post }}" hint-size="100%,318px"></dc-import>
+          </sc-for>
+        </div>
+        <sc-if value="{{ hasMore }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex; justify-content:center; padding-top:8px;">
+            <button onClick="{{ more }}" style="white-space:nowrap; padding:12px 26px; border-radius:999px; background:transparent; border:1px solid var(--text); cursor:pointer; font-family:inherit; font-size:14px; font-weight:500; color:var(--text);" style-hover="background:var(--text); color:var(--bg);">Carregar mais posts</button>
+          </div>
+        </sc-if>
+      </div>
+
+      <dc-import name="SiteFooter" hint-size="100%,330px"></dc-import>
+      <dc-import name="PlayerFixo" style="position:relative; z-index:20;" hint-size="100%,72px"></dc-import>
+    </div>
+  </div>
+
+  <div style="display:flex; flex-direction:column; gap:14px; align-items:center;">
+    <span style="font-size:13px; font-weight:500; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); align-self:flex-start;">Mobile</span>
+    <div data-screen-label="Autor mobile" style="position:relative; width:375px; border-radius:36px; overflow:clip; box-shadow:0 24px 60px -24px rgba(60,40,20,.25); background:var(--bg); border:8px solid #2a2622;">
+      <dc-import name="SiteHeader" mobile="{{ true }}" active="Blog" hint-size="100%,59px"></dc-import>
+      <div style="padding:32px 18px 28px; border-bottom:1px solid var(--line);">
+        <div style="display:flow-root;">
+          <div style="float:left; width:84px; height:84px; border-radius:50%; overflow:hidden; margin:2px 16px 10px 0;"><image-slot id="autor-avatar-m" shape="circle" placeholder="Foto"></image-slot></div>
+          <span style="display:block; font-size:10px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-text);">{{ author.papel }}</span>
+          <h2 style="margin:6px 0 12px; font-family:'Outfit',sans-serif; font-size:28px; font-weight:400; letter-spacing:-.015em; color:var(--text); line-height:1.1;">{{ author.nome }}</h2>
+          <p style="margin:0 0 12px; font-size:14px; line-height:1.7; color:var(--text-body);">{{ author.bio }}</p>
+          <p style="margin:0; font-size:14px; line-height:1.7; color:var(--text-body);">{{ author.bio2 }}</p>
+          <span style="display:block; margin-top:12px; font-size:12px; color:var(--muted);">{{ countLabel }} · {{ author.desde }}</span>
+        </div>
+        <figure style="position:relative; margin:24px 0 0; padding:22px 18px 18px; background:var(--surface); border:1px solid var(--line); border-radius:16px; display:flex; flex-direction:column; gap:10px;">
+          <span style="position:absolute; left:28px; top:-8px; width:14px; height:14px; background:var(--surface); border-left:1px solid var(--line); border-top:1px solid var(--line); transform:rotate(45deg);"></span>
+          <span style="font-size:9px; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--muted);">Citação favorita</span>
+          <blockquote style="margin:0; font-family:'Outfit',sans-serif; font-size:18px; font-weight:300; line-height:1.4; color:var(--text);"><span style="color:var(--accent);">“</span>{{ author.quote }}</blockquote>
+          <figcaption style="font-size:12px; color:var(--text-body);">— {{ author.quoteBy }}</figcaption>
+        </figure>
+      </div>
+      <div style="padding:24px 18px 32px; display:flex; flex-direction:column; gap:14px;">
+        <h2 style="margin:0; font-family:'Outfit',sans-serif; font-size:20px; font-weight:400; color:var(--text);">Posts de {{ firstName }}</h2>
+        <sc-for list="{{ shown }}" as="post" hint-placeholder-count="4">
+          <dc-import name="CardPost" post="{{ post }}" hint-size="100%,318px"></dc-import>
+        </sc-for>
+        <sc-if value="{{ hasMore }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ more }}" style="white-space:nowrap; height:46px; border-radius:999px; background:transparent; border:1px solid var(--text); font-family:inherit; font-size:14px; font-weight:500; color:var(--text);">Carregar mais posts</button>
+        </sc-if>
+      </div>
+      <dc-import name="SiteFooter" mobile="{{ true }}" hint-size="100%,420px"></dc-import>
+      <dc-import name="PlayerFixo" mobile="{{ true }}" style="position:sticky; bottom:0; z-index:20;" hint-size="100%,56px"></dc-import>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1360,&quot;height&quot;:1800},&quot;autor&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;marina&quot;,&quot;options&quot;:[&quot;marina&quot;,&quot;igor&quot;,&quot;fundador&quot;,&quot;equipe&quot;],&quot;tsType&quot;:&quot;string&quot;}}">
+const AUTHORS = {
+  marina: { nome: 'Marina Alves', papel: 'Cronista e apresentadora do Blues & Jazz Clube', desde: 'Escreve desde 2021',
+    bio: 'Jornalista de formação e ouvinte de rádio desde criança, Marina escreve crônicas sobre música, cidade e memória. Apresenta o Blues & Jazz Clube nas noites de sábado.' },
+  igor: { nome: 'Igor Bastos', papel: 'Pesquisador musical', desde: 'Escreve desde 2022',
+    bio: 'Colecionador de discos e pesquisador de música brasileira, Igor garimpa gravações raras e conta a história por trás delas. Também produz o podcast Clássicos Explicados.' },
+  fundador: { nome: 'Nome do Fundador', papel: 'Fundador e curador', desde: 'Escreve desde 2019',
+    bio: 'Radialista há mais de 20 anos, criou a Agenda Cultural para dividir os discos, livros e histórias que marcaram sua vida em Votuporanga.' },
+  equipe: { nome: 'Equipe Agenda Cultural', papel: 'Redação', desde: 'Desde 2019',
+    bio: 'Textos coletivos da equipe da rádio: bastidores, agenda cultural da região e novidades da programação.' },
+};
+const POSTS = [
+  { categoria: 'Crônicas', titulo: 'O jazz que ecoa nos becos do centro', a: 'marina', data: '28 out 2026' },
+  { categoria: 'Descobertas Musicais', titulo: 'Cinco discos de choro para ouvir sem pressa', a: 'igor', data: '25 out 2026' },
+  { categoria: 'Reflexões', titulo: 'Por que ainda ouvimos rádio', a: 'fundador', data: '22 out 2026' },
+  { categoria: 'Podcasts', titulo: 'Bastidores da Cena #32: o sarau que virou escola', a: 'equipe', data: '20 out 2026' },
+  { categoria: 'Artigos', titulo: 'A história da viola caipira no noroeste paulista', a: 'igor', data: '17 out 2026' },
+  { categoria: 'Crônicas', titulo: 'A viola e as tardes de domingo', a: 'marina', data: '14 out 2026' },
+  { categoria: 'Descobertas Musicais', titulo: 'Uma cantora de Votuporanga que você precisa ouvir', a: 'marina', data: '10 out 2026' },
+  { categoria: 'Reflexões', titulo: 'O silêncio entre uma música e outra', a: 'fundador', data: '06 out 2026' },
+  { categoria: 'Artigos', titulo: 'Como funciona a curadoria das nossas estações', a: 'equipe', data: '02 out 2026' },
+  { categoria: 'Podcasts', titulo: 'Clássicos Explicados #18: Villa-Lobos para iniciantes', a: 'igor', data: '29 set 2026' },
+  { categoria: 'Crônicas', titulo: 'Memórias de uma loja de discos que fechou as portas', a: 'fundador', data: '25 set 2026' },
+  { categoria: 'Descobertas Musicais', titulo: 'Trilhas de cinema brasileiro que merecem um play', a: 'igor', data: '21 set 2026' },
+  { categoria: 'Reflexões', titulo: 'Ler em voz alta: a poesia falada como encontro', a: 'marina', data: '17 set 2026' },
+  { categoria: 'Artigos', titulo: 'Festivais de música no interior paulista em novembro', a: 'equipe', data: '13 set 2026' },
+  { categoria: 'Podcasts', titulo: 'Bastidores da Cena #31: luthiers do interior', a: 'equipe', data: '09 set 2026' },
+].map((p, i) => ({ ...p, i, autor: AUTHORS[p.a].nome, href: `Post.dc.html?p=${i}`, autorHref: `Autor.dc.html?a=${p.a}` }));
+const qs = (k) => new URLSearchParams(location.search).get(k);
+
+const EXTRA = {
+  marina: { bio2: 'Antes da rádio, passou quinze anos em redações de jornal no interior paulista, cobrindo cultura e cidade. Hoje divide o tempo entre os textos do blog, a curadoria do Blues & Jazz Clube e oficinas de escrita com estudantes da região.', quote: 'Viver é muito perigoso.', quoteBy: 'João Guimarães Rosa' },
+  igor: { bio2: 'Já catalogou mais de quatro mil discos entre vinis, fitas e CDs, e mantém um arquivo pessoal de entrevistas com músicos do noroeste paulista. No blog, escreve sobre gravações esquecidas, instrumentos e as histórias de quem toca longe dos holofotes.', quote: 'Sem a música, a vida seria um erro.', quoteBy: 'Friedrich Nietzsche' },
+  fundador: { bio2: 'Começou no rádio AM ainda adolescente, operando a mesa de som de uma emissora local. Desde então nunca parou de colecionar discos e livros — e de procurar formas de dividi-los com mais gente. A Agenda Cultural é o resultado dessa vontade.', quote: 'Tudo no mundo começou com um sim.', quoteBy: 'Clarice Lispector' },
+  equipe: { bio2: 'A redação reúne colaboradores, produtores e voluntários que ajudam a manter a rádio no ar. Os textos assinados pela equipe trazem novidades da programação, agenda de eventos da região e bastidores do dia a dia.', quote: 'Quem canta seus males espanta.', quoteBy: 'Dito popular' },
+};
+class Component extends DCLogic {
+  state = { limit: 6 };
+  renderVals() {
+    const key = AUTHORS[qs('a')] ? qs('a') : (this.props.autor || 'marina');
+    const author = { ...(AUTHORS[key] || AUTHORS.marina), ...(EXTRA[key] || EXTRA.marina) };
+    const list = POSTS.filter(p => p.a === key);
+    return {
+      author,
+      firstName: key === 'equipe' ? 'equipe' : author.nome.split(' ')[0],
+      countLabel: `${list.length} ${list.length === 1 ? 'post' : 'posts'}`,
+      shown: list.slice(0, this.state.limit),
+      hasMore: list.length > this.state.limit,
+      more: () => this.setState(s => ({ limit: s.limit + 6 })),
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="./tema.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&amp;display=swap" rel="stylesheet">
+</helmet>
+<div style="font-family:'DM Sans',sans-serif;">
+  <sc-if value="{{ isDesk }}" hint-placeholder-val="{{ true }}">
+    <div style="padding:44px 40px 28px; background:var(--surface); border-top:1px solid var(--line); display:flex; flex-direction:column; gap:28px;">
+      <div style="display:grid; grid-template-columns:280px 140px minmax(0,1fr); gap:48px;">
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <img src="uploads/cropped-Horizontal-v2.png" alt="agenda cultural" style="height:30px; width:fit-content; display:block;">
+          <span style="font-size:13px; line-height:1.6; color:var(--text-body);">Uma rádio feita com carinho em Votuporanga, SP, para quem gosta de boa música, boa leitura e boa conversa.</span>
+          <a href="mailto:contato@agendacultural.fm" style="font-size:13px; font-weight:500;">contato@agendacultural.fm</a>
+          <div style="display:flex; gap:10px; margin-top:4px;">
+            <span style="width:34px; height:34px; border-radius:50%; background:var(--surface2); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:500; color:var(--text-body);">IG</span>
+            <span style="width:34px; height:34px; border-radius:50%; background:var(--surface2); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:500; color:var(--text-body);">FB</span>
+            <span style="width:34px; height:34px; border-radius:50%; background:var(--surface2); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:500; color:var(--text-body);">YT</span>
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:9px;">
+          <span style="font-size:12px; font-weight:500; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);">Menu</span>
+          <a href="Estacoes.dc.html" style="font-size:13px; color:var(--text-body);">Estações</a>
+          <a href="Blog.dc.html" style="font-size:13px; color:var(--text-body);">Blog</a>
+          <a href="#" style="font-size:13px; color:var(--text-body);">Literatura</a>
+          <a href="Blog.dc.html?c=Podcasts" style="font-size:13px; color:var(--text-body);">Podcasts</a>
+          <a href="Sobre.dc.html" style="font-size:13px; color:var(--text-body);">Sobre</a>
+          <a href="Contato.dc.html" style="font-size:13px; color:var(--text-body);">Contato</a>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:9px;">
+          <span style="font-size:12px; font-weight:500; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);">Todas as estações</span>
+          <div style="display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px 24px;">
+            <sc-for list="{{ stations }}" as="s" hint-placeholder-count="12">
+              <a href="{{ s.href }}" style="font-size:13px; color:var(--text-body); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ s.name }}</a>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+      <div style="border-top:1px solid var(--line); padding-top:16px;">
+        <span style="font-size:12px; color:var(--muted);">© 2026 Rádio Agenda Cultural — Votuporanga, SP, Brasil.</span>
+      </div>
+    </div>
+  </sc-if>
+  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+    <div style="padding:26px 18px 22px; background:var(--surface); border-top:1px solid var(--line); display:flex; flex-direction:column; gap:18px;">
+      <img src="uploads/cropped-Horizontal-v2.png" alt="agenda cultural" style="height:26px; width:fit-content; display:block;">
+      <span style="font-size:12px; line-height:1.6; color:var(--text-body);">Uma rádio feita com carinho em Votuporanga, SP, para quem gosta de boa música, boa leitura e boa conversa.</span>
+      <a href="mailto:contato@agendacultural.fm" style="font-size:13px; font-weight:500;">contato@agendacultural.fm</a>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <span style="font-size:11px; font-weight:500; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);">Todas as estações</span>
+        <div style="display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px 16px;">
+          <sc-for list="{{ stations }}" as="s" hint-placeholder-count="12">
+            <a href="{{ s.href }}" style="font-size:12px; color:var(--text-body); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ s.name }}</a>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px;">
+        <span style="width:36px; height:36px; border-radius:50%; background:var(--surface2); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:500; color:var(--text-body);">IG</span>
+        <span style="width:36px; height:36px; border-radius:50%; background:var(--surface2); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:500; color:var(--text-body);">FB</span>
+        <span style="width:36px; height:36px; border-radius:50%; background:var(--surface2); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:500; color:var(--text-body);">YT</span>
+      </div>
+      <span style="font-size:11px; color:var(--muted); border-top:1px solid var(--line); padding-top:14px;">© 2026 Rádio Agenda Cultural</span>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:300},&quot;mobile&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const NAMES = ['Blues & Jazz Clube','Bossa & Violão','Clássicos Contemporâneos','Vozes da Cidade','Sons do Brasil','Poesia Falada','Noites de Ópera','Rock Progressivo BR','MPB de Ouro','Viola Caipira','Samba & Choro','Trilhas de Cinema'];
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      isMobile: !!this.props.mobile, isDesk: !this.props.mobile,
+      stations: NAMES.map((name, i) => ({ name, href: `Estacao.dc.html?e=${i}` })),
+    };
+  }
+}
+</script>
+</body>
+</html>

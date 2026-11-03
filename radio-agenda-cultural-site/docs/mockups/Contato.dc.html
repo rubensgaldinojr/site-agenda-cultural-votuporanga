@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="./tema.css">
+  <meta name="design_doc_mode" content="canvas">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&amp;display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; }
+    * { box-sizing: border-box; }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: #ee8133 !important; }
+  </style>
+</helmet>
+<div style="font-family:'DM Sans',sans-serif; padding:56px 40px 100px; display:flex; flex-direction:column; gap:56px; align-items:center; background:var(--canvas);">
+
+  <div style="width:100%; max-width:1280px; display:flex; flex-direction:column; gap:6px;">
+    <span style="font-family:'Outfit',sans-serif; font-size:14px; font-weight:500; letter-spacing:.06em; text-transform:uppercase; color:var(--muted);">Rádio Agenda Cultural</span>
+    <h1 style="margin:0; font-family:'Outfit',sans-serif; font-size:28px; letter-spacing:-.01em; font-weight:400; color:var(--text);">Contato / Sugestão de música</h1>
+  </div>
+
+  <div style="width:100%; max-width:1280px; display:flex; flex-direction:column; gap:14px;">
+    <span style="font-size:13px; font-weight:500; letter-spacing:.04em; text-transform:uppercase; color:var(--muted);">Desktop</span>
+    <div data-screen-label="Contato desktop" style="position:relative; width:1280px; border-radius:20px; overflow:clip; box-shadow:0 24px 60px -24px rgba(60,40,20,.25); background:var(--bg);">
+      <dc-import name="SiteHeader" hint-size="100%,71px"></dc-import>
+
+      <div style="padding:72px 56px 88px; display:grid; grid-template-columns:minmax(0,1fr) 600px; gap:72px; align-items:start;">
+        <div style="display:flex; flex-direction:column; gap:16px; padding-top:8px;">
+          <span style="font-size:11px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-text);">Contato</span>
+          <h2 style="margin:0; font-family:'Outfit',sans-serif; font-size:48px; font-weight:400; letter-spacing:-.02em; color:var(--text); line-height:1.08;">Fale com a gente</h2>
+          <p style="margin:0; font-size:16px; line-height:1.75; color:var(--text-body); text-wrap:pretty;">Quer sugerir uma música, pedir aquela faixa especial, propor uma parceria ou só mandar um oi? Escreva para a gente — todas as mensagens são lidas pela equipe.</p>
+          <div style="margin-top:20px; display:flex; flex-direction:column;">
+            <div style="padding:16px 0; border-top:1px solid var(--line); display:flex; flex-direction:column; gap:3px;">
+              <span style="font-size:11px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);">E-mail</span>
+              <a href="mailto:contato@agendacultural.fm" style="font-size:15px; font-weight:500;">contato@agendacultural.fm</a>
+            </div>
+            <div style="padding:16px 0; border-top:1px solid var(--line); display:flex; flex-direction:column; gap:3px;">
+              <span style="font-size:11px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);">Onde estamos</span>
+              <span style="font-size:15px; color:var(--text);">Votuporanga, SP — Brasil</span>
+            </div>
+            <div style="padding:16px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between;">
+              <span style="font-size:11px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);">Redes</span>
+              <div style="display:flex; gap:8px;">
+                <span style="width:34px; height:34px; border-radius:50%; background:var(--surface2); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:500; color:var(--text-body);">IG</span>
+                <span style="width:34px; height:34px; border-radius:50%; background:var(--surface2); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:500; color:var(--text-body);">FB</span>
+                <span style="width:34px; height:34px; border-radius:50%; background:var(--surface2); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:500; color:var(--text-body);">YT</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:32px; box-shadow:0 18px 40px -30px rgba(60,40,20,.3);">
+          <sc-if value="{{ editing }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex; flex-direction:column; gap:18px;">
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <span style="font-size:12px; font-weight:500; color:var(--text-body);">Assunto</span>
+                <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                  <sc-for list="{{ subjects }}" as="s" hint-placeholder-count="4">
+                    <button onClick="{{ s.pick }}" style="white-space:nowrap; padding:8px 14px; border-radius:999px; background:{{ s.bg }}; border:1px solid {{ s.border }}; cursor:pointer; font-family:inherit; font-size:13px; font-weight:500; color:{{ s.color }};">{{ s.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <label style="display:flex; flex-direction:column; gap:6px;"><span style="font-size:12px; font-weight:500; color:var(--text-body);">Nome</span><input placeholder="Seu nome" style="padding:12px 14px; border-radius:10px; border:1px solid var(--line); background:var(--bg); font-family:inherit; font-size:14px; color:var(--text);"></label>
+                <label style="display:flex; flex-direction:column; gap:6px;"><span style="font-size:12px; font-weight:500; color:var(--text-body);">E-mail</span><input placeholder="voce@email.com" style="padding:12px 14px; border-radius:10px; border:1px solid var(--line); background:var(--bg); font-family:inherit; font-size:14px; color:var(--text);"></label>
+              </div>
+              <sc-if value="{{ isMusic }}" hint-placeholder-val="{{ true }}">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:16px; border-radius:12px; background:var(--accent-soft);">
+                  <label style="display:flex; flex-direction:column; gap:6px;"><span style="font-size:12px; font-weight:500; color:var(--accent-text);">Música</span><input placeholder="Nome da faixa" style="padding:11px 14px; border-radius:10px; border:1px solid transparent; background:var(--surface); font-family:inherit; font-size:14px; color:var(--text);"></label>
+                  <label style="display:flex; flex-direction:column; gap:6px;"><span style="font-size:12px; font-weight:500; color:var(--accent-text);">Artista</span><input placeholder="Quem canta ou toca" style="padding:11px 14px; border-radius:10px; border:1px solid transparent; background:var(--surface); font-family:inherit; font-size:14px; color:var(--text);"></label>
+                </div>
+              </sc-if>
+              <label style="display:flex; flex-direction:column; gap:6px;"><span style="font-size:12px; font-weight:500; color:var(--text-body);">Mensagem</span><textarea rows="5" placeholder="{{ msgPlaceholder }}" style="padding:12px 14px; border-radius:10px; border:1px solid var(--line); background:var(--bg); font-family:inherit; font-size:14px; line-height:1.6; color:var(--text); resize:vertical;"></textarea></label>
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding-top:4px;">
+                <span style="font-size:12px; color:var(--muted);">Seu e-mail não será publicado.</span>
+                <button onClick="{{ send }}" style="white-space:nowrap; padding:12px 26px; border-radius:999px; background:var(--accent); border:none; cursor:pointer; font-family:inherit; font-size:14px; font-weight:500; color:#ffffff;" style-hover="background:var(--accent-dark);">Enviar mensagem</button>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+            <div style="min-height:420px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:12px;">
+              <span style="width:52px; height:52px; border-radius:50%; background:var(--accent-soft); display:flex; align-items:center; justify-content:center; font-size:20px; color:var(--accent-text);">✓</span>
+              <h3 style="margin:6px 0 0; font-family:'Outfit',sans-serif; font-size:26px; font-weight:400; color:var(--text);">Mensagem enviada</h3>
+              <p style="margin:0; max-width:340px; font-size:14px; line-height:1.65; color:var(--text-body);">Obrigado por escrever! Respondemos pelo e-mail que você informou.</p>
+              <button onClick="{{ reset }}" style="white-space:nowrap; margin-top:8px; padding:10px 20px; border-radius:999px; background:var(--surface); border:1px solid var(--line); cursor:pointer; font-family:inherit; font-size:13px; color:var(--text);">Enviar outra mensagem</button>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+
+      <dc-import name="SiteFooter" hint-size="100%,330px"></dc-import>
+      <dc-import name="PlayerFixo" style="position:relative; z-index:20;" hint-size="100%,72px"></dc-import>
+    </div>
+  </div>
+
+  <div style="display:flex; flex-direction:column; gap:14px; align-items:center;">
+    <span style="font-size:13px; font-weight:500; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); align-self:flex-start;">Mobile</span>
+    <div data-screen-label="Contato mobile" style="position:relative; width:375px; border-radius:36px; overflow:clip; box-shadow:0 24px 60px -24px rgba(60,40,20,.25); background:var(--bg); border:8px solid #2a2622;">
+      <dc-import name="SiteHeader" mobile="{{ true }}" active="Contato" hint-size="100%,59px"></dc-import>
+      <div style="padding:32px 18px 20px; display:flex; flex-direction:column; gap:10px;">
+        <span style="font-size:10px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-text);">Contato</span>
+        <h2 style="margin:0; font-family:'Outfit',sans-serif; font-size:30px; font-weight:400; letter-spacing:-.015em; color:var(--text); line-height:1.1;">Fale com a gente</h2>
+        <p style="margin:0; font-size:14px; line-height:1.65; color:var(--text-body);">Sugira uma música, faça um pedido ou proponha uma parceria.</p>
+        <a href="mailto:contato@agendacultural.fm" style="font-size:14px; font-weight:500;">contato@agendacultural.fm</a>
+      </div>
+      <div style="padding:0 18px 32px;">
+        <div style="background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:18px;">
+          <sc-if value="{{ editing }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex; flex-direction:column; gap:14px;">
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <span style="font-size:12px; font-weight:500; color:var(--text-body);">Assunto</span>
+                <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                  <sc-for list="{{ subjects }}" as="s" hint-placeholder-count="4">
+                    <button onClick="{{ s.pick }}" style="white-space:nowrap; height:36px; padding:0 12px; border-radius:999px; background:{{ s.bg }}; border:1px solid {{ s.border }}; font-family:inherit; font-size:12px; font-weight:500; color:{{ s.color }};">{{ s.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+              <input placeholder="Seu nome" style="height:46px; padding:0 14px; border-radius:10px; border:1px solid var(--line); background:var(--bg); font-family:inherit; font-size:14px; color:var(--text);">
+              <input placeholder="Seu e-mail" style="height:46px; padding:0 14px; border-radius:10px; border:1px solid var(--line); background:var(--bg); font-family:inherit; font-size:14px; color:var(--text);">
+              <sc-if value="{{ isMusic }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex; flex-direction:column; gap:8px; padding:12px; border-radius:12px; background:var(--accent-soft);">
+                  <input placeholder="Música" style="height:44px; padding:0 14px; border-radius:10px; border:1px solid transparent; background:var(--surface); font-family:inherit; font-size:14px; color:var(--text);">
+                  <input placeholder="Artista" style="height:44px; padding:0 14px; border-radius:10px; border:1px solid transparent; background:var(--surface); font-family:inherit; font-size:14px; color:var(--text);">
+                </div>
+              </sc-if>
+              <textarea rows="4" placeholder="{{ msgPlaceholder }}" style="padding:12px 14px; border-radius:10px; border:1px solid var(--line); background:var(--bg); font-family:inherit; font-size:14px; line-height:1.55; color:var(--text); resize:vertical;"></textarea>
+              <button onClick="{{ send }}" style="white-space:nowrap; height:48px; border-radius:999px; background:var(--accent); border:none; font-family:inherit; font-size:14px; font-weight:500; color:#ffffff;">Enviar mensagem</button>
+              <span style="font-size:11px; color:var(--muted); text-align:center;">Seu e-mail não será publicado.</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:40px 8px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px;">
+              <span style="width:46px; height:46px; border-radius:50%; background:var(--accent-soft); display:flex; align-items:center; justify-content:center; font-size:18px; color:var(--accent-text);">✓</span>
+              <h3 style="margin:4px 0 0; font-family:'Outfit',sans-serif; font-size:22px; font-weight:400; color:var(--text);">Mensagem enviada</h3>
+              <p style="margin:0; font-size:13px; line-height:1.6; color:var(--text-body);">Respondemos pelo e-mail que você informou.</p>
+              <button onClick="{{ reset }}" style="white-space:nowrap; margin-top:6px; height:42px; padding:0 18px; border-radius:999px; background:var(--surface); border:1px solid var(--line); font-family:inherit; font-size:13px; color:var(--text);">Enviar outra</button>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+      <dc-import name="SiteFooter" mobile="{{ true }}" hint-size="100%,420px"></dc-import>
+      <dc-import name="PlayerFixo" mobile="{{ true }}" style="position:sticky; bottom:0; z-index:20;" hint-size="100%,56px"></dc-import>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1360,&quot;height&quot;:1700},&quot;assuntoInicial&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Sugestão de música&quot;,&quot;options&quot;:[&quot;Sugestão de música&quot;,&quot;Pedido musical&quot;,&quot;Parcerias&quot;,&quot;Outro&quot;],&quot;tsType&quot;:&quot;string&quot;}}">
+const SUBJECTS = ['Sugestão de música', 'Pedido musical', 'Parcerias', 'Outro'];
+class Component extends DCLogic {
+  state = { subject: null, sent: false };
+  renderVals() {
+    const subject = this.state.subject ?? (this.props.assuntoInicial || SUBJECTS[0]);
+    const music = subject === 'Sugestão de música' || subject === 'Pedido musical';
+    return {
+      subjects: SUBJECTS.map(s => ({
+        label: s, pick: () => this.setState({ subject: s }),
+        bg: s === subject ? 'var(--text)' : 'var(--surface)',
+        border: s === subject ? 'var(--text)' : 'var(--line)',
+        color: s === subject ? 'var(--bg)' : 'var(--text-body)',
+      })),
+      isMusic: music,
+      msgPlaceholder: music ? 'Conte por que essa música merece tocar (e em qual estação, se quiser)…' : 'Escreva sua mensagem…',
+      editing: !this.state.sent, sent: this.state.sent,
+      send: () => this.setState({ sent: true }),
+      reset: () => this.setState({ sent: false }),
+    };
+  }
+}
+</script>
+</body>
+</html>

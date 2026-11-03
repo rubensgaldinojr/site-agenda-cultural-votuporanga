@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="./tema.css">
+  <style>.stripe-cover { background-image: repeating-linear-gradient(135deg, var(--ph1) 0 10px, var(--ph2) 10px 20px); }</style>
+</helmet>
+<div style="height:100%; display:flex; flex-direction:column; gap:10px; background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:12px 12px 16px; font-family:'DM Sans',sans-serif; transition:box-shadow .25s ease, transform .25s ease;" style-hover="box-shadow:0 18px 40px -26px rgba(60,40,20,.4); transform:translateY(-2px);">
+  <a href="{{ post.href }}" class="stripe-cover" style="height:168px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-family:monospace; font-size:10px; color:var(--muted);">imagem do post</a>
+  <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:0 4px;">
+    <span style="font-size:11px; font-weight:500; letter-spacing:.08em; text-transform:uppercase; color:var(--accent-text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ post.categoria }}</span>
+    <span style="font-size:12px; color:var(--muted); white-space:nowrap;">{{ post.data }}</span>
+  </div>
+  <a href="{{ post.href }}" style="padding:0 4px; font-size:15px; font-weight:500; color:var(--text); line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:40px;" style-hover="color:var(--accent-text);">{{ post.titulo }}</a>
+  <span style="padding:0 4px; margin-top:auto; font-size:12px; color:var(--muted);">por <a href="{{ post.autorHref }}" style="color:var(--muted); text-decoration:underline; text-decoration-color:var(--line); text-underline-offset:3px;" style-hover="color:var(--accent-text);">{{ post.autor }}</a></span>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:320,&quot;height&quot;:320},&quot;post&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;{categoria:string,data:string,titulo:string,autor:string,href:string,autorHref:string}&quot;}}"></script>
+</body>
+</html>

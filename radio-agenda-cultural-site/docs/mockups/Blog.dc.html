@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="./tema.css">
+  <meta name="design_doc_mode" content="canvas">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&amp;display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; }
+    * { box-sizing: border-box; }
+    .scrollx::-webkit-scrollbar { display: none; }
+  </style>
+</helmet>
+<div style="font-family:'DM Sans',sans-serif; padding:56px 40px 100px; display:flex; flex-direction:column; gap:56px; align-items:center; background:var(--canvas);">
+
+  <div style="width:100%; max-width:1280px; display:flex; flex-direction:column; gap:6px;">
+    <span style="font-family:'Outfit',sans-serif; font-size:14px; font-weight:500; letter-spacing:.06em; text-transform:uppercase; color:var(--muted);">Rádio Agenda Cultural</span>
+    <h1 style="margin:0; font-family:'Outfit',sans-serif; font-size:28px; letter-spacing:-.01em; font-weight:400; color:var(--text);">Blog — listagem (também usada para Podcasts)</h1>
+  </div>
+
+  <div style="width:100%; max-width:1280px; display:flex; flex-direction:column; gap:14px;">
+    <span style="font-size:13px; font-weight:500; letter-spacing:.04em; text-transform:uppercase; color:var(--muted);">Desktop</span>
+    <div data-screen-label="Blog desktop" style="position:relative; width:1280px; border-radius:20px; overflow:clip; box-shadow:0 24px 60px -24px rgba(60,40,20,.25); background:var(--bg);">
+      <dc-import name="SiteHeader" active="{{ navActive }}" hint-size="100%,71px"></dc-import>
+
+      <div style="padding:64px 40px 32px; display:flex; flex-direction:column; gap:14px; max-width:780px;">
+        <span style="font-size:11px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-text);">{{ eyebrow }}</span>
+        <h2 style="margin:0; font-family:'Outfit',sans-serif; font-size:46px; font-weight:400; letter-spacing:-.02em; color:var(--text); line-height:1.1; text-wrap:balance;">{{ title }}</h2>
+        <p style="margin:0; font-size:16px; line-height:1.75; color:var(--text-body); text-wrap:pretty;">{{ lede }}</p>
+      </div>
+
+      <div style="margin:0 40px; padding:12px; border-radius:16px; background:var(--surface2); display:flex; align-items:center; gap:10px; position:relative; z-index:10;">
+          <div style="position:relative; width:230px; flex:none;">
+            <button onClick="{{ fCat.toggle }}" style="width:100%; height:44px; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:0 14px; border-radius:10px; background:var(--surface); border:1px solid {{ fCat.border }}; cursor:pointer; font-family:inherit; text-align:left;">
+              <span style="display:flex; flex-direction:column; min-width:0;">
+                <span style="font-size:9px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);">{{ fCat.label }}</span>
+                <span style="font-size:13px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ fCat.value }}</span>
+              </span>
+              <span style="font-size:10px; color:var(--muted); transform:{{ fCat.chev }}; transition:transform .2s ease;">▾</span>
+            </button>
+            <sc-if value="{{ fCat.open }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute; left:0; top:calc(100% + 6px); min-width:100%; width:max-content; max-width:280px; z-index:15; padding:6px; background:var(--surface); border:1px solid var(--line); border-radius:12px; box-shadow:0 20px 44px -16px rgba(60,40,20,.25); display:flex; flex-direction:column;">
+                <sc-for list="{{ fCat.opts }}" as="o" hint-placeholder-count="4">
+                  <button onClick="{{ o.pick }}" style="display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:8px; background:{{ o.bg }}; border:none; cursor:pointer; font-family:inherit; font-size:13px; color:var(--text); text-align:left; white-space:nowrap;" style-hover="background:var(--surface2);">
+                    <span style="width:12px; font-size:12px; color:var(--accent-text);">{{ o.check }}</span>{{ o.label }}
+                  </button>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+          <div style="position:relative; width:230px; flex:none;">
+            <button onClick="{{ fAut.toggle }}" style="width:100%; height:44px; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:0 14px; border-radius:10px; background:var(--surface); border:1px solid {{ fAut.border }}; cursor:pointer; font-family:inherit; text-align:left;">
+              <span style="display:flex; flex-direction:column; min-width:0;">
+                <span style="font-size:9px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);">{{ fAut.label }}</span>
+                <span style="font-size:13px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ fAut.value }}</span>
+              </span>
+              <span style="font-size:10px; color:var(--muted); transform:{{ fAut.chev }}; transition:transform .2s ease;">▾</span>
+            </button>
+            <sc-if value="{{ fAut.open }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute; left:0; top:calc(100% + 6px); min-width:100%; width:max-content; max-width:280px; z-index:15; padding:6px; background:var(--surface); border:1px solid var(--line); border-radius:12px; box-shadow:0 20px 44px -16px rgba(60,40,20,.25); display:flex; flex-direction:column;">
+                <sc-for list="{{ fAut.opts }}" as="o" hint-placeholder-count="4">
+                  <button onClick="{{ o.pick }}" style="display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:8px; background:{{ o.bg }}; border:none; cursor:pointer; font-family:inherit; font-size:13px; color:var(--text); text-align:left; white-space:nowrap;" style-hover="background:var(--surface2);">
+                    <span style="width:12px; font-size:12px; color:var(--accent-text);">{{ o.check }}</span>{{ o.label }}
+                  </button>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+          <sc-if value="{{ hasFilters }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ clear }}" style="white-space:nowrap; height:44px; padding:0 18px; border-radius:999px; background:transparent; border:1px solid var(--accent); cursor:pointer; font-family:inherit; font-size:13px; font-weight:500; color:var(--accent-text);" style-hover="background:var(--accent-soft);">Limpar filtros</button>
+          </sc-if>
+          <span style="flex:1;"></span>
+          <div style="position:relative; width:230px; flex:none;">
+            <button onClick="{{ sort.toggle }}" style="width:100%; height:44px; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:0 14px; border-radius:10px; background:var(--surface); border:1px solid {{ sort.border }}; cursor:pointer; font-family:inherit; text-align:left;">
+              <span style="display:flex; flex-direction:column; min-width:0;">
+                <span style="font-size:9px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);">{{ sort.label }}</span>
+                <span style="font-size:13px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ sort.value }}</span>
+              </span>
+              <span style="font-size:10px; color:var(--muted); transform:{{ sort.chev }}; transition:transform .2s ease;">▾</span>
+            </button>
+            <sc-if value="{{ sort.open }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute; right:0; top:calc(100% + 6px); min-width:100%; width:max-content; max-width:280px; z-index:15; padding:6px; background:var(--surface); border:1px solid var(--line); border-radius:12px; box-shadow:0 20px 44px -16px rgba(60,40,20,.25); display:flex; flex-direction:column;">
+                <sc-for list="{{ sort.opts }}" as="o" hint-placeholder-count="4">
+                  <button onClick="{{ o.pick }}" style="display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:8px; background:{{ o.bg }}; border:none; cursor:pointer; font-family:inherit; font-size:13px; color:var(--text); text-align:left; white-space:nowrap;" style-hover="background:var(--surface2);">
+                    <span style="width:12px; font-size:12px; color:var(--accent-text);">{{ o.check }}</span>{{ o.label }}
+                  </button>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+      </div>
+      <div style="padding:16px 40px 0; display:flex; align-items:center; gap:8px;">
+        <span style="font-size:12px; color:var(--muted);">{{ countLabel }}</span>
+        <sc-for list="{{ activeTags }}" as="t" hint-placeholder-count="0">
+          <button onClick="{{ t.remove }}" style="white-space:nowrap; display:flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px; background:var(--accent-soft); border:none; cursor:pointer; font-family:inherit; font-size:12px; color:var(--accent-text);">{{ t.label }} <span style="font-size:11px;">✕</span></button>
+        </sc-for>
+      </div>
+
+      <div style="padding:20px 40px 0;">
+        <div style="padding-top:24px; border-top:1px solid var(--line); display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px 20px;">
+          <sc-for list="{{ pagePosts }}" as="post" hint-placeholder-count="6">
+            <dc-import name="CardPost" post="{{ post }}" hint-size="100%,318px"></dc-import>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="padding:36px 40px 72px; display:flex; align-items:center; justify-content:center; gap:6px;">
+        <button onClick="{{ prev }}" aria-label="Anterior" style="width:38px; height:38px; border-radius:50%; background:var(--surface); border:1px solid var(--line); cursor:pointer; font-size:16px; color:var(--text);">‹</button>
+        <sc-for list="{{ pages }}" as="p" hint-placeholder-count="3">
+          <button onClick="{{ p.go }}" style="width:38px; height:38px; border-radius:50%; background:{{ p.bg }}; border:1px solid {{ p.border }}; cursor:pointer; font-family:inherit; font-size:13px; font-weight:500; color:var(--text);">{{ p.label }}</button>
+        </sc-for>
+        <button onClick="{{ next }}" aria-label="Próxima" style="width:38px; height:38px; border-radius:50%; background:var(--surface); border:1px solid var(--line); cursor:pointer; font-size:16px; color:var(--text);">›</button>
+      </div>
+
+      <dc-import name="SiteFooter" hint-size="100%,330px"></dc-import>
+      <dc-import name="PlayerFixo" style="position:relative; z-index:20;" hint-size="100%,72px"></dc-import>
+    </div>
+  </div>
+
+  <div style="display:flex; flex-direction:column; gap:14px; align-items:center;">
+    <span style="font-size:13px; font-weight:500; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); align-self:flex-start;">Mobile</span>
+    <div data-screen-label="Blog mobile" style="position:relative; width:375px; border-radius:36px; overflow:clip; box-shadow:0 24px 60px -24px rgba(60,40,20,.25); background:var(--bg); border:8px solid #2a2622;">
+      <dc-import name="SiteHeader" mobile="{{ true }}" active="{{ navActive }}" hint-size="100%,59px"></dc-import>
+      <div style="padding:32px 18px 20px; display:flex; flex-direction:column; gap:10px;">
+        <span style="font-size:10px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-text);">{{ eyebrow }}</span>
+        <h2 style="margin:0; font-family:'Outfit',sans-serif; font-size:30px; font-weight:400; letter-spacing:-.015em; color:var(--text); line-height:1.1;">{{ title }}</h2>
+        <p style="margin:0; font-size:14px; line-height:1.65; color:var(--text-body);">{{ lede }}</p>
+      </div>
+      <div style="padding:0 18px 14px; display:flex; flex-direction:column; gap:10px; position:relative; z-index:10;">
+        <div style="display:flex; gap:8px;">
+          <button onClick="{{ toggleMF }}" style="flex:none; white-space:nowrap; height:46px; padding:0 16px; display:flex; align-items:center; gap:8px; border-radius:10px; background:{{ mfBg }}; border:1px solid var(--line); font-family:inherit; font-size:13px; font-weight:500; color:var(--text);">Filtros<sc-if value="{{ hasFilters }}" hint-placeholder-val="{{ false }}"><span style="min-width:18px; height:18px; padding:0 5px; border-radius:999px; background:var(--accent); color:#ffffff; font-size:11px; display:flex; align-items:center; justify-content:center;">{{ nFilters }}</span></sc-if></button>
+          <div style="flex:1; min-width:0;"><div style="position:relative; width:100%;">
+            <button onClick="{{ sortM.toggle }}" style="width:100%; height:46px; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:0 14px; border-radius:10px; background:var(--surface); border:1px solid {{ sortM.border }}; cursor:pointer; font-family:inherit; text-align:left;">
+              <span style="display:flex; flex-direction:column; min-width:0;">
+                <span style="font-size:9px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);">{{ sortM.label }}</span>
+                <span style="font-size:13px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ sortM.value }}</span>
+              </span>
+              <span style="font-size:10px; color:var(--muted); transform:{{ sortM.chev }}; transition:transform .2s ease;">▾</span>
+            </button>
+            <sc-if value="{{ sortM.open }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute; left:0; top:calc(100% + 6px); min-width:100%; width:max-content; max-width:280px; z-index:15; padding:6px; background:var(--surface); border:1px solid var(--line); border-radius:12px; box-shadow:0 20px 44px -16px rgba(60,40,20,.25); display:flex; flex-direction:column;">
+                <sc-for list="{{ sortM.opts }}" as="o" hint-placeholder-count="4">
+                  <button onClick="{{ o.pick }}" style="display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:8px; background:{{ o.bg }}; border:none; cursor:pointer; font-family:inherit; font-size:13px; color:var(--text); text-align:left; white-space:nowrap;" style-hover="background:var(--surface2);">
+                    <span style="width:12px; font-size:12px; color:var(--accent-text);">{{ o.check }}</span>{{ o.label }}
+                  </button>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div></div>
+        </div>
+        <sc-if value="{{ mfOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:10px; border-radius:14px; background:var(--surface2); display:flex; flex-direction:column; gap:8px;">
+            <div style="position:relative; width:100%;">
+            <button onClick="{{ fCatM.toggle }}" style="width:100%; height:46px; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:0 14px; border-radius:10px; background:var(--surface); border:1px solid {{ fCatM.border }}; cursor:pointer; font-family:inherit; text-align:left;">
+              <span style="display:flex; flex-direction:column; min-width:0;">
+                <span style="font-size:9px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);">{{ fCatM.label }}</span>
+                <span style="font-size:13px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ fCatM.value }}</span>
+              </span>
+              <span style="font-size:10px; color:var(--muted); transform:{{ fCatM.chev }}; transition:transform .2s ease;">▾</span>
+            </button>
+            <sc-if value="{{ fCatM.open }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute; left:0; top:calc(100% + 6px); min-width:100%; width:max-content; max-width:280px; z-index:15; padding:6px; background:var(--surface); border:1px solid var(--line); border-radius:12px; box-shadow:0 20px 44px -16px rgba(60,40,20,.25); display:flex; flex-direction:column;">
+                <sc-for list="{{ fCatM.opts }}" as="o" hint-placeholder-count="4">
+                  <button onClick="{{ o.pick }}" style="display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:8px; background:{{ o.bg }}; border:none; cursor:pointer; font-family:inherit; font-size:13px; color:var(--text); text-align:left; white-space:nowrap;" style-hover="background:var(--surface2);">
+                    <span style="width:12px; font-size:12px; color:var(--accent-text);">{{ o.check }}</span>{{ o.label }}
+                  </button>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+            <div style="position:relative; width:100%;">
+            <button onClick="{{ fAutM.toggle }}" style="width:100%; height:46px; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:0 14px; border-radius:10px; background:var(--surface); border:1px solid {{ fAutM.border }}; cursor:pointer; font-family:inherit; text-align:left;">
+              <span style="display:flex; flex-direction:column; min-width:0;">
+                <span style="font-size:9px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);">{{ fAutM.label }}</span>
+                <span style="font-size:13px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ fAutM.value }}</span>
+              </span>
+              <span style="font-size:10px; color:var(--muted); transform:{{ fAutM.chev }}; transition:transform .2s ease;">▾</span>
+            </button>
+            <sc-if value="{{ fAutM.open }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute; left:0; top:calc(100% + 6px); min-width:100%; width:max-content; max-width:280px; z-index:15; padding:6px; background:var(--surface); border:1px solid var(--line); border-radius:12px; box-shadow:0 20px 44px -16px rgba(60,40,20,.25); display:flex; flex-direction:column;">
+                <sc-for list="{{ fAutM.opts }}" as="o" hint-placeholder-count="4">
+                  <button onClick="{{ o.pick }}" style="display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:8px; background:{{ o.bg }}; border:none; cursor:pointer; font-family:inherit; font-size:13px; color:var(--text); text-align:left; white-space:nowrap;" style-hover="background:var(--surface2);">
+                    <span style="width:12px; font-size:12px; color:var(--accent-text);">{{ o.check }}</span>{{ o.label }}
+                  </button>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+            <sc-if value="{{ hasFilters }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ clear }}" style="height:42px; border-radius:999px; background:transparent; border:1px solid var(--accent); font-family:inherit; font-size:13px; font-weight:500; color:var(--accent-text);">Limpar filtros</button>
+            </sc-if>
+          </div>
+        </sc-if>
+        <span style="font-size:11px; color:var(--muted);">{{ countLabel }}</span>
+      </div>
+      <div style="padding:16px 18px 0; border-top:1px solid var(--line); display:flex; flex-direction:column; gap:14px;">
+        <sc-for list="{{ pagePostsM }}" as="post" hint-placeholder-count="4">
+          <dc-import name="CardPost" post="{{ post }}" hint-size="100%,318px"></dc-import>
+        </sc-for>
+      </div>
+      <div style="padding:20px 18px 32px; display:flex; align-items:center; justify-content:space-between;">
+        <button onClick="{{ prevM }}" style="white-space:nowrap; height:42px; padding:0 16px; border-radius:999px; background:var(--surface); border:1px solid var(--line); font-family:inherit; font-size:12px; font-weight:500; color:var(--text);">‹ Anteriores</button>
+        <span style="font-size:12px; color:var(--muted);">{{ pageLabelM }}</span>
+        <button onClick="{{ nextM }}" style="white-space:nowrap; height:42px; padding:0 16px; border-radius:999px; background:var(--surface); border:1px solid var(--line); font-family:inherit; font-size:12px; font-weight:500; color:var(--text);">Próximos ›</button>
+      </div>
+      <dc-import name="SiteFooter" mobile="{{ true }}" hint-size="100%,420px"></dc-import>
+      <dc-import name="PlayerFixo" mobile="{{ true }}" style="position:sticky; bottom:0; z-index:20;" hint-size="100%,56px"></dc-import>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1360,&quot;height&quot;:1800},&quot;categoriaInicial&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Todos&quot;,&quot;options&quot;:[&quot;Todos&quot;,&quot;Crônicas&quot;,&quot;Descobertas Musicais&quot;,&quot;Reflexões&quot;,&quot;Podcasts&quot;,&quot;Artigos&quot;],&quot;tsType&quot;:&quot;string&quot;}}">
+const AUTHORS = {
+  marina: { nome: 'Marina Alves', papel: 'Cronista e apresentadora do Blues & Jazz Clube', desde: 'Escreve desde 2021',
+    bio: 'Jornalista de formação e ouvinte de rádio desde criança, Marina escreve crônicas sobre música, cidade e memória. Apresenta o Blues & Jazz Clube nas noites de sábado.' },
+  igor: { nome: 'Igor Bastos', papel: 'Pesquisador musical', desde: 'Escreve desde 2022',
+    bio: 'Colecionador de discos e pesquisador de música brasileira, Igor garimpa gravações raras e conta a história por trás delas. Também produz o podcast Clássicos Explicados.' },
+  fundador: { nome: 'Nome do Fundador', papel: 'Fundador e curador', desde: 'Escreve desde 2019',
+    bio: 'Radialista há mais de 20 anos, criou a Agenda Cultural para dividir os discos, livros e histórias que marcaram sua vida em Votuporanga.' },
+  equipe: { nome: 'Equipe Agenda Cultural', papel: 'Redação', desde: 'Desde 2019',
+    bio: 'Textos coletivos da equipe da rádio: bastidores, agenda cultural da região e novidades da programação.' },
+};
+const POSTS = [
+  { categoria: 'Crônicas', titulo: 'O jazz que ecoa nos becos do centro', a: 'marina', data: '28 out 2026' },
+  { categoria: 'Descobertas Musicais', titulo: 'Cinco discos de choro para ouvir sem pressa', a: 'igor', data: '25 out 2026' },
+  { categoria: 'Reflexões', titulo: 'Por que ainda ouvimos rádio', a: 'fundador', data: '22 out 2026' },
+  { categoria: 'Podcasts', titulo: 'Bastidores da Cena #32: o sarau que virou escola', a: 'equipe', data: '20 out 2026' },
+  { categoria: 'Artigos', titulo: 'A história da viola caipira no noroeste paulista', a: 'igor', data: '17 out 2026' },
+  { categoria: 'Crônicas', titulo: 'A viola e as tardes de domingo', a: 'marina', data: '14 out 2026' },
+  { categoria: 'Descobertas Musicais', titulo: 'Uma cantora de Votuporanga que você precisa ouvir', a: 'marina', data: '10 out 2026' },
+  { categoria: 'Reflexões', titulo: 'O silêncio entre uma música e outra', a: 'fundador', data: '06 out 2026' },
+  { categoria: 'Artigos', titulo: 'Como funciona a curadoria das nossas estações', a: 'equipe', data: '02 out 2026' },
+  { categoria: 'Podcasts', titulo: 'Clássicos Explicados #18: Villa-Lobos para iniciantes', a: 'igor', data: '29 set 2026' },
+  { categoria: 'Crônicas', titulo: 'Memórias de uma loja de discos que fechou as portas', a: 'fundador', data: '25 set 2026' },
+  { categoria: 'Descobertas Musicais', titulo: 'Trilhas de cinema brasileiro que merecem um play', a: 'igor', data: '21 set 2026' },
+  { categoria: 'Reflexões', titulo: 'Ler em voz alta: a poesia falada como encontro', a: 'marina', data: '17 set 2026' },
+  { categoria: 'Artigos', titulo: 'Festivais de música no interior paulista em novembro', a: 'equipe', data: '13 set 2026' },
+  { categoria: 'Podcasts', titulo: 'Bastidores da Cena #31: luthiers do interior', a: 'equipe', data: '09 set 2026' },
+].map((p, i) => ({ ...p, i, autor: AUTHORS[p.a].nome, href: `Post.dc.html?p=${i}`, autorHref: `Autor.dc.html?a=${p.a}` }));
+const qs = (k) => new URLSearchParams(location.search).get(k);
+
+const CATS = ['Crônicas', 'Descobertas Musicais', 'Reflexões', 'Podcasts', 'Artigos'];
+const SORTS = ['Mais recentes primeiro', 'Mais antigos primeiro', 'Título (A–Z)', 'Autor (A–Z)'];
+const AUTS = Object.keys(AUTHORS);
+const PER = 6, PER_M = 4;
+const mod = (a, n) => ((a % n) + n) % n;
+
+class Component extends DCLogic {
+  state = { cat: undefined, aut: null, sort: 0, page: 0, pageM: 0, open: null, mf: false };
+  componentDidMount() {
+    this._close = (e) => { if (this.state.open && !e.target.closest('button')) this.setState({ open: null }); };
+    document.addEventListener('click', this._close);
+  }
+  componentWillUnmount() { document.removeEventListener('click', this._close); }
+  dd(id, label, value, opts, cur, onPick) {
+    const open = this.state.open === id;
+    return {
+      label, value, open, chev: open ? 'rotate(180deg)' : 'none',
+      border: open ? 'var(--accent)' : 'var(--line)',
+      toggle: () => this.setState({ open: open ? null : id }),
+      opts: opts.map((o, i) => ({ label: o, check: i === cur ? '✓' : '', bg: i === cur ? 'var(--surface2)' : 'transparent',
+        pick: () => { onPick(i); this.setState({ open: null, page: 0, pageM: 0 }); } })),
+    };
+  }
+  renderVals() {
+    const init = this.props.categoriaInicial && this.props.categoriaInicial !== 'Todos' ? this.props.categoriaInicial : null;
+    const cat = this.state.cat !== undefined ? this.state.cat : (CATS.includes(qs('c')) ? qs('c') : init);
+    const aut = this.state.aut;
+    let list = POSTS.filter(p => (!cat || p.categoria === cat) && (!aut || p.a === aut));
+    const s = this.state.sort;
+    list = [...list].sort((a, b) => s === 0 ? a.i - b.i : s === 1 ? b.i - a.i : s === 2 ? a.titulo.localeCompare(b.titulo, 'pt') : a.autor.localeCompare(b.autor, 'pt') || a.i - b.i);
+    const nP = Math.max(1, Math.ceil(list.length / PER)), nM = Math.max(1, Math.ceil(list.length / PER_M));
+    const page = Math.min(this.state.page, nP - 1), pageM = Math.min(this.state.pageM, nM - 1);
+    const pod = cat === 'Podcasts';
+    const catOpts = ['Todas as categorias', ...CATS], autOpts = ['Todos os autores', ...AUTS.map(k => AUTHORS[k].nome)];
+    const catIdx = cat ? CATS.indexOf(cat) + 1 : 0, autIdx = aut ? AUTS.indexOf(aut) + 1 : 0;
+    const setCat = (i) => this.setState({ cat: i ? CATS[i - 1] : null });
+    const setAut = (i) => this.setState({ aut: i ? AUTS[i - 1] : null });
+    const setSort = (i) => this.setState({ sort: i });
+    const nFilters = (cat ? 1 : 0) + (aut ? 1 : 0);
+    const tags = [];
+    if (cat) tags.push({ label: cat, remove: () => this.setState({ cat: null, page: 0, pageM: 0 }) });
+    if (aut) tags.push({ label: AUTHORS[aut].nome, remove: () => this.setState({ aut: null, page: 0, pageM: 0 }) });
+    return {
+      navActive: pod ? 'Podcasts' : 'Blog',
+      eyebrow: pod ? 'Podcasts' : 'Blog',
+      title: pod ? 'Conversas para ouvir com calma' : 'Histórias, descobertas e boas conversas',
+      lede: pod ? 'Episódios com artistas, curadores e gente que faz a cena cultural do interior paulista.' : 'Crônicas, discos garimpados, reflexões e bastidores da rádio, escritos por quem faz a Agenda Cultural.',
+      fCat: this.dd('cat', 'Categoria', catOpts[catIdx], catOpts, catIdx, setCat),
+      fAut: this.dd('aut', 'Autor(a)', autOpts[autIdx], autOpts, autIdx, setAut),
+      sort: this.dd('sort', 'Ordenar por', SORTS[s], SORTS, s, setSort),
+      fCatM: this.dd('catM', 'Categoria', catOpts[catIdx], catOpts, catIdx, setCat),
+      fAutM: this.dd('autM', 'Autor(a)', autOpts[autIdx], autOpts, autIdx, setAut),
+      sortM: this.dd('sortM', 'Ordenar por', SORTS[s], SORTS, s, setSort),
+      hasFilters: nFilters > 0, nFilters, activeTags: tags,
+      clear: () => this.setState({ cat: null, aut: null, page: 0, pageM: 0 }),
+      mfOpen: this.state.mf, mfBg: this.state.mf ? 'var(--surface2)' : 'var(--surface)',
+      toggleMF: () => this.setState(st => ({ mf: !st.mf })),
+      countLabel: `${list.length} ${list.length === 1 ? 'post encontrado' : 'posts encontrados'}`,
+      pagePosts: list.slice(page * PER, page * PER + PER),
+      pages: Array.from({ length: nP }, (_, p) => ({
+        label: p + 1, go: () => this.setState({ page: p }),
+        bg: p === page ? 'var(--accent-soft)' : 'var(--surface)',
+        border: p === page ? 'var(--accent)' : 'var(--line)',
+      })),
+      prev: () => this.setState({ page: mod(page - 1, nP) }),
+      next: () => this.setState({ page: mod(page + 1, nP) }),
+      pagePostsM: list.slice(pageM * PER_M, pageM * PER_M + PER_M),
+      pageLabelM: `${pageM + 1} de ${nM}`,
+      prevM: () => this.setState({ pageM: mod(pageM - 1, nM) }),
+      nextM: () => this.setState({ pageM: mod(pageM + 1, nM) }),
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+/* ============================================================
+   Player de Rádio - Agenda Cultural — estilos
+
+   Pra mudar cor, tamanho, posição etc. SEM editar o plugin,
+   use Aparência → Personalizar → CSS Adicional no WordPress e
+   sobrescreva as classes abaixo (todas com especificidade baixa
+   de propósito, pra isso funcionar sem precisar de !important):
+
+   .racr-player          contêiner fixo do player inteiro
+   .racr-barra           barra sempre visível (play + nome + expandir)
+   .racr-botao-play      botão redondo de play/pause
+   .racr-botao-expandir  botão que abre/fecha a lista de estações
+   .racr-nome-estacao    nome da estação atual
+   .racr-status          texto de status (Parado / Ao vivo / Carregando...)
+   .racr-lista-estacoes  lista de estações (some quando recolhido)
+   .racr-estacao         cada botão de estação na lista
+   .racr-estacao-ativa   estação selecionada no momento
+   .racr-estacao-cor     bolinha com a cor de destaque da estação
+   ============================================================ */
+
+.racr-player {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 9999;
+    width: 280px;
+    max-width: calc(100vw - 32px);
+    background: #1a1a1a;
+    border-radius: 12px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, .3);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.racr-barra {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+}
+
+.racr-botao-play {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border: none;
+    border-radius: 50%;
+    background: #ee8133;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .15s ease;
+}
+.racr-botao-play:hover { background: #d6702a; }
+.racr-botao-play .racr-icone-pause { display: none; }
+.racr-player.racr-tocando .racr-icone-play { display: none; }
+.racr-player.racr-tocando .racr-icone-pause { display: inline; }
+
+.racr-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+.racr-nome-estacao { color: #fff; font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.racr-status { color: #aaa; font-size: 11px; }
+.racr-player.racr-erro .racr-status { color: #e06b6b; }
+
+.racr-botao-expandir {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 12px;
+    transition: transform .15s ease;
+}
+.racr-player.racr-expandido .racr-botao-expandir { transform: rotate(180deg); }
+
+.racr-lista-estacoes {
+    display: none;
+    list-style: none;
+    margin: 0;
+    padding: 4px 8px 10px;
+    max-height: 280px;
+    overflow-y: auto;
+    border-top: 1px solid rgba(255, 255, 255, .08);
+}
+.racr-player.racr-expandido .racr-lista-estacoes { display: flex; flex-direction: column; gap: 2px; margin-top: 4px; }
+.racr-lista-estacoes li { margin: 0; }
+
+.racr-estacao {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    text-align: left;
+    padding: 8px 10px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: #ddd;
+    font-size: 13px;
+    cursor: pointer;
+}
+.racr-estacao:hover { background: rgba(255, 255, 255, .08); }
+.racr-estacao-ativa { background: rgba(255, 255, 255, .14); color: #fff; font-weight: 600; }
+.racr-estacao-cor { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+body.racr-navegando { cursor: progress; }

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="./tema.css">
+  <style>@keyframes livering { 0% { transform: scale(1); opacity: .6; } 100% { transform: scale(3); opacity: 0; } }</style>
+</helmet>
+<div onClick="{{ cardClick }}" style="height:100%; display:flex; align-items:center; gap:12px; padding:{{ pad }}; border-radius:12px; background:{{ bg }}; border:1px solid {{ border }}; min-width:0; cursor:{{ cursor }}; font-family:'DM Sans',sans-serif; transition:border-color .2s ease;" style-hover="border-color:var(--accent);">
+  <div style="display:flex; flex-direction:column; gap:4px; flex:1; min-width:0;">
+    <sc-if value="{{ full }}" hint-placeholder-val="{{ true }}">
+      <a href="{{ href }}" style="font-size:13px; line-height:1.3; font-weight:500; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" style-hover="color:var(--accent-text);">{{ name }}</a>
+    </sc-if>
+    <sc-if value="{{ compact }}" hint-placeholder-val="{{ false }}">
+      <span style="font-size:12px; line-height:1.3; font-weight:500; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ name }}</span>
+    </sc-if>
+    <sc-if value="{{ showGenre }}" hint-placeholder-val="{{ false }}">
+      <span style="font-size:11px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ genre }}</span>
+    </sc-if>
+    <div style="display:flex; align-items:center; gap:5px; height:10px;">
+      <span style="position:relative; width:5px; height:5px; flex:none;">
+        <span style="position:absolute; inset:0; border-radius:50%; background:var(--live); animation:livering 1.8s ease-out infinite;"></span>
+        <span style="position:absolute; inset:0; border-radius:50%; background:var(--live);"></span>
+      </span>
+      <span style="font-size:8px; line-height:10px; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--live-text);">{{ liveLabel }}</span>
+    </div>
+  </div>
+  <sc-if value="{{ full }}" hint-placeholder-val="{{ true }}">
+    <button onClick="{{ onPlay }}" aria-label="Ouvir estação" style="flex:none; width:32px; height:32px; border-radius:50%; background:{{ playBg }}; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+      <sc-if value="{{ playing }}" hint-placeholder-val="{{ false }}">
+        <span style="display:flex; gap:3px;"><span style="width:3px; height:10px; border-radius:1px; background:#ffffff;"></span><span style="width:3px; height:10px; border-radius:1px; background:#ffffff;"></span></span>
+      </sc-if>
+      <sc-if value="{{ paused }}" hint-placeholder-val="{{ true }}">
+        <span style="width:0; height:0; border-top:4px solid transparent; border-bottom:4px solid transparent; border-left:7px solid var(--text); margin-left:2px;"></span>
+      </sc-if>
+    </button>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:300,&quot;height&quot;:80},&quot;name&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Blues &amp; Jazz Clube&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;genre&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Blues &amp; Jazz&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;href&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Estacao.dc.html&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;showGenre&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;compact&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;playing&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;onPlay&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;()=&gt;void&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const p = !!this.props.playing;
+    const compact = !!this.props.compact;
+    return {
+      bg: p ? 'var(--accent-soft)' : 'var(--surface)',
+      border: p ? 'var(--accent)' : 'var(--line)',
+      playBg: p ? 'var(--accent)' : 'var(--surface2)',
+      playing: p, paused: !p,
+      compact, full: !compact,
+      pad: compact ? '10px 12px' : '11px 11px 11px 14px',
+      cursor: compact ? 'pointer' : 'default',
+      cardClick: compact ? this.props.onPlay : undefined,
+      liveLabel: compact && p ? 'Tocando' : 'Ao vivo',
+      showGenre: !!this.props.showGenre,
+      href: this.props.href ?? 'Estacao.dc.html',
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="./tema.css">
+  <meta name="design_doc_mode" content="canvas">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&amp;display=swap" rel="stylesheet">
+  <script src="./image-slot.js"></script>
+  <style>
+    body { margin: 0; }
+    * { box-sizing: border-box; }
+    @keyframes livepulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+    @keyframes livering { 0% { transform: scale(1); opacity: .6; } 100% { transform: scale(3); opacity: 0; } }
+  </style>
+</helmet>
+<div style="font-family:'DM Sans',sans-serif; padding:56px 40px 100px; display:flex; flex-direction:column; gap:56px; align-items:center; background:var(--canvas);">
+
+  <div style="width:100%; max-width:1280px; display:flex; flex-direction:column; gap:6px;">
+    <span style="font-family:'Outfit',sans-serif; font-size:14px; font-weight:500; letter-spacing:.06em; text-transform:uppercase; color:var(--muted);">Rádio Agenda Cultural</span>
+    <h1 style="margin:0; font-family:'Outfit',sans-serif; font-size:28px; letter-spacing:-.01em; font-weight:400; color:var(--text);">Página de estação — template para todas as estações</h1>
+  </div>
+
+  <div style="width:100%; max-width:1280px; display:flex; flex-direction:column; gap:14px;">
+    <span style="font-size:13px; font-weight:500; letter-spacing:.04em; text-transform:uppercase; color:var(--muted);">Desktop</span>
+    <div data-screen-label="Estação desktop" style="position:relative; width:1280px; border-radius:20px; overflow:clip; box-shadow:0 24px 60px -24px rgba(60,40,20,.25); background:var(--bg);">
+      <dc-import name="SiteHeader" active="Estações" hint-size="100%,71px"></dc-import>
+
+      <div style="position:relative; overflow:hidden; min-height:500px; display:flex; align-items:flex-end;">
+        <div style="position:absolute; inset:0;"><image-slot id="estacao-capa" shape="rect" placeholder="Imagem de fundo da estação"></image-slot></div>
+        <div style="position:absolute; inset:0; pointer-events:none; background:{{ heroFade }};"></div>
+        <div style="position:relative; pointer-events:none; width:100%; max-width:720px; padding:56px 56px 52px; display:flex; flex-direction:column; align-items:flex-start; gap:16px;">
+          <a href="Estacoes.dc.html" style="pointer-events:auto; font-size:12px; color:var(--muted);">← Todas as estações</a>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <sc-if value="{{ mostrarAoVivo }}" hint-placeholder-val="{{ true }}">
+              <span style="display:flex; align-items:center; gap:7px; white-space:nowrap; padding:5px 12px 5px 10px; border-radius:999px; background:var(--surface); border:1px solid var(--line);">
+                <span style="position:relative; width:6px; height:6px; flex:none;"><span style="position:absolute; inset:0; border-radius:50%; background:var(--live); animation:livering 1.8s ease-out infinite;"></span><span style="position:absolute; inset:0; border-radius:50%; background:var(--live);"></span></span>
+                <span style="font-size:10px; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--live-text);">No ar agora</span>
+              </span>
+            </sc-if>
+            <span style="font-size:11px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-text);">{{ st.genre }}</span>
+          </div>
+          <h2 style="margin:0; font-family:'Outfit',sans-serif; font-size:58px; font-weight:400; letter-spacing:-.025em; color:var(--text); line-height:1.02; text-wrap:balance;">{{ st.name }}</h2>
+          <p style="margin:0; max-width:520px; font-size:16px; line-height:1.7; color:var(--text-body);">Transmissão contínua, 24 horas por dia, direto de Votuporanga.</p>
+          <div style="pointer-events:auto; display:flex; align-items:center; gap:16px; margin-top:8px;">
+            <button onClick="{{ toggleThis }}" style="white-space:nowrap; display:flex; align-items:center; gap:10px; padding:13px 26px 13px 20px; border-radius:999px; background:{{ ctaBg }}; border:1px solid var(--accent); cursor:pointer; font-family:inherit;" style-hover="opacity:.92;">
+              <sc-if value="{{ thisPlaying }}" hint-placeholder-val="{{ false }}">
+                <span style="display:flex; gap:4px;"><span style="width:3px; height:12px; border-radius:1px; background:var(--accent-text);"></span><span style="width:3px; height:12px; border-radius:1px; background:var(--accent-text);"></span></span>
+                <span style="font-size:14px; font-weight:500; color:var(--accent-text);">Tocando agora</span>
+              </sc-if>
+              <sc-if value="{{ thisPaused }}" hint-placeholder-val="{{ true }}">
+                <span style="width:0; height:0; border-top:5px solid transparent; border-bottom:5px solid transparent; border-left:8px solid #ffffff;"></span>
+                <span style="font-size:14px; font-weight:500; color:#ffffff;">Ouvir agora</span>
+              </sc-if>
+            </button>
+            <div style="display:flex; flex-direction:column; gap:2px; min-width:0; max-width:320px; padding:8px 16px; border-radius:12px; background:color-mix(in srgb, var(--surface) 72%, transparent); backdrop-filter:blur(8px);">
+              <span style="font-size:10px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);">Tocando agora</span>
+              <span style="font-size:13px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ st.track }} <span style="color:var(--muted);">— {{ st.artist }}</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding:56px 56px 64px; display:flex; flex-direction:column; gap:18px; max-width:820px;">
+        <p style="margin:0; font-family:'Outfit',sans-serif; font-size:22px; font-weight:300; line-height:1.5; color:var(--text); text-wrap:pretty;">{{ st.p1 }}</p>
+        <p style="margin:0; font-size:16px; line-height:1.8; color:var(--text-body); text-wrap:pretty;">{{ st.p2 }}</p>
+        <p style="margin:0; font-size:16px; line-height:1.8; color:var(--text-body); text-wrap:pretty;">{{ st.p3 }}</p>
+      </div>
+
+      <div style="padding:48px 40px 64px; border-top:1px solid var(--line); background:var(--surface2); display:flex; flex-direction:column; gap:22px;">
+        <div style="display:flex; align-items:baseline; justify-content:space-between;">
+          <h2 style="margin:0; font-family:'Outfit',sans-serif; font-size:28px; letter-spacing:-.01em; font-weight:400; color:var(--text);">Outras estações</h2>
+          <a href="Estacoes.dc.html" style="font-size:14px; font-weight:500;">Ver todas →</a>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:20px;">
+          <sc-for list="{{ others }}" as="o" hint-placeholder-count="4">
+            <div style="display:flex; flex-direction:column; gap:10px; min-width:0;">
+              <a href="{{ o.href }}" class="stripe-cover" style="position:relative; display:block; height:150px; border-radius:12px; transition:transform .25s ease;" style-hover="transform:translateY(-2px);">
+                <button onClick="{{ o.play }}" aria-label="Ouvir" style="position:absolute; right:10px; bottom:10px; width:36px; height:36px; border-radius:50%; background:var(--accent); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                  <span style="width:0; height:0; border-top:5px solid transparent; border-bottom:5px solid transparent; border-left:8px solid #ffffff; margin-left:2px;"></span>
+                </button>
+              </a>
+              <div style="display:flex; flex-direction:column; gap:2px; min-width:0;">
+                <a href="{{ o.href }}" style="font-size:14px; font-weight:500; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ o.name }}</a>
+                <span style="font-size:12px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ o.genre }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="padding:56px 40px 72px; border-top:1px solid var(--line); display:flex; flex-direction:column; gap:22px;">
+        <div style="display:flex; align-items:baseline; justify-content:space-between;">
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <span style="font-size:11px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-text);">Do blog</span>
+            <h2 style="margin:0; font-family:'Outfit',sans-serif; font-size:28px; letter-spacing:-.01em; font-weight:400; color:var(--text);">Para ler enquanto ouve</h2>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px;">
+          <sc-for list="{{ posts }}" as="post" hint-placeholder-count="3">
+            <dc-import name="CardPost" post="{{ post }}" hint-size="100%,318px"></dc-import>
+          </sc-for>
+        </div>
+        <div style="display:flex; justify-content:center; padding-top:8px;">
+          <a href="Blog.dc.html" style="white-space:nowrap; padding:12px 26px; border-radius:999px; border:1px solid var(--text); font-size:14px; font-weight:500; color:var(--text);">Ver todos os posts →</a>
+        </div>
+      </div>
+
+      <dc-import name="SiteFooter" hint-size="100%,330px"></dc-import>
+      <dc-import name="PlayerFixo" current-index="{{ cur }}" is-playing="{{ playing }}" on-select="{{ select }}" on-toggle="{{ toggle }}" style="position:relative; z-index:20;" hint-size="100%,72px"></dc-import>
+    </div>
+  </div>
+
+  <div style="display:flex; flex-direction:column; gap:14px; align-items:center;">
+    <span style="font-size:13px; font-weight:500; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); align-self:flex-start;">Mobile</span>
+    <div data-screen-label="Estação mobile" style="position:relative; width:375px; border-radius:36px; overflow:clip; box-shadow:0 24px 60px -24px rgba(60,40,20,.25); background:var(--bg); border:8px solid #2a2622;">
+      <dc-import name="SiteHeader" mobile="{{ true }}" active="Estações" hint-size="100%,59px"></dc-import>
+      <div style="position:relative; overflow:hidden; min-height:460px; display:flex; align-items:flex-end;">
+        <div style="position:absolute; inset:0;"><image-slot id="estacao-capa-m" shape="rect" placeholder="Imagem de fundo"></image-slot></div>
+        <div style="position:absolute; inset:0; pointer-events:none; background:{{ heroFadeM }};"></div>
+        <div style="position:relative; pointer-events:none; width:100%; padding:20px 18px 22px; display:flex; flex-direction:column; align-items:flex-start; gap:10px;">
+          <sc-if value="{{ mostrarAoVivo }}" hint-placeholder-val="{{ true }}">
+            <span style="display:flex; align-items:center; gap:6px; white-space:nowrap; padding:4px 10px 4px 8px; border-radius:999px; background:var(--surface); border:1px solid var(--line);">
+              <span style="position:relative; width:5px; height:5px; flex:none;"><span style="position:absolute; inset:0; border-radius:50%; background:var(--live); animation:livering 1.8s ease-out infinite;"></span><span style="position:absolute; inset:0; border-radius:50%; background:var(--live);"></span></span>
+              <span style="font-size:9px; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--live-text);">No ar agora</span>
+            </span>
+          </sc-if>
+          <span style="font-size:10px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-text);">{{ st.genre }}</span>
+          <h2 style="margin:0; font-family:'Outfit',sans-serif; font-size:34px; font-weight:400; letter-spacing:-.02em; color:var(--text); line-height:1.05;">{{ st.name }}</h2>
+          <button onClick="{{ toggleThis }}" style="pointer-events:auto; width:100%; margin-top:6px; white-space:nowrap; display:flex; align-items:center; justify-content:center; gap:10px; height:48px; border-radius:999px; background:{{ ctaBg }}; border:1px solid var(--accent); font-family:inherit;">
+            <sc-if value="{{ thisPlaying }}" hint-placeholder-val="{{ false }}">
+              <span style="display:flex; gap:3px;"><span style="width:3px; height:11px; border-radius:1px; background:var(--accent-text);"></span><span style="width:3px; height:11px; border-radius:1px; background:var(--accent-text);"></span></span>
+              <span style="font-size:14px; font-weight:500; color:var(--accent-text);">Tocando agora</span>
+            </sc-if>
+            <sc-if value="{{ thisPaused }}" hint-placeholder-val="{{ true }}">
+              <span style="width:0; height:0; border-top:6px solid transparent; border-bottom:6px solid transparent; border-left:9px solid #ffffff;"></span>
+              <span style="font-size:14px; font-weight:500; color:#ffffff;">Ouvir agora</span>
+            </sc-if>
+          </button>
+          <span style="width:100%; font-size:12px; color:var(--muted); text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Tocando: {{ st.track }} — {{ st.artist }}</span>
+        </div>
+      </div>
+      <div style="padding:24px 18px 32px; display:flex; flex-direction:column; gap:14px;">
+        <p style="margin:0; font-family:'Outfit',sans-serif; font-size:18px; font-weight:300; line-height:1.5; color:var(--text);">{{ st.p1 }}</p>
+        <p style="margin:0; font-size:14px; line-height:1.75; color:var(--text-body);">{{ st.p2 }}</p>
+        <p style="margin:0; font-size:14px; line-height:1.75; color:var(--text-body);">{{ st.p3 }}</p>
+      </div>
+      <div style="padding:24px 18px 28px; border-top:1px solid var(--line); background:var(--surface2); display:flex; flex-direction:column; gap:14px;">
+        <div style="display:flex; align-items:baseline; justify-content:space-between;">
+          <h2 style="margin:0; font-family:'Outfit',sans-serif; font-size:20px; font-weight:400; color:var(--text);">Outras estações</h2>
+          <a href="Estacoes.dc.html" style="font-size:13px; font-weight:500;">Ver todas →</a>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px 12px;">
+          <sc-for list="{{ others }}" as="o" hint-placeholder-count="4">
+            <a href="{{ o.href }}" style="display:flex; flex-direction:column; gap:7px; min-width:0;">
+              <span class="stripe-cover" style="display:block; height:104px; border-radius:10px;"></span>
+              <span style="font-size:13px; font-weight:500; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ o.name }}</span>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+      <div style="padding:28px 18px 32px; border-top:1px solid var(--line); display:flex; flex-direction:column; gap:14px;">
+        <span style="font-size:10px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-text);">Do blog</span>
+        <h2 style="margin:0; font-family:'Outfit',sans-serif; font-size:20px; font-weight:400; color:var(--text);">Para ler enquanto ouve</h2>
+        <sc-for list="{{ posts }}" as="post" hint-placeholder-count="3">
+          <dc-import name="CardPost" post="{{ post }}" hint-size="100%,318px"></dc-import>
+        </sc-for>
+        <a href="Blog.dc.html" style="display:flex; align-items:center; justify-content:center; height:46px; border-radius:999px; border:1px solid var(--text); font-size:14px; font-weight:500; color:var(--text);">Ver todos os posts →</a>
+      </div>
+      <dc-import name="SiteFooter" mobile="{{ true }}" hint-size="100%,420px"></dc-import>
+      <dc-import name="PlayerFixo" mobile="{{ true }}" current-index="{{ cur }}" is-playing="{{ playing }}" on-select="{{ select }}" on-toggle="{{ toggle }}" style="position:sticky; bottom:0; z-index:20;" hint-size="100%,56px"></dc-import>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1360,&quot;height&quot;:1800},&quot;estacao&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Blues &amp; Jazz Clube&quot;,&quot;options&quot;:[&quot;Blues &amp; Jazz Clube&quot;,&quot;Bossa &amp; Violão&quot;,&quot;Clássicos Contemporâneos&quot;,&quot;Vozes da Cidade&quot;,&quot;Sons do Brasil&quot;,&quot;Poesia Falada&quot;,&quot;Noites de Ópera&quot;,&quot;Rock Progressivo BR&quot;,&quot;MPB de Ouro&quot;,&quot;Viola Caipira&quot;,&quot;Samba &amp; Choro&quot;,&quot;Trilhas de Cinema&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Conteúdo&quot;},&quot;numOutrasEstacoes&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:4,&quot;min&quot;:3,&quot;max&quot;:8,&quot;step&quot;:1,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Outras estações&quot;},&quot;mostrarAoVivo&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Hero&quot;},&quot;tratamentoHero&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;forte&quot;,&quot;options&quot;:[&quot;forte&quot;,&quot;suave&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Hero&quot;}}">
+const STATIONS = [
+  { name: 'Blues & Jazz Clube', genre: 'Blues & Jazz', track: 'Sweet Home Chicago', artist: 'Muddy Waters',
+    p1: 'O Blues & Jazz Clube reúne o melhor do blues histórico e do jazz autoral em uma curadoria contínua, dos clássicos de Chicago às gravações contemporâneas que dialogam com a tradição.',
+    p2: 'A programação é pensada como uma noite num clube pequeno: standards, improvisos longos e aquelas faixas que a gente não ouve em lugar nenhum. Entre um bloco e outro, histórias sobre os artistas, os selos e as cenas que moldaram o gênero.',
+    p3: 'Toca 24 horas por dia, com sessões especiais aos sábados dedicadas a músicos brasileiros influenciados pelo blues e pelo jazz.' },
+  { name: 'Bossa & Violão', genre: 'Bossa Nova', track: 'Garota de Ipanema', artist: 'João Gilberto' },
+  { name: 'Clássicos Contemporâneos', genre: 'Instrumental', track: 'Prelúdio Nº 1', artist: 'Egberto Gismonti' },
+  { name: 'Vozes da Cidade', genre: 'Entrevistas & Cultura', track: 'Papo com o Curador', artist: 'Agenda Cultural' },
+  { name: 'Sons do Brasil', genre: 'Regional & Raízes', track: 'Asa Branca', artist: 'Luiz Gonzaga' },
+  { name: 'Poesia Falada', genre: 'Literatura & Spoken Word', track: 'Versos ao Vivo', artist: 'Coletivo Sarau' },
+  { name: 'Noites de Ópera', genre: 'Clássica & Ópera', track: 'Nessun Dorma', artist: 'Orquestra Municipal' },
+  { name: 'Rock Progressivo BR', genre: 'Rock Nacional', track: 'Horizonte Aberto', artist: 'Banda Miragem' },
+  { name: 'MPB de Ouro', genre: 'MPB', track: 'Como Nossos Pais', artist: 'Elis Regina' },
+  { name: 'Viola Caipira', genre: 'Sertanejo de Raiz', track: 'Tristeza do Jeca', artist: 'Tonico & Tinoco' },
+  { name: 'Samba & Choro', genre: 'Samba & Choro', track: 'Carinhoso', artist: 'Pixinguinha' },
+  { name: 'Trilhas de Cinema', genre: 'Trilhas Sonoras', track: 'Cinema Paradiso', artist: 'Ennio Morricone' },
+];
+const POSTS = [
+  { categoria: 'Crônicas', titulo: 'O jazz que ecoa nos becos do centro', autor: 'Marina Alves', a: 'marina', data: '28 out 2026', p: 0 },
+  { categoria: 'Descobertas Musicais', titulo: 'Cinco discos de choro para ouvir sem pressa', autor: 'Igor Bastos', a: 'igor', data: '25 out 2026', p: 1 },
+  { categoria: 'Artigos', titulo: 'Como funciona a curadoria das nossas estações', autor: 'Equipe Agenda Cultural', a: 'equipe', data: '02 out 2026', p: 8 },
+].map(x => ({ ...x, href: `Post.dc.html?p=${x.p}`, autorHref: `Autor.dc.html?a=${x.a}` }));
+const texts = (s) => ({
+  p1: s.p1 ?? `A ${s.name} é a estação da Agenda Cultural dedicada a ${s.genre.toLowerCase()}, com uma curadoria feita à mão e tocando sem parar.`,
+  p2: s.p2 ?? 'Cada faixa é escolhida por quem ouve de verdade: clássicos que atravessaram gerações ao lado de gravações novas e de artistas independentes do interior paulista.',
+  p3: s.p3 ?? 'A transmissão é contínua, 24 horas por dia. Deixe tocando enquanto trabalha, lê ou cozinha.',
+});
+
+class Component extends DCLogic {
+  state = { cur: null, playing: false };
+  pageIndex() {
+    const q = Number(new URLSearchParams(location.search).get('e'));
+    if (Number.isInteger(q) && q >= 0 && q < STATIONS.length && location.search.includes('e=')) return q;
+    const i = STATIONS.findIndex(s => s.name === this.props.estacao);
+    return i < 0 ? 0 : i;
+  }
+  renderVals() {
+    const idx = this.pageIndex();
+    const cur = this.state.cur ?? idx;
+    const playing = this.state.playing;
+    const st = { ...STATIONS[idx], ...texts(STATIONS[idx]) };
+    const thisPlaying = playing && cur === idx;
+    const n = this.props.numOutrasEstacoes ?? 4;
+    const others = STATIONS.map((s, i) => ({ ...s, i, href: `Estacao.dc.html?e=${i}`, play: (e) => { e.preventDefault(); this.setState({ cur: i, playing: true }); } }))
+      .filter(s => s.i !== idx).slice(0, n);
+    const suave = (this.props.tratamentoHero ?? 'forte') === 'suave';
+    return {
+      st, others, cur, playing, posts: POSTS,
+      mostrarAoVivo: this.props.mostrarAoVivo ?? true,
+      heroFade: suave
+        ? 'linear-gradient(90deg, color-mix(in srgb, var(--bg) 94%, transparent) 0%, color-mix(in srgb, var(--bg) 70%, transparent) 36%, color-mix(in srgb, var(--bg) 0%, transparent) 72%)'
+        : 'linear-gradient(90deg, var(--bg) 0%, var(--bg) 30%, color-mix(in srgb, var(--bg) 82%, transparent) 48%, color-mix(in srgb, var(--bg) 15%, transparent) 76%, color-mix(in srgb, var(--bg) 0%, transparent) 100%)',
+      heroFadeM: suave
+        ? 'linear-gradient(to top, var(--bg) 0%, color-mix(in srgb, var(--bg) 85%, transparent) 40%, color-mix(in srgb, var(--bg) 0%, transparent) 75%)'
+        : 'linear-gradient(to top, var(--bg) 0%, var(--bg) 34%, color-mix(in srgb, var(--bg) 80%, transparent) 56%, color-mix(in srgb, var(--bg) 0%, transparent) 88%)',
+      thisPlaying, thisPaused: !thisPlaying,
+      ctaBg: thisPlaying ? 'var(--accent-soft)' : 'var(--accent)',
+      toggleThis: () => this.setState(thisPlaying ? { playing: false } : { cur: idx, playing: true }),
+      select: (i) => this.setState({ cur: i, playing: true }),
+      toggle: () => this.setState(s => ({ playing: !s.playing })),
+    };
+  }
+}
+</script>
+</body>
+</html>

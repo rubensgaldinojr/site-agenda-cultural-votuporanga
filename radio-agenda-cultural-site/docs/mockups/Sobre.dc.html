@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="./tema.css">
+  <meta name="design_doc_mode" content="canvas">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&amp;display=swap" rel="stylesheet">
+  <script src="./image-slot.js"></script>
+  <style>
+    body { margin: 0; }
+    * { box-sizing: border-box; }
+  </style>
+</helmet>
+<div style="font-family:'DM Sans',sans-serif; padding:56px 40px 100px; display:flex; flex-direction:column; gap:56px; align-items:center; background:var(--canvas);">
+
+  <div style="width:100%; max-width:1280px; display:flex; flex-direction:column; gap:6px;">
+    <span style="font-family:'Outfit',sans-serif; font-size:14px; font-weight:500; letter-spacing:.06em; text-transform:uppercase; color:var(--muted);">Rádio Agenda Cultural</span>
+    <h1 style="margin:0; font-family:'Outfit',sans-serif; font-size:28px; letter-spacing:-.01em; font-weight:400; color:var(--text);">Sobre</h1>
+  </div>
+
+  <div style="width:100%; max-width:1280px; display:flex; flex-direction:column; gap:14px;">
+    <span style="font-size:13px; font-weight:500; letter-spacing:.04em; text-transform:uppercase; color:var(--muted);">Desktop</span>
+    <div data-screen-label="Sobre desktop" style="position:relative; width:1280px; border-radius:20px; overflow:clip; box-shadow:0 24px 60px -24px rgba(60,40,20,.25); background:var(--bg);">
+      <dc-import name="SiteHeader" active="Sobre" hint-size="100%,71px"></dc-import>
+
+      <div style="position:relative; overflow:hidden; background:var(--bg);">
+        <div style="position:absolute; top:0; right:0; bottom:0; width:62%;"><image-slot id="sobre-hero" shape="rect" placeholder="Foto do estúdio, da cidade ou da equipe"></image-slot></div>
+        <div style="position:absolute; inset:0; pointer-events:none; background:linear-gradient(90deg, var(--bg) 0%, var(--bg) 38%, color-mix(in srgb, var(--bg) 75%, transparent) 52%, color-mix(in srgb, var(--bg) 10%, transparent) 78%, color-mix(in srgb, var(--bg) 0%, transparent) 100%);"></div>
+        <div style="position:relative; pointer-events:none; padding:96px 56px; max-width:660px; display:flex; flex-direction:column; align-items:flex-start; gap:20px;">
+          <div style="pointer-events:auto; display:flex; align-items:center; gap:8px; padding:6px 14px 6px 10px; border-radius:999px; background:var(--surface); border:1px solid var(--line); white-space:nowrap;">
+            <span style="width:6px; height:6px; border-radius:50%; background:var(--accent);"></span>
+            <span style="font-size:12px; font-weight:500; color:var(--text-body);">Votuporanga, SP — Brasil</span>
+          </div>
+          <h2 style="margin:0; font-family:'Outfit',sans-serif; font-size:50px; font-weight:400; letter-spacing:-.025em; color:var(--text); line-height:1.06; text-wrap:balance;">Uma rádio que nasceu de uma coleção de discos</h2>
+          <p style="margin:0; font-size:16px; line-height:1.75; color:var(--text-body); text-wrap:pretty;">A Agenda Cultural é uma rádio web independente, feita no interior paulista por gente que ama música, livros e boa conversa.</p>
+        </div>
+      </div>
+
+      <div style="padding:80px 56px; border-top:1px solid var(--line); display:grid; grid-template-columns:300px minmax(0,1fr); gap:64px;">
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <span style="font-size:11px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-text);">Nossa história</span>
+          <h3 style="margin:0; font-family:'Outfit',sans-serif; font-size:30px; font-weight:400; letter-spacing:-.015em; color:var(--text); line-height:1.15;">De uma estante de vinis para o mundo</h3>
+        </div>
+        <div style="max-width:680px; display:flex; flex-direction:column; gap:20px;">
+          <p style="margin:0; font-family:'Outfit',sans-serif; font-size:22px; font-weight:300; line-height:1.5; color:var(--text);">Tudo começou em Votuporanga, com uma estante cheia de vinis e a vontade de compartilhar o que tocava dentro de casa.</p>
+          <p style="margin:0; font-size:17px; line-height:1.85; color:var(--text-body);">Durante anos, os discos circularam entre amigos, em fitas gravadas e em tardes de domingo com a vitrola ligada. Quando a internet tornou possível transmitir para qualquer lugar, a ideia ficou óbvia: transformar aquela coleção em rádio.</p>
+          <p style="margin:0; font-size:17px; line-height:1.85; color:var(--text-body);">A primeira estação tocava jazz e bossa nova, montada à mão, faixa por faixa. Os ouvintes foram chegando — primeiro da cidade, depois de outros estados e até de fora do país — e com eles vieram pedidos, sugestões e novas estações.</p>
+          <p style="margin:0; font-size:17px; line-height:1.85; color:var(--text-body);">Hoje a Agenda Cultural reúne estações temáticas tocando 24 horas por dia, uma biblioteca gratuita de literatura e um blog com crônicas, entrevistas e descobertas musicais. Continuamos independentes, sem pressa e com o mesmo cuidado de quem escolhe o próximo disco para um amigo.</p>
+        </div>
+      </div>
+
+      <div style="padding:48px 56px 20px; border-top:1px solid var(--line); display:flex; align-items:baseline; justify-content:space-between;">
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <span style="font-size:11px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-text);">Quem faz</span>
+          <h3 style="margin:0; font-family:'Outfit',sans-serif; font-size:30px; font-weight:400; letter-spacing:-.015em; color:var(--text);">As pessoas por trás da rádio</h3>
+        </div>
+        <a href="Blog.dc.html" style="font-size:14px; font-weight:500;">Todos os textos →</a>
+      </div>
+
+      <sc-for list="{{ autores }}" as="a" hint-placeholder-count="3">
+        <div style="margin:0 56px; padding:28px 0; border-top:1px solid var(--line); display:flex; flex-direction:{{ a.dir }}; gap:48px; align-items:center;">
+          <div style="width:280px; height:240px; flex:none;"><image-slot id="{{ a.slot }}" shape="rounded" radius="16" placeholder="Foto do autor"></image-slot></div>
+          <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:14px;">
+            <div style="display:flex; align-items:baseline; justify-content:space-between; gap:20px;">
+              <div style="display:flex; flex-direction:column; gap:2px; min-width:0;">
+                <h4 style="margin:0; font-family:'Outfit',sans-serif; font-size:26px; font-weight:400; letter-spacing:-.015em; color:var(--text);">{{ a.nome }}</h4>
+                <span style="font-size:13px; color:var(--muted);">{{ a.papel }}</span>
+              </div>
+              <a href="{{ a.href }}" style="white-space:nowrap; padding:9px 18px; border-radius:999px; border:1px solid var(--line); background:var(--surface); font-size:13px; font-weight:500; color:var(--text);" style-hover="border-color:var(--text);">Página do autor →</a>
+            </div>
+            <p style="margin:0; max-width:620px; font-size:15px; line-height:1.7; color:var(--text-body);">{{ a.bio }}</p>
+            <div style="display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-top:4px;">
+              <sc-for list="{{ a.itens }}" as="it" hint-placeholder-count="3">
+                <a href="{{ it.href }}" style="display:flex; align-items:center; gap:12px; padding:8px 12px 8px 8px; border-radius:12px; background:var(--surface); border:1px solid var(--line); min-width:0;" style-hover="border-color:var(--accent);">
+                  <span class="stripe-cover" style="width:{{ it.w }}; height:52px; border-radius:6px; flex:none;"></span>
+                  <span style="display:flex; flex-direction:column; gap:2px; min-width:0;">
+                    <span style="font-size:9px; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--accent-text);">{{ it.tipo }}</span>
+                    <span style="font-size:13px; line-height:1.3; color:var(--text); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">{{ it.titulo }}</span>
+                  </span>
+                </a>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+
+      <div style="margin-top:28px; padding:48px 56px; border-top:1px solid var(--line); background:var(--surface2);">
+        <div style="display:grid; grid-template-columns:repeat(3,minmax(0,1fr));">
+          <div style="padding:4px 32px 4px 0; display:flex; flex-direction:column; gap:6px;">
+            <span style="font-size:11px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);">Estações</span>
+            <span style="font-family:'Outfit',sans-serif; font-size:19px; font-weight:400; color:var(--text); line-height:1.25;">12 estações no ar, 24h por dia</span>
+            <span style="font-size:13px; line-height:1.6; color:var(--muted);">Jazz, MPB, clássicos, raízes e poesia — uma trilha para cada momento.</span>
+          </div>
+          <div style="padding:4px 32px; display:flex; flex-direction:column; gap:6px; border-left:1px solid var(--line);">
+            <span style="font-size:11px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);">Literatura</span>
+            <span style="font-family:'Outfit',sans-serif; font-size:19px; font-weight:400; color:var(--text); line-height:1.25;">Conteúdo literário gratuito</span>
+            <span style="font-size:13px; line-height:1.6; color:var(--muted);">Contos, antologias e cadernos para baixar e ler quando quiser.</span>
+          </div>
+          <div style="padding:4px 32px; display:flex; flex-direction:column; gap:6px; border-left:1px solid var(--line);">
+            <span style="font-size:11px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);">Blog</span>
+            <span style="font-family:'Outfit',sans-serif; font-size:19px; font-weight:400; color:var(--text); line-height:1.25;">Crônicas, bastidores e entrevistas</span>
+            <span style="font-size:13px; line-height:1.6; color:var(--muted);">Histórias da cena cultural contadas por quem faz a rádio.</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding:72px 40px 80px; border-top:1px solid var(--line); display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px;">
+        <h3 style="margin:0; font-family:'Outfit',sans-serif; font-size:34px; font-weight:400; letter-spacing:-.015em; color:var(--text);">Tem uma música para sugerir?</h3>
+        <p style="margin:0; max-width:520px; font-size:15px; line-height:1.7; color:var(--text-body);">Pedidos, ideias de estação, parcerias ou só um oi — a gente lê tudo.</p>
+        <div style="display:flex; gap:10px; margin-top:8px;">
+          <a href="Contato.dc.html" style="white-space:nowrap; padding:12px 24px; border-radius:999px; background:var(--accent); font-size:14px; font-weight:500; color:#ffffff;">Fale com a gente</a>
+          <a href="Estacoes.dc.html" style="white-space:nowrap; padding:12px 22px; border-radius:999px; background:var(--surface); border:1px solid var(--line); font-size:14px; color:var(--text);">Ouvir as estações</a>
+        </div>
+      </div>
+
+      <dc-import name="SiteFooter" hint-size="100%,330px"></dc-import>
+      <dc-import name="PlayerFixo" style="position:relative; z-index:20;" hint-size="100%,72px"></dc-import>
+    </div>
+  </div>
+
+  <div style="display:flex; flex-direction:column; gap:14px; align-items:center;">
+    <span style="font-size:13px; font-weight:500; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); align-self:flex-start;">Mobile</span>
+    <div data-screen-label="Sobre mobile" style="position:relative; width:375px; border-radius:36px; overflow:clip; box-shadow:0 24px 60px -24px rgba(60,40,20,.25); background:var(--bg); border:8px solid #2a2622;">
+      <dc-import name="SiteHeader" mobile="{{ true }}" active="Sobre" hint-size="100%,59px"></dc-import>
+      <div style="position:relative; overflow:hidden; min-height:440px; display:flex; align-items:flex-end;">
+        <div style="position:absolute; inset:0;"><image-slot id="sobre-hero-m" shape="rect" placeholder="Foto do estúdio"></image-slot></div>
+        <div style="position:absolute; inset:0; pointer-events:none; background:linear-gradient(to top, var(--bg) 0%, var(--bg) 40%, color-mix(in srgb, var(--bg) 75%, transparent) 62%, color-mix(in srgb, var(--bg) 0%, transparent) 92%);"></div>
+        <div style="position:relative; pointer-events:none; padding:20px 18px 24px; display:flex; flex-direction:column; align-items:flex-start; gap:12px;">
+          <div style="display:flex; align-items:center; gap:7px; padding:5px 12px 5px 9px; border-radius:999px; background:var(--surface); border:1px solid var(--line); white-space:nowrap;">
+            <span style="width:6px; height:6px; border-radius:50%; background:var(--accent);"></span>
+            <span style="font-size:11px; font-weight:500; color:var(--text-body);">Votuporanga, SP — Brasil</span>
+          </div>
+          <h2 style="margin:0; font-family:'Outfit',sans-serif; font-size:31px; font-weight:400; letter-spacing:-.02em; color:var(--text); line-height:1.08;">Uma rádio que nasceu de uma coleção de discos</h2>
+          <p style="margin:0; font-size:14px; line-height:1.65; color:var(--text-body);">Rádio web independente, feita no interior paulista por gente que ama música, livros e boa conversa.</p>
+        </div>
+      </div>
+      <div style="padding:32px 18px; border-top:1px solid var(--line); display:flex; flex-direction:column; gap:14px;">
+        <span style="font-size:10px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-text);">Nossa história</span>
+        <p style="margin:0; font-family:'Outfit',sans-serif; font-size:19px; font-weight:300; line-height:1.5; color:var(--text);">Tudo começou em Votuporanga, com uma estante cheia de vinis e a vontade de compartilhar.</p>
+        <p style="margin:0; font-size:15px; line-height:1.8; color:var(--text-body);">Durante anos, os discos circularam entre amigos, em fitas gravadas e tardes de domingo. Quando a internet tornou possível transmitir para qualquer lugar, a ideia ficou óbvia: transformar a coleção em rádio.</p>
+        <p style="margin:0; font-size:15px; line-height:1.8; color:var(--text-body);">Hoje são estações temáticas 24h, uma biblioteca gratuita e um blog — com o mesmo cuidado de quem escolhe o próximo disco para um amigo.</p>
+      </div>
+      <div style="padding:28px 18px 8px; border-top:1px solid var(--line); display:flex; flex-direction:column; gap:4px;">
+        <span style="font-size:10px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-text);">Quem faz</span>
+        <h3 style="margin:0; font-family:'Outfit',sans-serif; font-size:22px; font-weight:400; color:var(--text);">As pessoas por trás da rádio</h3>
+      </div>
+      <sc-for list="{{ autores }}" as="a" hint-placeholder-count="3">
+        <div style="margin:0 18px; padding:20px 0; border-bottom:1px solid var(--line); display:flex; flex-direction:column; gap:12px;">
+          <div style="display:flex; align-items:center; gap:14px;">
+            <div style="width:72px; height:72px; flex:none;"><image-slot id="{{ a.slotM }}" shape="rounded" radius="12" placeholder=" "></image-slot></div>
+            <div style="display:flex; flex-direction:column; gap:2px; min-width:0;">
+              <h4 style="margin:0; font-family:'Outfit',sans-serif; font-size:20px; font-weight:400; color:var(--text);">{{ a.nome }}</h4>
+              <span style="font-size:12px; color:var(--muted);">{{ a.papel }}</span>
+            </div>
+          </div>
+          <p style="margin:0; font-size:14px; line-height:1.65; color:var(--text-body);">{{ a.bio }}</p>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <sc-for list="{{ a.itens }}" as="it" hint-placeholder-count="3">
+              <a href="{{ it.href }}" style="display:flex; align-items:center; gap:10px; padding:6px 10px 6px 6px; border-radius:10px; background:var(--surface); border:1px solid var(--line); min-height:52px;">
+                <span class="stripe-cover" style="width:{{ it.wM }}; height:40px; border-radius:5px; flex:none;"></span>
+                <span style="display:flex; flex-direction:column; gap:1px; min-width:0;">
+                  <span style="font-size:9px; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--accent-text);">{{ it.tipo }}</span>
+                  <span style="font-size:13px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ it.titulo }}</span>
+                </span>
+              </a>
+            </sc-for>
+          </div>
+          <a href="{{ a.href }}" style="font-size:13px; font-weight:500;">Página do autor →</a>
+        </div>
+      </sc-for>
+      <div style="padding:32px 18px; display:flex; flex-direction:column; gap:12px;">
+        <h3 style="margin:0; font-family:'Outfit',sans-serif; font-size:22px; font-weight:400; color:var(--text);">Tem uma música para sugerir?</h3>
+        <p style="margin:0; font-size:14px; line-height:1.65; color:var(--text-body);">Pedidos, ideias de estação, parcerias ou só um oi.</p>
+        <a href="Contato.dc.html" style="display:flex; align-items:center; justify-content:center; height:48px; border-radius:999px; background:var(--accent); font-size:14px; font-weight:500; color:#ffffff;">Fale com a gente</a>
+      </div>
+      <dc-import name="SiteFooter" mobile="{{ true }}" hint-size="100%,420px"></dc-import>
+      <dc-import name="PlayerFixo" mobile="{{ true }}" style="position:sticky; bottom:0; z-index:20;" hint-size="100%,56px"></dc-import>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1360,&quot;height&quot;:2400}}">
+const AUTORES = [
+  { key: 'fundador', nome: 'Nome do Fundador', papel: 'Fundador e curador',
+    bio: 'Radialista há mais de 20 anos, criou a Agenda Cultural para dividir os discos, livros e histórias que marcaram sua vida. Escolhe boa parte da programação e responde pessoalmente aos recados.',
+    itens: [['Livro', 'Crônicas de uma vitrola'], ['Artigo', 'Por que ainda ouvimos rádio'], ['Artigo', 'Memórias de uma loja de discos']] },
+  { key: 'marina', nome: 'Marina Alves', papel: 'Cronista e apresentadora',
+    bio: 'Jornalista e ouvinte de rádio desde criança, escreve crônicas sobre música, cidade e memória. Apresenta o Blues & Jazz Clube nas noites de sábado.',
+    itens: [['Livro', 'Cidade em voz baixa'], ['Artigo', 'O jazz que ecoa nos becos do centro'], ['Artigo', 'A viola e as tardes de domingo']] },
+  { key: 'igor', nome: 'Igor Bastos', papel: 'Pesquisador musical',
+    bio: 'Colecionador de discos e pesquisador de música brasileira, garimpa gravações raras e conta a história por trás delas. Produz o podcast Clássicos Explicados.',
+    itens: [['Artigo', 'Cinco discos de choro para ouvir sem pressa'], ['Artigo', 'A história da viola caipira no noroeste paulista'], ['Livro', 'Caderno de discos raros']] },
+];
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      autores: AUTORES.map((a, i) => ({
+        ...a, dir: i % 2 ? 'row-reverse' : 'row',
+        slot: `sobre-autor-${a.key}`, slotM: `sobre-autor-${a.key}-m`,
+        href: `Autor.dc.html?a=${a.key}`,
+        itens: a.itens.map(([tipo, titulo]) => ({ tipo, titulo, href: tipo === 'Livro' ? '#' : 'Post.dc.html',
+          w: tipo === 'Livro' ? '38px' : '52px', wM: tipo === 'Livro' ? '30px' : '40px' })),
+      })),
+    };
+  }
+}
+</script>
+</body>
+</html>

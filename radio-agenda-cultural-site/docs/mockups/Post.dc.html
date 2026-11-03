@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="./tema.css">
+  <meta name="design_doc_mode" content="canvas">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&amp;display=swap" rel="stylesheet">
+  <script src="./image-slot.js"></script>
+  <style>
+    body { margin: 0; }
+    * { box-sizing: border-box; }
+    input:focus, textarea:focus { outline: none; border-color: #ee8133 !important; }
+  </style>
+</helmet>
+<div style="font-family:'DM Sans',sans-serif; padding:56px 40px 100px; display:flex; flex-direction:column; gap:48px; align-items:center; background:var(--canvas);">
+
+  <div style="width:100%; max-width:1280px; display:flex; flex-direction:column; gap:14px;">
+    <span style="font-family:'Outfit',sans-serif; font-size:14px; font-weight:500; letter-spacing:.06em; text-transform:uppercase; color:var(--muted);">Rádio Agenda Cultural</span>
+    <h1 style="margin:0; font-family:'Outfit',sans-serif; font-size:28px; letter-spacing:-.01em; font-weight:400; color:var(--text);">Post individual — formatos</h1>
+    <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:4px;">
+      <sc-for list="{{ fmts }}" as="f" hint-placeholder-count="7">
+        <button onClick="{{ f.pick }}" style="white-space:nowrap; padding:9px 16px; border-radius:999px; background:{{ f.bg }}; border:1px solid {{ f.border }}; cursor:pointer; font-family:inherit; font-size:13px; font-weight:500; color:{{ f.color }};">{{ f.label }}</button>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="width:100%; max-width:1280px; display:flex; flex-direction:column; gap:14px;">
+    <span style="font-size:13px; font-weight:500; letter-spacing:.04em; text-transform:uppercase; color:var(--muted);">Desktop — {{ c.badge }}</span>
+    <div data-screen-label="Post desktop" style="position:relative; width:1280px; border-radius:20px; overflow:clip; box-shadow:0 24px 60px -24px rgba(60,40,20,.25); background:var(--bg);">
+      <dc-import name="SiteHeader" active="Blog" hint-size="100%,71px"></dc-import>
+
+      <div style="padding:64px 40px 40px; display:flex; justify-content:center;">
+        <div style="width:780px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:18px;">
+          <div style="display:flex; align-items:center; gap:10px; font-size:12px; color:var(--muted);">
+            <a href="Blog.dc.html" style="color:var(--muted);">Blog</a><span>/</span>
+            <a href="{{ catHref }}" style="font-weight:500; letter-spacing:.08em; text-transform:uppercase; font-size:11px;">{{ c.categoria }}</a>
+            <span style="padding:3px 10px; border-radius:999px; background:var(--surface); border:1px solid var(--line); font-size:11px; font-weight:500; color:var(--text-body);">{{ c.badge }}</span>
+          </div>
+          <h2 style="margin:0; font-family:'Outfit',sans-serif; font-size:50px; font-weight:400; letter-spacing:-.025em; color:var(--text); line-height:1.08; text-wrap:balance;">{{ c.titulo }}</h2>
+          <p style="margin:0; max-width:640px; font-size:18px; line-height:1.65; color:var(--text-body); text-wrap:pretty;">{{ c.dek }}</p>
+          <div style="display:flex; align-items:center; gap:12px; margin-top:6px;">
+            <div style="width:38px; height:38px; border-radius:50%; overflow:hidden; flex:none;"><image-slot id="post-autor-avatar" shape="circle" placeholder=" "></image-slot></div>
+            <span style="font-size:14px; color:var(--text-body); white-space:nowrap;">por <a href="{{ autorHref }}" style="font-weight:500; color:var(--text); text-decoration:underline; text-decoration-color:var(--accent); text-underline-offset:4px;">{{ author.nome }}</a></span>
+            <span style="width:3px; height:3px; border-radius:50%; background:var(--muted);"></span>
+            <span style="font-size:14px; color:var(--muted);">{{ c.data }}</span>
+            <span style="width:3px; height:3px; border-radius:50%; background:var(--muted);"></span>
+            <span style="font-size:14px; color:var(--muted);">{{ c.meta }}</span>
+            <a href="#comentarios" style="display:flex; align-items:center; gap:6px; margin-left:6px; padding:6px 12px; border-radius:999px; background:var(--surface); border:1px solid var(--line); font-size:13px; color:var(--text-body);">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>{{ commentCount }}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <sc-if value="{{ isTexto }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:0 120px; display:flex; flex-direction:column; gap:10px;">
+          <div style="height:500px;"><image-slot id="post-capa" shape="rounded" radius="18" placeholder="Imagem de destaque do post"></image-slot></div>
+          <span style="font-size:12px; color:var(--muted); text-align:center;">Legenda da imagem de destaque.</span>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isPoesia }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex; justify-content:center;"><span style="width:56px; height:1px; background:var(--accent);"></span></div>
+      </sc-if>
+      <sc-if value="{{ isVideo }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:0 120px; display:flex; flex-direction:column; gap:10px;">
+          <div style="position:relative; aspect-ratio:16/9; border-radius:18px; overflow:hidden; background:#1f1b17;">
+            <image-slot id="post-video" shape="rect" placeholder="Thumbnail do vídeo (YouTube / Vimeo)"></image-slot>
+            <div style="position:absolute; inset:0; pointer-events:none; background:linear-gradient(to top, rgba(28,22,16,.55) 0%, rgba(28,22,16,0) 40%);"></div>
+            <button onClick="{{ toggleVideo }}" aria-label="Assistir" style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:84px; height:84px; border-radius:50%; background:var(--accent); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 12px 30px -10px rgba(0,0,0,.45);">
+              <sc-if value="{{ videoPaused }}" hint-placeholder-val="{{ true }}"><span style="width:0; height:0; border-top:13px solid transparent; border-bottom:13px solid transparent; border-left:20px solid #ffffff; margin-left:5px;"></span></sc-if>
+              <sc-if value="{{ videoPlaying }}" hint-placeholder-val="{{ false }}"><span style="display:flex; gap:6px;"><span style="width:6px; height:22px; border-radius:2px; background:#ffffff;"></span><span style="width:6px; height:22px; border-radius:2px; background:#ffffff;"></span></span></sc-if>
+            </button>
+            <div style="position:absolute; left:24px; right:24px; bottom:20px; pointer-events:none; display:flex; align-items:center; gap:14px;">
+              <span style="font-size:12px; font-weight:500; color:#ffffff;">{{ videoTime }}</span>
+              <span style="flex:1; height:3px; border-radius:2px; background:rgba(255,255,255,.3); overflow:hidden;"><span style="display:block; width:{{ videoPct }}; height:100%; background:var(--accent);"></span></span>
+              <span style="font-size:12px; font-weight:500; color:#ffffff;">18:24</span>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:center; gap:8px; margin-top:6px;">
+            <sc-for list="{{ chapters }}" as="ch" hint-placeholder-count="4">
+              <span style="white-space:nowrap; display:flex; gap:8px; padding:7px 14px; border-radius:999px; background:var(--surface); border:1px solid var(--line); font-size:12px; color:var(--text-body);"><span style="color:var(--accent-text); font-weight:500;">{{ ch.t }}</span>{{ ch.n }}</span>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isMusica }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:0 120px;">
+          <div style="display:grid; grid-template-columns:380px minmax(0,1fr); gap:44px; align-items:center; padding:28px; background:var(--surface); border:1px solid var(--line); border-radius:20px;">
+            <div style="height:380px;"><image-slot id="post-artista" shape="rounded" radius="14" placeholder="Foto da artista ou capa do disco"></image-slot></div>
+            <div style="display:flex; flex-direction:column; gap:14px; min-width:0;">
+              <span style="font-size:11px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-text);">Artista em destaque</span>
+              <h3 style="margin:0; font-family:'Outfit',sans-serif; font-size:34px; font-weight:400; letter-spacing:-.02em; color:var(--text); line-height:1.1;">Helena Moura</h3>
+              <span style="font-size:14px; color:var(--muted);">MPB · Votuporanga, SP · Disco “Varanda” (2026)</span>
+              <div style="display:flex; flex-direction:column; margin-top:6px; border-top:1px solid var(--line);">
+                <sc-for list="{{ tracks }}" as="tr" hint-placeholder-count="4">
+                  <div style="display:flex; align-items:center; gap:14px; padding:10px 0; border-bottom:1px solid var(--line);">
+                    <button onClick="{{ tr.play }}" aria-label="Tocar" style="width:32px; height:32px; flex:none; border-radius:50%; background:{{ tr.bg }}; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                      <sc-if value="{{ tr.on }}" hint-placeholder-val="{{ false }}"><span style="display:flex; gap:3px;"><span style="width:3px; height:10px; border-radius:1px; background:#ffffff;"></span><span style="width:3px; height:10px; border-radius:1px; background:#ffffff;"></span></span></sc-if>
+                      <sc-if value="{{ tr.off }}" hint-placeholder-val="{{ true }}"><span style="width:0; height:0; border-top:4px solid transparent; border-bottom:4px solid transparent; border-left:7px solid var(--text); margin-left:2px;"></span></sc-if>
+                    </button>
+                    <span style="font-size:12px; color:var(--muted); width:16px;">{{ tr.num }}</span>
+                    <span style="flex:1; min-width:0; font-size:14px; color:{{ tr.color }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ tr.n }}</span>
+                    <span style="font-size:12px; color:var(--muted);">{{ tr.d }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex; align-items:center; gap:10px; margin-top:6px;">
+                <a href="Estacao.dc.html?e=8" style="white-space:nowrap; display:flex; align-items:center; gap:8px; padding:11px 20px; border-radius:999px; background:var(--accent); font-size:13px; font-weight:500; color:#ffffff;"><span style="width:0; height:0; border-top:4px solid transparent; border-bottom:4px solid transparent; border-left:7px solid #ffffff;"></span>Toca na estação MPB de Ouro</a>
+                <a href="#" style="white-space:nowrap; padding:11px 18px; border-radius:999px; background:var(--surface); border:1px solid var(--line); font-size:13px; color:var(--text);">Instagram da artista</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isTirinha }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:0 80px; display:flex; flex-direction:column; gap:14px;">
+          <div style="padding:20px; background:var(--surface); border:1px solid var(--line); border-radius:20px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px;">
+            <div style="aspect-ratio:1/1;"><image-slot id="post-tira-1" shape="rounded" radius="8" placeholder="Quadro 1"></image-slot></div>
+            <div style="aspect-ratio:1/1;"><image-slot id="post-tira-2" shape="rounded" radius="8" placeholder="Quadro 2"></image-slot></div>
+            <div style="aspect-ratio:1/1;"><image-slot id="post-tira-3" shape="rounded" radius="8" placeholder="Quadro 3"></image-slot></div>
+          </div>
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <a href="#" style="white-space:nowrap; padding:10px 18px; border-radius:999px; background:var(--surface); border:1px solid var(--line); font-size:13px; color:var(--text);">‹ Tirinha anterior</a>
+            <span style="font-size:13px; color:var(--muted);">Tirinha nº 128 · publicada toda manhã</span>
+            <a href="#" style="white-space:nowrap; padding:10px 18px; border-radius:999px; background:var(--surface); border:1px solid var(--line); font-size:13px; color:var(--text);">Próxima tirinha ›</a>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isImagem }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:0 40px; display:flex; flex-direction:column; gap:12px;">
+          <div style="height:680px;"><image-slot id="post-imagem" shape="rounded" radius="18" placeholder="Fotografia em destaque (grande formato)"></image-slot></div>
+          <div style="display:flex; justify-content:space-between; gap:24px; padding:0 4px;">
+            <span style="font-size:13px; color:var(--text-body);">A fachada do Cine Votuporanga numa tarde de outubro.</span>
+            <span style="font-size:12px; color:var(--muted); white-space:nowrap;">Foto: Igor Bastos</span>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isCitacao }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:0 120px;">
+          <figure style="margin:0; padding:72px 96px; background:var(--surface2); border-radius:24px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:22px;">
+            <span style="font-family:'Outfit',sans-serif; font-size:110px; line-height:.55; height:48px; color:var(--accent);">“</span>
+            <blockquote style="margin:0; font-family:'Outfit',sans-serif; font-size:48px; font-weight:300; line-height:1.2; letter-spacing:-.02em; color:var(--text); text-wrap:balance;">Tudo no mundo começou com um sim.</blockquote>
+            <figcaption style="display:flex; flex-direction:column; gap:3px;">
+              <span style="font-size:15px; font-weight:500; color:var(--text);">Clarice Lispector</span>
+              <span style="font-size:13px; color:var(--muted);">A Hora da Estrela, 1977</span>
+            </figcaption>
+          </figure>
+        </div>
+      </sc-if>
+
+      <div style="padding:52px 40px 24px; display:flex; justify-content:center;">
+        <div style="width:680px; display:flex; flex-direction:column; gap:22px;">
+          <sc-for list="{{ blocks }}" as="b" hint-placeholder-count="4">
+            <sc-if value="{{ b.isP }}" hint-placeholder-val="{{ true }}"><p style="margin:0; font-size:18px; line-height:1.85; color:var(--text-body); text-wrap:pretty;">{{ b.text }}</p></sc-if>
+            <sc-if value="{{ b.isH }}" hint-placeholder-val="{{ false }}"><h3 style="margin:14px 0 0; font-family:'Outfit',sans-serif; font-size:28px; font-weight:400; letter-spacing:-.01em; color:var(--text); line-height:1.25;">{{ b.text }}</h3></sc-if>
+            <sc-if value="{{ b.isQ }}" hint-placeholder-val="{{ false }}">
+              <div style="margin:18px 0; padding:28px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); display:flex; flex-direction:column; gap:12px;">
+                <span style="font-family:'Outfit',sans-serif; font-size:44px; line-height:.6; color:var(--accent);">“</span>
+                <p style="margin:0; font-family:'Outfit',sans-serif; font-size:27px; font-weight:300; line-height:1.4; letter-spacing:-.01em; color:var(--text);">{{ b.text }}</p>
+              </div>
+            </sc-if>
+            <sc-if value="{{ b.isStanza }}" hint-placeholder-val="{{ false }}"><p style="margin:0 0 10px; padding-left:56px; font-family:'Outfit',sans-serif; font-size:23px; font-weight:300; line-height:1.75; color:var(--text); white-space:pre-line;">{{ b.text }}</p></sc-if>
+          </sc-for>
+
+          <div style="margin-top:10px; padding-top:22px; border-top:1px solid var(--line); display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <sc-for list="{{ tags }}" as="t" hint-placeholder-count="3">
+              <a href="#" style="white-space:nowrap; padding:6px 12px; border-radius:999px; background:var(--surface2); font-size:12px; color:var(--text-body);">#{{ t }}</a>
+            </sc-for>
+            <span style="flex:1;"></span>
+            <div style="position:relative;">
+              <button onClick="{{ toggleShare }}" style="white-space:nowrap; display:flex; align-items:center; gap:9px; padding:11px 20px; border-radius:999px; background:var(--text); border:none; cursor:pointer; font-family:inherit; font-size:13px; font-weight:500; color:var(--bg);" style-hover="background:var(--text-body);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"></line></svg>
+                Compartilhar
+              </button>
+              <sc-if value="{{ shareOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute; right:0; bottom:calc(100% + 8px); width:220px; padding:6px; z-index:10; background:var(--surface); border:1px solid var(--line); border-radius:14px; box-shadow:0 20px 44px -16px rgba(60,40,20,.25); display:flex; flex-direction:column;">
+                  <sc-for list="{{ shareOpts }}" as="s" hint-placeholder-count="5">
+                    <button onClick="{{ s.act }}" style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:9px; background:transparent; border:none; cursor:pointer; font-family:inherit; font-size:13px; color:var(--text); text-align:left;" style-hover="background:var(--surface2);">
+                      <span style="width:28px; height:28px; border-radius:50%; background:var(--surface2); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:500; color:var(--text-body);">{{ s.ic }}</span>{{ s.label }}
+                    </button>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding:24px 40px 56px; display:flex; justify-content:center;">
+        <div style="width:680px; display:flex; gap:20px; padding:24px; background:var(--surface); border:1px solid var(--line); border-radius:16px;">
+          <div style="width:72px; height:72px; border-radius:50%; overflow:hidden; flex:none;"><image-slot id="post-autor-box" shape="circle" placeholder=" "></image-slot></div>
+          <div style="display:flex; flex-direction:column; gap:6px; min-width:0;">
+            <span style="font-size:11px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);">Escrito por</span>
+            <a href="{{ autorHref }}" style="font-family:'Outfit',sans-serif; font-size:21px; font-weight:400; color:var(--text);">{{ author.nome }}</a>
+            <p style="margin:0; font-size:14px; line-height:1.65; color:var(--text-body);">{{ author.bio }}</p>
+            <a href="{{ autorHref }}" style="margin-top:4px; font-size:13px; font-weight:500;">Ver todos os posts →</a>
+          </div>
+        </div>
+      </div>
+
+      <div id="comentarios" style="padding:56px 40px 72px; border-top:1px solid var(--line); display:flex; justify-content:center;">
+        <div style="width:680px; display:flex; flex-direction:column; gap:28px;">
+          <div style="display:flex; align-items:baseline; justify-content:space-between;">
+            <h2 style="margin:0; font-family:'Outfit',sans-serif; font-size:28px; font-weight:400; letter-spacing:-.01em; color:var(--text);">{{ commentTitle }}</h2>
+            <span style="font-size:13px; color:var(--muted);">Mais antigos primeiro</span>
+          </div>
+
+          <div style="display:flex; flex-direction:column;">
+            <sc-for list="{{ threads }}" as="th" hint-placeholder-count="3">
+              <div style="padding:20px 0; border-top:1px solid var(--line); display:flex; flex-direction:column; gap:16px;">
+                <div style="display:flex; gap:14px;">
+                  <span style="width:40px; height:40px; flex:none; border-radius:50%; background:{{ th.av }}; display:flex; align-items:center; justify-content:center; font-family:'Outfit',sans-serif; font-size:15px; color:var(--text);">{{ th.ini }}</span>
+                  <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:6px;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                      <span style="font-size:14px; font-weight:500; color:var(--text);">{{ th.n }}</span>
+                      <span style="font-size:12px; color:var(--muted);">{{ th.d }}</span>
+                      <sc-if value="{{ th.pending }}" hint-placeholder-val="{{ false }}"><span style="padding:2px 8px; border-radius:999px; background:var(--accent-soft); font-size:11px; color:var(--accent-text);">Aguardando moderação</span></sc-if>
+                    </div>
+                    <p style="margin:0; font-size:15px; line-height:1.7; color:var(--text-body);">{{ th.t }}</p>
+                    <button onClick="{{ th.reply }}" style="align-self:flex-start; padding:0; background:none; border:none; cursor:pointer; font-family:inherit; font-size:13px; font-weight:500; color:var(--accent-text);">Responder</button>
+                  </div>
+                </div>
+                <sc-for list="{{ th.replies }}" as="r" hint-placeholder-count="0">
+                  <div style="margin-left:54px; padding-left:18px; border-left:2px solid var(--line); display:flex; gap:12px;">
+                    <span style="width:34px; height:34px; flex:none; border-radius:50%; background:{{ r.av }}; display:flex; align-items:center; justify-content:center; font-family:'Outfit',sans-serif; font-size:13px; color:var(--text);">{{ r.ini }}</span>
+                    <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:5px;">
+                      <div style="display:flex; align-items:center; gap:10px;">
+                        <span style="font-size:14px; font-weight:500; color:var(--text);">{{ r.n }}</span>
+                        <sc-if value="{{ r.isAuthor }}" hint-placeholder-val="{{ false }}"><span style="padding:2px 8px; border-radius:999px; background:var(--accent); font-size:10px; font-weight:500; letter-spacing:.06em; text-transform:uppercase; color:#ffffff;">Autora</span></sc-if>
+                        <span style="font-size:12px; color:var(--muted);">{{ r.d }}</span>
+                      </div>
+                      <p style="margin:0; font-size:15px; line-height:1.7; color:var(--text-body);">{{ r.t }}</p>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display:flex; align-items:center; justify-content:space-between; padding-top:18px; border-top:1px solid var(--line);">
+            <button onClick="{{ prevC }}" style="white-space:nowrap; padding:9px 16px; border-radius:999px; background:var(--surface); border:1px solid var(--line); cursor:pointer; font-family:inherit; font-size:13px; color:{{ prevColor }};">‹ Comentários anteriores</button>
+            <span style="font-size:12px; color:var(--muted);">Página {{ cPageLabel }}</span>
+            <button onClick="{{ nextC }}" style="white-space:nowrap; padding:9px 16px; border-radius:999px; background:var(--surface); border:1px solid var(--line); cursor:pointer; font-family:inherit; font-size:13px; color:{{ nextColor }};">Próximos comentários ›</button>
+          </div>
+
+          <div style="margin-top:12px; padding:28px; background:var(--surface); border:1px solid var(--line); border-radius:18px; display:flex; flex-direction:column; gap:16px;">
+            <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px;">
+              <h3 style="margin:0; font-family:'Outfit',sans-serif; font-size:22px; font-weight:400; color:var(--text);">{{ formTitle }}</h3>
+              <sc-if value="{{ replying }}" hint-placeholder-val="{{ false }}"><button onClick="{{ cancelReply }}" style="padding:0; background:none; border:none; cursor:pointer; font-family:inherit; font-size:13px; color:var(--muted);">Cancelar resposta</button></sc-if>
+            </div>
+            <span style="font-size:13px; color:var(--muted);">Seu e-mail não será publicado. Campos obrigatórios marcados com *</span>
+            <label style="display:flex; flex-direction:column; gap:6px;"><span style="font-size:12px; font-weight:500; color:var(--text-body);">Comentário *</span><textarea rows="5" value="{{ fText }}" onChange="{{ setText }}" placeholder="Escreva seu comentário…" style="padding:12px 14px; border-radius:10px; border:1px solid var(--line); background:var(--bg); font-family:inherit; font-size:14px; line-height:1.6; color:var(--text); resize:vertical;"></textarea></label>
+            <div style="display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px;">
+              <label style="display:flex; flex-direction:column; gap:6px;"><span style="font-size:12px; font-weight:500; color:var(--text-body);">Nome *</span><input value="{{ fName }}" onChange="{{ setName }}" style="padding:11px 14px; border-radius:10px; border:1px solid var(--line); background:var(--bg); font-family:inherit; font-size:14px; color:var(--text);"></label>
+              <label style="display:flex; flex-direction:column; gap:6px;"><span style="font-size:12px; font-weight:500; color:var(--text-body);">E-mail *</span><input style="padding:11px 14px; border-radius:10px; border:1px solid var(--line); background:var(--bg); font-family:inherit; font-size:14px; color:var(--text);"></label>
+              <label style="display:flex; flex-direction:column; gap:6px;"><span style="font-size:12px; font-weight:500; color:var(--text-body);">Site</span><input style="padding:11px 14px; border-radius:10px; border:1px solid var(--line); background:var(--bg); font-family:inherit; font-size:14px; color:var(--text);"></label>
+            </div>
+            <label style="display:flex; align-items:center; gap:10px; font-size:13px; color:var(--text-body); cursor:pointer;"><input type="checkbox" style="accent-color:#ee8133; width:16px; height:16px;">Salvar meus dados neste navegador para a próxima vez que eu comentar.</label>
+            <div style="display:flex; justify-content:flex-end;">
+              <button onClick="{{ publish }}" style="white-space:nowrap; padding:12px 26px; border-radius:999px; background:var(--accent); border:none; cursor:pointer; font-family:inherit; font-size:14px; font-weight:500; color:#ffffff;" style-hover="background:var(--accent-dark);">Publicar comentário</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding:48px 40px 64px; border-top:1px solid var(--line); background:var(--surface2); display:flex; flex-direction:column; gap:22px;">
+        <div style="display:flex; align-items:baseline; justify-content:space-between;">
+          <h2 style="margin:0; font-family:'Outfit',sans-serif; font-size:28px; letter-spacing:-.01em; font-weight:400; color:var(--text);">Posts relacionados</h2>
+          <a href="Blog.dc.html" style="font-size:14px; font-weight:500;">Ver todos →</a>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px;">
+          <sc-for list="{{ related }}" as="post" hint-placeholder-count="3">
+            <dc-import name="CardPost" post="{{ post }}" hint-size="100%,318px"></dc-import>
+          </sc-for>
+        </div>
+      </div>
+
+      <dc-import name="SiteFooter" hint-size="100%,330px"></dc-import>
+      <dc-import name="PlayerFixo" style="position:relative; z-index:20;" hint-size="100%,72px"></dc-import>
+    </div>
+  </div>
+
+  <div style="display:flex; flex-direction:column; gap:14px; align-items:center;">
+    <span style="font-size:13px; font-weight:500; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); align-self:flex-start;">Mobile — {{ c.badge }}</span>
+    <div data-screen-label="Post mobile" style="position:relative; width:375px; border-radius:36px; overflow:clip; box-shadow:0 24px 60px -24px rgba(60,40,20,.25); background:var(--bg); border:8px solid #2a2622;">
+      <dc-import name="SiteHeader" mobile="{{ true }}" active="Blog" hint-size="100%,59px"></dc-import>
+      <div style="padding:30px 18px 22px; display:flex; flex-direction:column; gap:12px;">
+        <div style="display:flex; align-items:center; gap:8px; font-size:11px; color:var(--muted);">
+          <a href="{{ catHref }}" style="font-weight:500; letter-spacing:.08em; text-transform:uppercase; font-size:10px;">{{ c.categoria }}</a>
+          <span style="padding:2px 9px; border-radius:999px; background:var(--surface); border:1px solid var(--line); font-size:10px; font-weight:500; color:var(--text-body);">{{ c.badge }}</span>
+        </div>
+        <h2 style="margin:0; font-family:'Outfit',sans-serif; font-size:30px; font-weight:400; letter-spacing:-.02em; color:var(--text); line-height:1.1;">{{ c.titulo }}</h2>
+        <div style="display:flex; align-items:center; gap:10px; margin-top:4px;">
+          <div style="width:34px; height:34px; border-radius:50%; overflow:hidden; flex:none;"><image-slot id="post-autor-avatar-m" shape="circle" placeholder=" "></image-slot></div>
+          <div style="display:flex; flex-direction:column; gap:1px; flex:1; min-width:0;">
+            <a href="{{ autorHref }}" style="font-size:13px; font-weight:500; color:var(--text);">{{ author.nome }}</a>
+            <span style="font-size:12px; color:var(--muted);">{{ c.data }} · {{ c.metaShort }}</span>
+          </div>
+          <button onClick="{{ toggleShare }}" aria-label="Compartilhar" style="width:40px; height:40px; flex:none; border-radius:50%; background:var(--surface); border:1px solid var(--line); display:flex; align-items:center; justify-content:center;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"></line></svg>
+          </button>
+        </div>
+      </div>
+
+      <sc-if value="{{ isTexto }}" hint-placeholder-val="{{ true }}"><div style="height:230px;"><image-slot id="post-capa-m" shape="rect" placeholder="Imagem de destaque"></image-slot></div></sc-if>
+      <sc-if value="{{ isVideo }}" hint-placeholder-val="{{ false }}">
+        <div style="position:relative; aspect-ratio:16/9; background:#1f1b17;">
+          <image-slot id="post-video-m" shape="rect" placeholder="Thumbnail do vídeo"></image-slot>
+          <button onClick="{{ toggleVideo }}" aria-label="Assistir" style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:60px; height:60px; border-radius:50%; background:var(--accent); border:none; display:flex; align-items:center; justify-content:center;">
+            <sc-if value="{{ videoPaused }}" hint-placeholder-val="{{ true }}"><span style="width:0; height:0; border-top:10px solid transparent; border-bottom:10px solid transparent; border-left:15px solid #ffffff; margin-left:4px;"></span></sc-if>
+            <sc-if value="{{ videoPlaying }}" hint-placeholder-val="{{ false }}"><span style="display:flex; gap:5px;"><span style="width:5px; height:17px; border-radius:2px; background:#ffffff;"></span><span style="width:5px; height:17px; border-radius:2px; background:#ffffff;"></span></span></sc-if>
+          </button>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isMusica }}" hint-placeholder-val="{{ false }}">
+        <div style="margin:0 18px; padding:14px; background:var(--surface); border:1px solid var(--line); border-radius:16px; display:flex; flex-direction:column; gap:12px;">
+          <div style="height:300px;"><image-slot id="post-artista-m" shape="rounded" radius="10" placeholder="Foto da artista"></image-slot></div>
+          <span style="font-size:10px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-text);">Artista em destaque</span>
+          <h3 style="margin:0; font-family:'Outfit',sans-serif; font-size:24px; font-weight:400; color:var(--text);">Helena Moura</h3>
+          <span style="font-size:12px; color:var(--muted);">MPB · Votuporanga, SP</span>
+          <div style="display:flex; flex-direction:column; border-top:1px solid var(--line);">
+            <sc-for list="{{ tracks }}" as="tr" hint-placeholder-count="4">
+              <button onClick="{{ tr.play }}" style="display:flex; align-items:center; gap:12px; min-height:48px; padding:0; background:none; border:none; border-bottom:1px solid var(--line); font-family:inherit; text-align:left;">
+                <span style="width:28px; height:28px; flex:none; border-radius:50%; background:{{ tr.bg }}; display:flex; align-items:center; justify-content:center;"><span style="width:0; height:0; border-top:4px solid transparent; border-bottom:4px solid transparent; border-left:6px solid {{ tr.icon }}; margin-left:2px;"></span></span>
+                <span style="flex:1; min-width:0; font-size:13px; color:{{ tr.color }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ tr.n }}</span>
+                <span style="font-size:11px; color:var(--muted);">{{ tr.d }}</span>
+              </button>
+            </sc-for>
+          </div>
+          <a href="Estacao.dc.html?e=8" style="display:flex; align-items:center; justify-content:center; height:46px; border-radius:999px; background:var(--accent); font-size:13px; font-weight:500; color:#ffffff;">Toca na estação MPB de Ouro</a>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isTirinha }}" hint-placeholder-val="{{ false }}">
+        <div style="margin:0 18px; padding:12px; background:var(--surface); border:1px solid var(--line); border-radius:16px; display:flex; flex-direction:column; gap:10px;">
+          <div style="aspect-ratio:1/1;"><image-slot id="post-tira-1-m" shape="rounded" radius="6" placeholder="Quadro 1"></image-slot></div>
+          <div style="aspect-ratio:1/1;"><image-slot id="post-tira-2-m" shape="rounded" radius="6" placeholder="Quadro 2"></image-slot></div>
+          <div style="aspect-ratio:1/1;"><image-slot id="post-tira-3-m" shape="rounded" radius="6" placeholder="Quadro 3"></image-slot></div>
+        </div>
+        <div style="padding:12px 18px 0; display:flex; justify-content:space-between;">
+          <a href="#" style="font-size:13px; font-weight:500;">‹ Anterior</a>
+          <span style="font-size:12px; color:var(--muted);">nº 128</span>
+          <a href="#" style="font-size:13px; font-weight:500;">Próxima ›</a>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isImagem }}" hint-placeholder-val="{{ false }}">
+        <div style="height:440px;"><image-slot id="post-imagem-m" shape="rect" placeholder="Fotografia em destaque"></image-slot></div>
+        <div style="padding:10px 18px 0; display:flex; justify-content:space-between; gap:12px;">
+          <span style="font-size:12px; color:var(--text-body);">A fachada do Cine Votuporanga.</span>
+          <span style="font-size:11px; color:var(--muted); white-space:nowrap;">Foto: Igor Bastos</span>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isCitacao }}" hint-placeholder-val="{{ false }}">
+        <figure style="margin:0 18px; padding:40px 24px; background:var(--surface2); border-radius:18px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:16px;">
+          <span style="font-family:'Outfit',sans-serif; font-size:72px; line-height:.55; height:30px; color:var(--accent);">“</span>
+          <blockquote style="margin:0; font-family:'Outfit',sans-serif; font-size:28px; font-weight:300; line-height:1.25; color:var(--text);">Tudo no mundo começou com um sim.</blockquote>
+          <figcaption style="display:flex; flex-direction:column; gap:2px;"><span style="font-size:14px; font-weight:500; color:var(--text);">Clarice Lispector</span><span style="font-size:12px; color:var(--muted);">A Hora da Estrela, 1977</span></figcaption>
+        </figure>
+      </sc-if>
+
+      <div style="padding:26px 18px 8px; display:flex; flex-direction:column; gap:18px;">
+        <sc-for list="{{ blocks }}" as="b" hint-placeholder-count="4">
+          <sc-if value="{{ b.isP }}" hint-placeholder-val="{{ true }}"><p style="margin:0; font-size:16px; line-height:1.8; color:var(--text-body);">{{ b.text }}</p></sc-if>
+          <sc-if value="{{ b.isH }}" hint-placeholder-val="{{ false }}"><h3 style="margin:8px 0 0; font-family:'Outfit',sans-serif; font-size:22px; font-weight:400; color:var(--text); line-height:1.25;">{{ b.text }}</h3></sc-if>
+          <sc-if value="{{ b.isQ }}" hint-placeholder-val="{{ false }}"><div style="padding:20px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line);"><p style="margin:0; font-family:'Outfit',sans-serif; font-size:21px; font-weight:300; line-height:1.4; color:var(--text);"><span style="color:var(--accent);">“</span>{{ b.text }}</p></div></sc-if>
+          <sc-if value="{{ b.isStanza }}" hint-placeholder-val="{{ false }}"><p style="margin:0; padding-left:18px; font-family:'Outfit',sans-serif; font-size:19px; font-weight:300; line-height:1.7; color:var(--text); white-space:pre-line;">{{ b.text }}</p></sc-if>
+        </sc-for>
+        <button onClick="{{ toggleShare }}" style="white-space:nowrap; display:flex; align-items:center; justify-content:center; gap:9px; height:48px; border-radius:999px; background:var(--text); border:none; font-family:inherit; font-size:14px; font-weight:500; color:var(--bg);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"></line></svg>
+          Compartilhar
+        </button>
+      </div>
+      <div style="padding:20px 18px 24px;">
+        <div style="display:flex; flex-direction:column; gap:10px; padding:18px; background:var(--surface); border:1px solid var(--line); border-radius:14px;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:48px; height:48px; border-radius:50%; overflow:hidden; flex:none;"><image-slot id="post-autor-box-m" shape="circle" placeholder=" "></image-slot></div>
+            <div style="display:flex; flex-direction:column; gap:1px;">
+              <span style="font-size:10px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);">Escrito por</span>
+              <a href="{{ autorHref }}" style="font-family:'Outfit',sans-serif; font-size:18px; color:var(--text);">{{ author.nome }}</a>
+            </div>
+          </div>
+          <p style="margin:0; font-size:13px; line-height:1.6; color:var(--text-body);">{{ author.bio }}</p>
+          <a href="{{ autorHref }}" style="font-size:13px; font-weight:500;">Ver todos os posts →</a>
+        </div>
+      </div>
+
+      <div style="padding:24px 18px 28px; border-top:1px solid var(--line); display:flex; flex-direction:column; gap:4px;">
+        <h2 style="margin:0 0 6px; font-family:'Outfit',sans-serif; font-size:21px; font-weight:400; color:var(--text);">{{ commentTitle }}</h2>
+        <sc-for list="{{ threads }}" as="th" hint-placeholder-count="3">
+          <div style="padding:14px 0; border-top:1px solid var(--line); display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; gap:10px;">
+              <span style="width:34px; height:34px; flex:none; border-radius:50%; background:{{ th.av }}; display:flex; align-items:center; justify-content:center; font-family:'Outfit',sans-serif; font-size:13px; color:var(--text);">{{ th.ini }}</span>
+              <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:4px;">
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;"><span style="font-size:13px; font-weight:500; color:var(--text);">{{ th.n }}</span><span style="font-size:11px; color:var(--muted);">{{ th.d }}</span></div>
+                <sc-if value="{{ th.pending }}" hint-placeholder-val="{{ false }}"><span style="align-self:flex-start; padding:2px 8px; border-radius:999px; background:var(--accent-soft); font-size:10px; color:var(--accent-text);">Aguardando moderação</span></sc-if>
+                <p style="margin:0; font-size:14px; line-height:1.65; color:var(--text-body);">{{ th.t }}</p>
+                <button onClick="{{ th.reply }}" style="align-self:flex-start; min-height:32px; padding:0; background:none; border:none; font-family:inherit; font-size:12px; font-weight:500; color:var(--accent-text);">Responder</button>
+              </div>
+            </div>
+            <sc-for list="{{ th.replies }}" as="r" hint-placeholder-count="0">
+              <div style="margin-left:16px; padding-left:14px; border-left:2px solid var(--line); display:flex; gap:10px;">
+                <span style="width:28px; height:28px; flex:none; border-radius:50%; background:{{ r.av }}; display:flex; align-items:center; justify-content:center; font-family:'Outfit',sans-serif; font-size:11px; color:var(--text);">{{ r.ini }}</span>
+                <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:3px;">
+                  <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;"><span style="font-size:13px; font-weight:500; color:var(--text);">{{ r.n }}</span><sc-if value="{{ r.isAuthor }}" hint-placeholder-val="{{ false }}"><span style="padding:1px 7px; border-radius:999px; background:var(--accent); font-size:9px; font-weight:500; letter-spacing:.06em; text-transform:uppercase; color:#ffffff;">Autora</span></sc-if><span style="font-size:11px; color:var(--muted);">{{ r.d }}</span></div>
+                  <p style="margin:0; font-size:14px; line-height:1.65; color:var(--text-body);">{{ r.t }}</p>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding-top:12px; border-top:1px solid var(--line);">
+          <button onClick="{{ prevC }}" style="white-space:nowrap; height:40px; padding:0 14px; border-radius:999px; background:var(--surface); border:1px solid var(--line); font-family:inherit; font-size:12px; color:{{ prevColor }};">‹ Anteriores</button>
+          <span style="font-size:12px; color:var(--muted);">{{ cPageLabel }}</span>
+          <button onClick="{{ nextC }}" style="white-space:nowrap; height:40px; padding:0 14px; border-radius:999px; background:var(--surface); border:1px solid var(--line); font-family:inherit; font-size:12px; color:{{ nextColor }};">Próximos ›</button>
+        </div>
+        <div style="margin-top:18px; padding:16px; background:var(--surface); border:1px solid var(--line); border-radius:14px; display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; align-items:baseline; justify-content:space-between; gap:8px;">
+            <h3 style="margin:0; font-family:'Outfit',sans-serif; font-size:18px; font-weight:400; color:var(--text);">{{ formTitle }}</h3>
+            <sc-if value="{{ replying }}" hint-placeholder-val="{{ false }}"><button onClick="{{ cancelReply }}" style="padding:0; background:none; border:none; font-family:inherit; font-size:12px; color:var(--muted);">Cancelar</button></sc-if>
+          </div>
+          <span style="font-size:11px; color:var(--muted);">Seu e-mail não será publicado.</span>
+          <textarea rows="4" value="{{ fText }}" onChange="{{ setText }}" placeholder="Comentário *" style="padding:12px 14px; border-radius:10px; border:1px solid var(--line); background:var(--bg); font-family:inherit; font-size:14px; line-height:1.55; color:var(--text); resize:vertical;"></textarea>
+          <input value="{{ fName }}" onChange="{{ setName }}" placeholder="Nome *" style="height:46px; padding:0 14px; border-radius:10px; border:1px solid var(--line); background:var(--bg); font-family:inherit; font-size:14px; color:var(--text);">
+          <input placeholder="E-mail *" style="height:46px; padding:0 14px; border-radius:10px; border:1px solid var(--line); background:var(--bg); font-family:inherit; font-size:14px; color:var(--text);">
+          <label style="display:flex; align-items:flex-start; gap:8px; font-size:12px; line-height:1.5; color:var(--text-body);"><input type="checkbox" style="accent-color:#ee8133; width:16px; height:16px; margin-top:1px; flex:none;">Salvar meus dados para a próxima vez.</label>
+          <button onClick="{{ publish }}" style="white-space:nowrap; height:48px; border-radius:999px; background:var(--accent); border:none; font-family:inherit; font-size:14px; font-weight:500; color:#ffffff;">Publicar comentário</button>
+        </div>
+      </div>
+
+      <div style="padding:24px 18px 28px; border-top:1px solid var(--line); background:var(--surface2); display:flex; flex-direction:column; gap:14px;">
+        <h2 style="margin:0; font-family:'Outfit',sans-serif; font-size:20px; font-weight:400; color:var(--text);">Posts relacionados</h2>
+        <sc-for list="{{ related }}" as="post" hint-placeholder-count="3">
+          <dc-import name="CardPost" post="{{ post }}" hint-size="100%,318px"></dc-import>
+        </sc-for>
+      </div>
+      <dc-import name="SiteFooter" mobile="{{ true }}" hint-size="100%,420px"></dc-import>
+      <dc-import name="PlayerFixo" mobile="{{ true }}" style="position:sticky; bottom:0; z-index:20;" hint-size="100%,56px"></dc-import>
+
+      <sc-if value="{{ shareOpen }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ toggleShare }}" style="position:absolute; inset:0; z-index:40; background:rgba(40,30,20,.3); display:flex; align-items:flex-end;">
+          <div style="width:100%; padding:10px 14px 24px; background:var(--surface); border-radius:20px 20px 0 0; display:flex; flex-direction:column; gap:4px;">
+            <div style="display:flex; justify-content:center; padding:2px 0 8px;"><span style="width:36px; height:4px; border-radius:2px; background:var(--line);"></span></div>
+            <span style="padding:0 6px 6px; font-family:'Outfit',sans-serif; font-size:16px; color:var(--text);">Compartilhar</span>
+            <sc-for list="{{ shareOpts }}" as="s" hint-placeholder-count="5">
+              <button onClick="{{ s.act }}" style="display:flex; align-items:center; gap:12px; min-height:48px; padding:0 6px; background:none; border:none; font-family:inherit; font-size:14px; color:var(--text); text-align:left;">
+                <span style="width:34px; height:34px; border-radius:50%; background:var(--surface2); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:500; color:var(--text-body);">{{ s.ic }}</span>{{ s.label }}
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1360,&quot;height&quot;:2600},&quot;formato&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;texto&quot;,&quot;options&quot;:[&quot;texto&quot;,&quot;poesia&quot;,&quot;video&quot;,&quot;musica&quot;,&quot;tirinha&quot;,&quot;imagem&quot;,&quot;citacao&quot;],&quot;tsType&quot;:&quot;string&quot;}}">
+const AUTHORS = {
+  marina: { nome: 'Marina Alves', papel: 'Cronista e apresentadora do Blues & Jazz Clube', desde: 'Escreve desde 2021',
+    bio: 'Jornalista de formação e ouvinte de rádio desde criança, Marina escreve crônicas sobre música, cidade e memória. Apresenta o Blues & Jazz Clube nas noites de sábado.' },
+  igor: { nome: 'Igor Bastos', papel: 'Pesquisador musical', desde: 'Escreve desde 2022',
+    bio: 'Colecionador de discos e pesquisador de música brasileira, Igor garimpa gravações raras e conta a história por trás delas. Também produz o podcast Clássicos Explicados.' },
+  fundador: { nome: 'Nome do Fundador', papel: 'Fundador e curador', desde: 'Escreve desde 2019',
+    bio: 'Radialista há mais de 20 anos, criou a Agenda Cultural para dividir os discos, livros e histórias que marcaram sua vida em Votuporanga.' },
+  equipe: { nome: 'Equipe Agenda Cultural', papel: 'Redação', desde: 'Desde 2019',
+    bio: 'Textos coletivos da equipe da rádio: bastidores, agenda cultural da região e novidades da programação.' },
+};
+const POSTS = [
+  { categoria: 'Crônicas', titulo: 'O jazz que ecoa nos becos do centro', a: 'marina', data: '28 out 2026' },
+  { categoria: 'Descobertas Musicais', titulo: 'Cinco discos de choro para ouvir sem pressa', a: 'igor', data: '25 out 2026' },
+  { categoria: 'Reflexões', titulo: 'Por que ainda ouvimos rádio', a: 'fundador', data: '22 out 2026' },
+  { categoria: 'Podcasts', titulo: 'Bastidores da Cena #32: o sarau que virou escola', a: 'equipe', data: '20 out 2026' },
+  { categoria: 'Artigos', titulo: 'A história da viola caipira no noroeste paulista', a: 'igor', data: '17 out 2026' },
+  { categoria: 'Crônicas', titulo: 'A viola e as tardes de domingo', a: 'marina', data: '14 out 2026' },
+  { categoria: 'Descobertas Musicais', titulo: 'Uma cantora de Votuporanga que você precisa ouvir', a: 'marina', data: '10 out 2026' },
+  { categoria: 'Reflexões', titulo: 'O silêncio entre uma música e outra', a: 'fundador', data: '06 out 2026' },
+  { categoria: 'Artigos', titulo: 'Como funciona a curadoria das nossas estações', a: 'equipe', data: '02 out 2026' },
+  { categoria: 'Podcasts', titulo: 'Clássicos Explicados #18: Villa-Lobos para iniciantes', a: 'igor', data: '29 set 2026' },
+  { categoria: 'Crônicas', titulo: 'Memórias de uma loja de discos que fechou as portas', a: 'fundador', data: '25 set 2026' },
+  { categoria: 'Descobertas Musicais', titulo: 'Trilhas de cinema brasileiro que merecem um play', a: 'igor', data: '21 set 2026' },
+  { categoria: 'Reflexões', titulo: 'Ler em voz alta: a poesia falada como encontro', a: 'marina', data: '17 set 2026' },
+  { categoria: 'Artigos', titulo: 'Festivais de música no interior paulista em novembro', a: 'equipe', data: '13 set 2026' },
+  { categoria: 'Podcasts', titulo: 'Bastidores da Cena #31: luthiers do interior', a: 'equipe', data: '09 set 2026' },
+].map((p, i) => ({ ...p, i, autor: AUTHORS[p.a].nome, href: `Post.dc.html?p=${i}`, autorHref: `Autor.dc.html?a=${p.a}` }));
+const qs = (k) => new URLSearchParams(location.search).get(k);
+
+
+const FMTS = [['texto','Texto / Crônica'],['poesia','Poesia'],['video','Vídeo'],['musica','Música / Artista'],['tirinha','Tirinha do dia'],['imagem','Imagem'],['citacao','Citação']];
+const P = (t) => ({ isP: true, text: t }), H = (t) => ({ isH: true, text: t }), Q = (t) => ({ isQ: true, text: t }), S = (t) => ({ isStanza: true, text: t });
+const CONTENT = {
+  texto: { categoria: 'Crônicas', badge: 'Crônica', a: 'marina', data: '28 out 2026', meta: '6 min de leitura', metaShort: '6 min', titulo: 'O jazz que ecoa nos becos do centro',
+    dek: 'Uma caminhada pelas ruas antigas da cidade, guiada por discos, vitrines e pelo som que escapa das janelas abertas no fim da tarde.', tags: ['jazz', 'cidade', 'memória'],
+    blocks: [P('Há uma hora do dia em que o centro muda de som. Os ônibus diminuem, as lojas baixam as portas pela metade e, de algum lugar que a gente nunca descobre direito, escapa um saxofone. Foi seguindo esse som que comecei a reparar na cidade de outro jeito.'),
+      P('O jazz, aqui, nunca foi de palco grande. Ele mora nos fundos de bares, nas vitrolas de quem guardou os discos do pai, nas aulas de música do conservatório que funcionam até tarde.'),
+      H('Os discos que ninguém pediu para guardar'),
+      P('Na loja da esquina, entre caixas de vinil sem capa, encontrei um disco de 1962 com uma dedicatória a lápis. O lado B está gasto exatamente na terceira faixa.'),
+      Q('Toda cidade tem uma trilha sonora. A diferença é quem para para ouvir.'),
+      P('Talvez seja por isso que a gente faz rádio. Para lembrar que a música continua tocando mesmo quando ninguém está prestando atenção — e que, às vezes, basta abrir a janela.')] },
+  poesia: { categoria: 'Reflexões', badge: 'Poesia', a: 'marina', data: '24 out 2026', meta: '1 min de leitura', metaShort: '1 min', titulo: 'Rádio de cozinha',
+    dek: 'Um poema sobre as vozes que atravessam a casa antes do café.', tags: ['poesia', 'rádio'],
+    blocks: [S('O rádio acorda antes da casa,\nchia baixinho na prateleira,\nfala do tempo, de uma estrada,\nde alguém que canta em outra cidade.'),
+      S('Minha mãe mexe o café\nno compasso de uma valsa antiga,\ne a manhã inteira cabe\nnuma frequência que ninguém mais sintoniza.'),
+      S('Desligo tarde.\nA música fica.')] },
+  video: { categoria: 'Podcasts', badge: 'Vídeo', a: 'equipe', data: '20 out 2026', meta: 'Vídeo · 18 min', metaShort: '18 min', titulo: 'Bastidores da Cena #32: o sarau que virou escola',
+    dek: 'Visitamos o coletivo que transformou um sarau de quintal em oficinas gratuitas de leitura e escrita para jovens da cidade.', tags: ['sarau', 'literatura', 'bastidores'],
+    blocks: [P('Neste episódio, conversamos com as organizadoras do Sarau do Quintal sobre como um encontro mensal entre amigos virou uma escola informal de poesia, com mais de 80 participantes por edição.'),
+      P('O vídeo também mostra trechos das leituras ao vivo e os bastidores da produção das antologias que o grupo publica todo ano.')] },
+  musica: { categoria: 'Descobertas Musicais', badge: 'Música', a: 'marina', data: '10 out 2026', meta: '4 min de leitura', metaShort: '4 min', titulo: 'Uma cantora de Votuporanga que você precisa ouvir',
+    dek: 'Helena Moura lança seu primeiro disco, “Varanda”, gravado em casa e já tocando na estação MPB de Ouro.', tags: ['mpb', 'artista local', 'lançamento'],
+    blocks: [P('Helena começou cantando no coral da escola e, durante anos, guardou as próprias composições num caderno. “Varanda” reúne oito dessas canções, gravadas com violão, piano e muito silêncio entre as notas.'),
+      P('O resultado é um disco de MPB delicado, com letras sobre o interior, o calor e as conversas de fim de tarde. As quatro faixas acima estão na programação da MPB de Ouro durante todo o mês.')] },
+  tirinha: { categoria: 'Tirinhas', badge: 'Tirinha do dia', a: 'fundador', data: '03 nov 2026', meta: 'Tirinha · 3 quadros', metaShort: '3 quadros', titulo: 'O rádio de pilha',
+    dek: 'A tirinha de hoje é sobre aquele rádio que nunca pegava direito — e que ninguém tinha coragem de jogar fora.', tags: ['tirinha', 'humor'],
+    blocks: [P('Toda manhã publicamos uma tirinha curta sobre música, rádio e vida no interior. Gostou? Deixe nos comentários qual rádio antigo morava na sua casa.')] },
+  imagem: { categoria: 'Crônicas', badge: 'Imagem', a: 'igor', data: '06 out 2026', meta: 'Ensaio fotográfico', metaShort: 'Foto', titulo: 'O último cinema de rua da cidade',
+    dek: 'Um registro da fachada que resiste no centro, entre lojas novas e memórias de matinê.', tags: ['fotografia', 'cinema', 'cidade'],
+    blocks: [P('O Cine Votuporanga fechou as portas há mais de uma década, mas a fachada continua ali, com as letras desbotadas e a bilheteria intacta. Fotografei numa tarde de outubro, quando a luz bate de lado e as letras quase parecem acesas de novo.')] },
+  citacao: { categoria: 'Reflexões', badge: 'Citação', a: 'fundador', data: '01 nov 2026', meta: '1 min de leitura', metaShort: '1 min', titulo: 'Citação da semana',
+    dek: 'Uma frase curta para acompanhar a programação dos próximos dias.', tags: ['citação', 'literatura'],
+    blocks: [P('Escolhi esta frase de Clarice para abrir novembro. Ela me lembra que toda estação, todo disco e todo programa começaram com alguém dizendo sim a uma ideia pequena.')] },
+};
+const AV = ['var(--accent-soft)', 'var(--surface2)', 'var(--av3)', 'var(--av4)', 'var(--av5)'];
+const ini = (n) => n.split(' ').map(x => x[0]).slice(0, 2).join('');
+const BASE_COMMENTS = [
+  { n: 'Ana Paula Ribeiro', d: '28 out 2026, 19:42', t: 'Que texto lindo! Me lembrou das tardes na loja de discos da Rua Amazonas, que fechou faz tempo.',
+    replies: [{ n: 'Marina Alves', isAuthor: true, d: '28 out 2026, 21:10', t: 'Ana, eu também frequentava! Acho que a gente se cruzou por lá algumas vezes.' }] },
+  { n: 'Carlos Henrique', d: '29 out 2026, 08:15', t: 'Ouço a rádio todo dia no trabalho. Agora vou prestar mais atenção no som da cidade no caminho de volta.', replies: [] },
+  { n: 'Luíza Fernandes', d: '29 out 2026, 12:03', t: 'Alguém sabe o nome do disco de 1962? Fiquei curiosa.',
+    replies: [{ n: 'Igor Bastos', d: '29 out 2026, 13:20', t: 'Pela descrição, aposto num disco do Moacir Santos. Vou procurar a foto e posto aqui.' }] },
+  { n: 'Roberto Lima', d: '30 out 2026, 22:47', t: 'Parabéns pela crônica e pela rádio. O Blues & Jazz Clube de sábado virou tradição aqui em casa.', replies: [] },
+  { n: 'Fernanda Souza', d: '31 out 2026, 10:30', t: 'Toda cidade tem uma trilha sonora — vou levar essa frase comigo.', replies: [] },
+];
+const PER_C = 3;
+
+class Component extends DCLogic {
+  state = { fmt: null, video: false, track: -1, share: false, cPage: 0, text: '', name: '', replyTo: null, mine: [] };
+  renderVals() {
+    const fmt = this.state.fmt ?? (this.props.formato || 'texto');
+    const c = CONTENT[fmt] || CONTENT.texto;
+    const author = AUTHORS[c.a];
+    const all = [...BASE_COMMENTS.map(x => ({ ...x, replies: [...x.replies] })), ];
+    this.state.mine.forEach(m => { if (m.to != null && all[m.to]) all[m.to].replies.push(m); else all.push(m); });
+    const total = all.reduce((s, x) => s + 1 + x.replies.length, 0);
+    const nPages = Math.max(1, Math.ceil(all.length / PER_C));
+    const cPage = Math.min(this.state.cPage, nPages - 1);
+    const deco = (x, i) => ({ ...x, ini: ini(x.n), av: AV[i % AV.length] });
+    const threads = all.map((x, i) => ({ ...deco(x, i), idx: i, replies: x.replies.map((r, j) => deco(r, i + j + 2)),
+      reply: () => this.setState({ replyTo: i }) })).slice(cPage * PER_C, cPage * PER_C + PER_C);
+    const tracks = ['Varanda', 'Calor de outubro', 'Conversa de portão', 'Último trem'].map((n, i) => {
+      const on = this.state.track === i;
+      return { n, num: i + 1, d: ['3:42', '4:05', '3:18', '5:01'][i], on, off: !on,
+        bg: on ? 'var(--accent)' : 'var(--surface2)', icon: on ? '#ffffff' : 'var(--text)', color: on ? 'var(--accent-text)' : 'var(--text)',
+        play: () => this.setState({ track: on ? -1 : i }) };
+    });
+    const closeShare = () => this.setState({ share: false });
+    const rel = POSTS.filter(p => p.categoria === c.categoria).concat(POSTS).filter((p, i, arr) => arr.indexOf(p) === i && p.titulo !== c.titulo).slice(0, 3);
+    return {
+      fmts: FMTS.map(([k, label]) => ({ label, pick: () => this.setState({ fmt: k, video: false, track: -1, share: false }),
+        bg: k === fmt ? 'var(--text)' : 'var(--surface)', border: k === fmt ? 'var(--text)' : 'var(--line)', color: k === fmt ? 'var(--bg)' : 'var(--text-body)' })),
+      c, author, autorHref: `Autor.dc.html?a=${c.a}`, tags: c.tags, blocks: c.blocks,
+      catHref: `Blog.dc.html?c=${encodeURIComponent(c.categoria)}`,
+      isTexto: fmt === 'texto', isPoesia: fmt === 'poesia', isVideo: fmt === 'video', isMusica: fmt === 'musica',
+      isTirinha: fmt === 'tirinha', isImagem: fmt === 'imagem', isCitacao: fmt === 'citacao',
+      videoPlaying: this.state.video, videoPaused: !this.state.video,
+      videoTime: this.state.video ? '02:16' : '00:00', videoPct: this.state.video ? '12%' : '0%',
+      toggleVideo: () => this.setState(s => ({ video: !s.video })),
+      chapters: [{ t: '00:00', n: 'Abertura' }, { t: '02:40', n: 'O quintal' }, { t: '08:15', n: 'As oficinas' }, { t: '14:30', n: 'Leitura ao vivo' }],
+      tracks,
+      shareOpen: this.state.share, toggleShare: () => this.setState(s => ({ share: !s.share })),
+      shareOpts: [['WA', 'WhatsApp'], ['FB', 'Facebook'], ['X', 'X (Twitter)'], ['@', 'E-mail'], ['🔗', 'Copiar link']].map(([ic, label]) => ({ ic, label, act: closeShare })),
+      commentCount: String(total),
+      commentTitle: `${total} comentários`,
+      threads, cPageLabel: `${cPage + 1} de ${nPages}`,
+      prevColor: cPage > 0 ? 'var(--text)' : 'var(--muted)', nextColor: cPage < nPages - 1 ? 'var(--text)' : 'var(--muted)',
+      prevC: () => this.setState({ cPage: Math.max(0, cPage - 1) }),
+      nextC: () => this.setState({ cPage: Math.min(nPages - 1, cPage + 1) }),
+      replying: this.state.replyTo != null,
+      formTitle: this.state.replyTo != null ? `Responder a ${all[this.state.replyTo].n}` : 'Deixe um comentário',
+      cancelReply: () => this.setState({ replyTo: null }),
+      fText: this.state.text, fName: this.state.name,
+      setText: (e) => this.setState({ text: e.target.value }),
+      setName: (e) => this.setState({ name: e.target.value }),
+      publish: () => {
+        const t = this.state.text.trim(); if (!t) return;
+        const m = { n: this.state.name.trim() || 'Você', d: 'agora mesmo', t, pending: true, replies: [], to: this.state.replyTo };
+        const newLen = all.length + (m.to == null ? 1 : 0);
+        this.setState(s => ({ mine: [...s.mine, m], text: '', replyTo: null, cPage: m.to == null ? Math.ceil(newLen / PER_C) - 1 : s.cPage }));
+      },
+      related: rel,
+    };
+  }
+}
+</script>
+</body>
+</html>

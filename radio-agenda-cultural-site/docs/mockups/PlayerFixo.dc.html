@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="./tema.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&amp;display=swap" rel="stylesheet">
+  <style>
+    @keyframes livepulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+  </style>
+</helmet>
+<div style="position:relative; font-family:'DM Sans',sans-serif;">
+
+  <sc-if value="{{ isDesk }}" hint-placeholder-val="{{ true }}">
+    <sc-if value="{{ open }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute; right:28px; bottom:84px; width:320px; background:var(--surface); border:1px solid var(--line); border-radius:16px; box-shadow:0 20px 44px -16px rgba(60,40,20,.22); overflow:hidden; z-index:5;">
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 18px; border-bottom:1px solid var(--line);">
+          <span style="font-family:'Outfit',sans-serif; font-weight:500; font-size:15px; color:var(--text);">Estações</span>
+          <button onClick="{{ close }}" style="white-space:nowrap; background:none; border:none; color:var(--muted); font-size:16px; cursor:pointer;">✕</button>
+        </div>
+        <div style="max-height:300px; overflow:auto;">
+          <sc-for list="{{ stations }}" as="station" hint-placeholder-count="6">
+            <button onClick="{{ station.select }}" style="white-space:nowrap; width:100%; display:flex; align-items:center; gap:12px; padding:10px 18px; background:{{ station.rowBg }}; border:none; cursor:pointer; text-align:left; font-family:inherit;" style-hover="background:var(--surface2);">
+              <div class="stripe-cover" style="width:38px; height:38px; border-radius:8px; flex:none;"></div>
+              <div style="display:flex; flex-direction:column; gap:2px; min-width:0; overflow:hidden;">
+                <span style="font-size:13px; font-weight:500; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ station.name }}</span>
+                <span style="font-size:11px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ station.genre }}</span>
+              </div>
+              <sc-if value="{{ station.isCurrent }}" hint-placeholder-val="{{ false }}">
+                <span style="margin-left:auto; width:8px; height:8px; border-radius:50%; background:var(--accent); flex:none; animation:livepulse 1.4s ease-in-out infinite;"></span>
+              </sc-if>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+    <div style="height:72px; background:var(--bar); border-top:1px solid var(--line); box-shadow:0 -8px 24px -12px rgba(60,40,20,.12); display:grid; grid-template-columns:1fr auto 1fr; align-items:center; padding:0 24px; gap:16px;">
+      <div style="display:flex; align-items:center; gap:14px; min-width:0;">
+        <div class="stripe-cover" style="width:44px; height:44px; border-radius:9px; flex:none;"></div>
+        <div style="display:flex; flex-direction:column; gap:3px; min-width:120px;">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span style="width:6px; height:6px; border-radius:50%; background:var(--accent); animation:livepulse 1.4s ease-in-out infinite;"></span>
+            <span style="font-size:9px; font-weight:500; letter-spacing:.08em; color:var(--accent-text); text-transform:uppercase;">Ao vivo</span>
+          </div>
+          <span style="font-size:13px; font-weight:500; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ current.name }}</span>
+        </div>
+        <div style="width:1px; height:28px; background:var(--line); flex:none;"></div>
+        <div style="display:flex; flex-direction:column; gap:2px; min-width:0;">
+          <span style="font-size:9px; font-weight:500; letter-spacing:.08em; color:var(--muted); text-transform:uppercase;">Tocando agora</span>
+          <span style="font-size:13px; font-weight:500; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ current.track }}</span>
+          <span style="font-size:11px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ current.artist }}</span>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:14px; background:var(--surface2); border:1px solid var(--line); border-radius:999px; padding:6px 16px; height:44px;">
+        <button onClick="{{ toggle }}" aria-label="Play/pause" style="white-space:nowrap; width:36px; height:36px; border-radius:50%; background:var(--accent); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex:none;" style-hover="background:var(--accent-dark);">
+          <sc-if value="{{ playing }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex; gap:4px;">
+              <span style="width:4px; height:13px; border-radius:2px; background:#ffffff;"></span>
+              <span style="width:4px; height:13px; border-radius:2px; background:#ffffff;"></span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ paused }}" hint-placeholder-val="{{ true }}">
+            <div style="width:0; height:0; border-top:7px solid transparent; border-bottom:7px solid transparent; border-left:9px solid #ffffff; margin-left:2px;"></div>
+          </sc-if>
+        </button>
+        <div style="width:1px; height:22px; background:var(--line); flex:none;"></div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div style="display:flex; align-items:flex-end; gap:2px; flex:none;">
+            <span style="width:3px; height:6px; border-radius:1px; background:var(--muted);"></span>
+            <span style="width:3px; height:9px; border-radius:1px; background:var(--muted);"></span>
+            <span style="width:3px; height:12px; border-radius:1px; background:var(--muted);"></span>
+          </div>
+          <input type="range" min="0" max="100" value="{{ volume }}" onChange="{{ setVolume }}" style="width:80px; accent-color:var(--accent); cursor:pointer;">
+        </div>
+      </div>
+      <div style="display:flex; justify-content:flex-end;">
+        <button onClick="{{ toggleOpen }}" style="white-space:nowrap; display:flex; align-items:center; gap:10px; padding:12px 18px; border-radius:999px; background:var(--surface); border:1px solid var(--line); cursor:pointer; font-family:inherit;" style-hover="background:var(--surface2);">
+          <span style="font-size:13px; font-weight:500; color:var(--text);">Trocar estação</span>
+          <span style="font-size:11px; color:var(--muted); transform:{{ chevron }}; transition:transform .2s ease;">▾</span>
+        </button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+    <sc-if value="{{ open }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute; left:0; right:0; bottom:56px; background:var(--surface); border-radius:20px 20px 0 0; box-shadow:0 -16px 40px -12px rgba(60,40,20,.3); max-height:420px; display:flex; flex-direction:column; z-index:5;">
+        <div style="display:flex; justify-content:center; padding-top:8px;"><span style="width:36px; height:4px; border-radius:2px; background:var(--line);"></span></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:6px 8px 6px 18px;">
+          <span style="font-family:'Outfit',sans-serif; font-weight:500; font-size:15px; color:var(--text);">Escolher estação</span>
+          <button onClick="{{ close }}" style="white-space:nowrap; background:none; border:none; color:var(--muted); font-size:16px; cursor:pointer; width:44px; height:44px;">✕</button>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:2px; padding:0 10px 14px; overflow:auto;">
+          <sc-for list="{{ stations }}" as="station" hint-placeholder-count="6">
+            <button onClick="{{ station.select }}" style="white-space:nowrap; width:100%; display:flex; align-items:center; gap:10px; padding:8px 10px; min-height:52px; border-radius:10px; background:{{ station.rowBg }}; border:none; cursor:pointer; text-align:left; font-family:inherit;">
+              <div class="stripe-cover" style="width:36px; height:36px; border-radius:8px; flex:none;"></div>
+              <div style="display:flex; flex-direction:column; gap:1px; min-width:0; overflow:hidden;">
+                <span style="font-size:13px; font-weight:500; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ station.name }}</span>
+                <span style="font-size:11px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ station.genre }}</span>
+              </div>
+              <sc-if value="{{ station.isCurrent }}" hint-placeholder-val="{{ false }}">
+                <span style="margin-left:auto; width:7px; height:7px; border-radius:50%; background:var(--accent); flex:none; animation:livepulse 1.4s ease-in-out infinite;"></span>
+              </sc-if>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+    <div style="height:56px; background:var(--bar); border-top:1px solid var(--line); box-shadow:0 -8px 24px -12px rgba(60,40,20,.12); display:flex; align-items:center; gap:8px; padding:0 10px 0 12px;">
+      <div class="stripe-cover" style="width:34px; height:34px; border-radius:7px; flex:none;"></div>
+      <div style="display:flex; flex-direction:column; gap:1px; min-width:0; flex:1;">
+        <span style="font-size:12px; font-weight:500; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ current.track }}</span>
+        <span style="font-size:10px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ current.artist }} · {{ current.name }}</span>
+      </div>
+      <button onClick="{{ toggle }}" aria-label="Play/pause" style="white-space:nowrap; width:40px; height:40px; border-radius:50%; background:var(--accent); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex:none;">
+        <sc-if value="{{ playing }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex; gap:3px;">
+            <span style="width:3px; height:11px; border-radius:2px; background:#ffffff;"></span>
+            <span style="width:3px; height:11px; border-radius:2px; background:#ffffff;"></span>
+          </div>
+        </sc-if>
+        <sc-if value="{{ paused }}" hint-placeholder-val="{{ true }}">
+          <div style="width:0; height:0; border-top:6px solid transparent; border-bottom:6px solid transparent; border-left:8px solid #ffffff; margin-left:2px;"></div>
+        </sc-if>
+      </button>
+      <button onClick="{{ toggleOpen }}" style="white-space:nowrap; display:flex; align-items:center; gap:5px; padding:0 12px; height:40px; border-radius:999px; background:var(--surface2); border:1px solid var(--line); cursor:pointer; flex:none; font-family:inherit;">
+        <span style="font-size:11px; font-weight:500; color:var(--text);">Estações</span>
+        <span style="font-size:9px; color:var(--muted);">▴</span>
+      </button>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:440},&quot;mobile&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;initialOpen&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;currentIndex&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;number&quot;},&quot;isPlaying&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;boolean&quot;},&quot;onSelect&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;(i:number)=&gt;void&quot;},&quot;onToggle&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;()=&gt;void&quot;}}">
+const STATIONS = [
+  { name: 'Blues & Jazz Clube', genre: 'Blues & Jazz', track: 'Sweet Home Chicago', artist: 'Muddy Waters' },
+  { name: 'Bossa & Violão', genre: 'Bossa Nova', track: 'Garota de Ipanema', artist: 'João Gilberto' },
+  { name: 'Clássicos Contemporâneos', genre: 'Instrumental', track: 'Prelúdio Nº 1', artist: 'Egberto Gismonti' },
+  { name: 'Vozes da Cidade', genre: 'Entrevistas & Cultura', track: 'Papo com o Curador', artist: 'Agenda Cultural' },
+  { name: 'Sons do Brasil', genre: 'Regional & Raízes', track: 'Asa Branca', artist: 'Luiz Gonzaga' },
+  { name: 'Poesia Falada', genre: 'Literatura & Spoken Word', track: 'Versos ao Vivo', artist: 'Coletivo Sarau' },
+  { name: 'Noites de Ópera', genre: 'Clássica & Ópera', track: 'Nessun Dorma', artist: 'Orquestra Municipal' },
+  { name: 'Rock Progressivo BR', genre: 'Rock Nacional', track: 'Horizonte Aberto', artist: 'Banda Miragem' },
+  { name: 'MPB de Ouro', genre: 'MPB', track: 'Como Nossos Pais', artist: 'Elis Regina' },
+  { name: 'Viola Caipira', genre: 'Sertanejo de Raiz', track: 'Tristeza do Jeca', artist: 'Tonico & Tinoco' },
+  { name: 'Samba & Choro', genre: 'Samba & Choro', track: 'Carinhoso', artist: 'Pixinguinha' },
+  { name: 'Trilhas de Cinema', genre: 'Trilhas Sonoras', track: 'Cinema Paradiso', artist: 'Ennio Morricone' },
+];
+
+class Component extends DCLogic {
+  state = { cur: 0, playing: false, open: null, volume: 70 };
+  renderVals() {
+    const p = this.props;
+    const cur = p.currentIndex ?? this.state.cur;
+    const playing = p.isPlaying ?? this.state.playing;
+    const open = this.state.open ?? !!p.initialOpen;
+    const select = (i) => {
+      if (p.onSelect) p.onSelect(i); else this.setState({ cur: i, playing: true });
+      this.setState({ open: false });
+    };
+    const stations = STATIONS.map((s, i) => ({
+      ...s, isCurrent: i === cur,
+      rowBg: i === cur ? 'var(--surface2)' : 'transparent',
+      select: () => select(i),
+    }));
+    return {
+      isMobile: !!p.mobile, isDesk: !p.mobile,
+      stations, current: stations[cur] || stations[0],
+      playing, paused: !playing,
+      toggle: () => (p.onToggle ? p.onToggle() : this.setState(s => ({ playing: !s.playing }))),
+      open,
+      toggleOpen: () => this.setState({ open: !open }),
+      close: () => this.setState({ open: false }),
+      chevron: open ? 'rotate(180deg)' : 'rotate(0deg)',
+      volume: this.state.volume,
+      setVolume: (e) => this.setState({ volume: Number(e.target.value) }),
+    };
+  }
+}
+</script>
+</body>
+</html>
