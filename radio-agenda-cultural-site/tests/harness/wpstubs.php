@@ -42,13 +42,13 @@ function antispambot($e){ return $e; }
 function wp_unslash($s){ return $s; }
 function wp_parse_url($u,$c=-1){ return $c===-1 ? parse_url($u) : parse_url($u,$c); }
 function untrailingslashit($s){ return rtrim($s,'/\\'); }
-function wp_date($f){ return date($f); }
+function wp_date($f){ if($f==='Y-m-d' && isset($_GET['dia'])) return $_GET['dia']; return date($f); }
 function get_theme_mod($k,$d=false){ return array_key_exists($k,$GLOBALS['mods']) ? $GLOBALS['mods'][$k] : $d; }
 function get_nav_menu_locations(){ return []; } function wp_get_nav_menu_items($m){ return []; }
 function get_option($k,$d=false){ return 0; }
 function get_permalink($p=null){ $id = is_object($p)?$p->ID:($p??($GLOBALS['loop']['posts'][$GLOBALS['loop']['i']]['url']??0)); if(is_int($id)&&isset($GLOBALS['posts_db'][$id])) return '/blog/post-'.$id.'/'; return is_string($id)?$id:'/estacao/'.$id.'/'; }
 function get_category_by_slug($s){ return false; } function get_category_link($c){ return '/'; }
-function wp_get_attachment_image($id,$size,$icon,$attr){ $src = ($id==7)?'/h/logo-claro.svg':'/h/logo-escuro.svg'; return '<img src="'.$src.'" class="'.esc_attr($attr['class']).'" alt="'.esc_attr($attr['alt']).'" height="34">'; }
+function wp_get_attachment_image($id,$size,$icon,$attr){ $src = ($id==7)?'/h/logo-claro.svg':(($id==55)?'/h/capa-1.svg':(($id==56)?'/h/foto2.svg':'/h/logo-escuro.svg')); return '<img src="'.$src.'" class="'.esc_attr($attr['class']??'').'" alt="'.esc_attr($attr['alt']??'').'" height="34">'; }
 function get_template_part($slug,$name=null,$args=[]){ include THEME_DIR.'/'.$slug.'.php'; }
 function get_header(){ include THEME_DIR.'/header.php'; } function get_footer(){ include THEME_DIR.'/footer.php'; }
 function wp_json_encode($d,$f=0){ return json_encode($d,$f); }
@@ -107,3 +107,12 @@ $GLOBALS['fields'][100]['texto_sobre_a_estacao']='<p>Primeiro parágrafo da esta
 
 function wp_strip_all_tags($t){ return strip_tags($t); }
 function wp_trim_words($t,$n=55,$mais='...'){ $p=preg_split('/\s+/',trim($t)); if(count($p)<=$n) return implode(' ',$p); return implode(' ',array_slice($p,0,$n)).$mais; }
+
+function wp_timezone(){ return new DateTimeZone('America/Sao_Paulo'); }
+function wp_next_scheduled($h){ return $GLOBALS['agendado'][$h] ?? false; }
+function wp_schedule_event($t,$rec,$h){ $GLOBALS['agendado'][$h]=$t; $GLOBALS['agenda_args']=[$t,$rec,$h]; return true; }
+function wp_clear_scheduled_hook($h){ unset($GLOBALS['agendado'][$h]); }
+function wp_list_pluck($l,$campo){ return array_map(function($x) use($campo){ return is_array($x)?$x[$campo]:$x->$campo; },$l); }
+// audiência das estações (números do mockup) e página inicial
+$ouv=[100=>980,101=>1240,102=>610,103=>420,104=>870,105=>310,106=>290,107=>540,108=>1120,109=>760,110=>690,111=>450];
+foreach($ouv as $id=>$n){ $GLOBALS['fields'][$id]['ouvintes']=$n; }

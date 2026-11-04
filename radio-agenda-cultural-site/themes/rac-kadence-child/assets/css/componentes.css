@@ -232,6 +232,17 @@
 .rac-card-img.is-tocando .rac-ico-play { display: none; }
 .rac-card-img.is-tocando .rac-ico-pause { display: flex; }
 
+/* Variante "destaque" (Home): mais baixo, sem trecho, selo de destaque */
+.rac-card-img--destaque { min-height: 230px; padding: 14px 18px 16px; }
+.rac-card-img--descoberta, .rac-card-img--descoberta.is-tocando { box-shadow: 0 0 0 3px var(--accent); }
+.rac-card-img__badge {
+  align-self: flex-start; padding: 5px 12px; border-radius: 999px; white-space: nowrap;
+  background: var(--surface); font-size: 11px; font-weight: 500; color: var(--text);
+}
+.rac-card-img--descoberta .rac-card-img__badge { background: var(--accent); color: var(--on-accent); }
+.rac-card-img--destaque .rac-card-img__nome { font-size: 21px; }
+.rac-card-img--destaque .rac-card-img__play { width: 44px; height: 44px; }
+
 /* =========================================================
    CARD DE POST
    ========================================================= */
@@ -305,6 +316,11 @@
   .rac-body .rac-card-img__ver { font-size: 11px; }
   .rac-body .rac-card-img__play { width: 34px; height: 34px; }
   .rac-card-img__live { padding: 3px 8px 3px 7px; }
+
+  /* Home: estações em destaque rolam na horizontal */
+  .rac-card-img--destaque { min-height: 170px; padding: 10px 12px 12px; }
+  .rac-card-img--destaque .rac-card-img__nome { font-size: 15px; }
+  .rac-card-img__badge { padding: 4px 10px; font-size: 10px; }
 }
 
 /* Grades da página de teste de componentes (template "Componentes").

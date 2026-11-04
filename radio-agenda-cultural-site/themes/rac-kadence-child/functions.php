@@ -7,6 +7,7 @@
  * Fase 2: PlayerFixo, CardEstacao e CardPost (veja inc/player.php).
  * Fase 3A: página Estações e Estação individual (page-estacoes.php,
  *          single-estacao.php).
+ * Fase 3B-1: página inicial (front-page.php, inc/home.php).
  *
  * REGRA CRÍTICA: o plugin troca via AJAX apenas o conteúdo de "#primary".
  * Todo template deste tema precisa ter exatamente UM <main id="primary">,
@@ -15,12 +16,13 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'RAC_TEMA_VERSAO', '0.3.0' );
+define( 'RAC_TEMA_VERSAO', '0.4.0' );
 
 require_once get_stylesheet_directory() . '/inc/helpers.php';
 require_once get_stylesheet_directory() . '/inc/customizer.php';
 require_once get_stylesheet_directory() . '/inc/player.php';
 require_once get_stylesheet_directory() . '/inc/acf-campos.php';
+require_once get_stylesheet_directory() . '/inc/home.php';
 
 /* ============================================================
    1. CONFIGURAÇÃO DO TEMA
@@ -93,6 +95,8 @@ function rac_enqueue_assets() {
     wp_enqueue_style( 'rac-componentes', $uri . '/assets/css/componentes.css', array( 'rac-base' ), filemtime( $dir . '/assets/css/componentes.css' ) );
 
     wp_enqueue_style( 'rac-paginas', $uri . '/assets/css/paginas.css', array( 'rac-componentes' ), filemtime( $dir . '/assets/css/paginas.css' ) );
+
+    wp_enqueue_style( 'rac-home', $uri . '/assets/css/home.css', array( 'rac-paginas' ), filemtime( $dir . '/assets/css/home.css' ) );
 
     wp_enqueue_script( 'rac-tema-js', $uri . '/assets/js/rac.js', array(), filemtime( $dir . '/assets/js/rac.js' ), true );
     // Player fixo e cards de estação (Fase 2). Só quando há player na página.

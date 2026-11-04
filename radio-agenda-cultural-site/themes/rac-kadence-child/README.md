@@ -1,6 +1,6 @@
 # Tema filho do Kadence — Rádio Agenda Cultural
 
-Versão 0.3.0 (Fases 1, 2 e 3A). Requer o tema **Kadence** instalado (é o tema pai).
+Versão 0.4.0 (Fases 1, 2, 3A e 3B-1). Requer o tema **Kadence** instalado (é o tema pai).
 
 ## Instalação (site de desenvolvimento)
 
@@ -76,6 +76,27 @@ Versão 0.3.0 (Fases 1, 2 e 3A). Requer o tema **Kadence** instalado (é o tema 
 - Os **campos novos** são criados por código em `inc/acf-campos.php` (ACF gratuito).
 - O player e o rodapé seguem a ordem do plugin (`ordem_de_exibicao` e depois alfabética).
 
+## Página inicial (Fase 3B-1)
+
+`front-page.php` vale para a página definida como **Página inicial** em Configurações → Leitura.
+Blog, Literatura, Podcasts e Recados dos ouvintes chegam na 3B-2.
+
+- **Textos e fotos:** em "Textos da página inicial" (abas Topo, Fundador, Destaques, Estações em
+  destaque e Sobre nós) da própria página. Campos vazios mostram o texto provisório do mockup (os do
+  fundador são placeholder até você preencher). A imagem do topo é a **Imagem destacada** da página
+  (sem ela, o placeholder).
+- **Mais ouvidas:** campo **"Ouvintes"** (número) em cada estação. As 2 com mais ouvintes aparecem como
+  "Mais ouvida #1 e #2" e o botão "Ouvir agora" do topo toca a #1. Sem números preenchidos, vale a
+  ordem de exibição e depois a alfabética. (O Zeno.fm não tem API pública de ouvintes; no futuro um
+  script pode atualizar este mesmo campo.)
+- **Descoberta do editor:** na aba "Estações em destaque", escolha **Sorteio diário** (padrão) ou
+  **Fixar uma estação**. O sorteio escolhe entre as estações que NÃO estão no top 2, troca à
+  meia-noite (fuso do site) e é igual para todos os visitantes no dia; percorre todas as estações num
+  ciclo sem repetir. Se a estação fixada estiver no top 2, usa o sorteio.
+- **Cache (LiteSpeed):** um evento diário às 00:05 limpa só a página inicial; salvar uma estação
+  também limpa. (Depende do WP-Cron, que roda quando há visitas.)
+- **Todas as estações:** cards clicáveis em ordem alfabética, sem o link "Ver estação" (como no mockup).
+
 ## Regras que não podem ser quebradas
 
 - Todo template tem **exatamente um** `<main id="primary">`: é a área que o plugin
@@ -105,9 +126,10 @@ style.css  functions.php  header.php  footer.php
 index.php  page.php  single.php  404.php          (genéricos; os definitivos vêm nas Fases 3–5)
 page-componentes.php                              (prévia de teste dos componentes)
 page-estacoes.php  single-estacao.php             (Fase 3A)
-inc/helpers.php  inc/customizer.php  inc/player.php  inc/acf-campos.php
-template-parts/theme-toggle.php  player-fixo.php  card-estacao.php  card-post.php  tile-estacao.php
-assets/css/tema.css  base.css  componentes.css  paginas.css
+front-page.php                                    (Fase 3B-1)
+inc/helpers.php  inc/customizer.php  inc/player.php  inc/acf-campos.php  inc/home.php
+template-parts/theme-toggle.php  player-fixo.php  card-estacao.php  card-estacao-imagem.php  card-post.php  tile-estacao.php
+assets/css/tema.css  base.css  componentes.css  paginas.css  home.css
 assets/js/rac.js  player.js  estacao.js
 assets/img/placeholder-topo.jpg
 ```
