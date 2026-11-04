@@ -44,20 +44,23 @@ function rac_inicial( $nome ) {
 }
 
 /**
- * Proteção extra só para os comentários da página inicial (recados).
- * Bloqueia: campo-armadilha preenchido, ou envio em menos de 3 s / sem a
- * medição do navegador (envio feito sem passar pelo formulário do tema).
+ * Proteção extra para os comentários feitos pelos formulários do tema: os recados
+ * da página inicial (sempre) e os comentários dos posts (que enviam o campo
+ * "rac_form"). Bloqueia: campo-armadilha preenchido, ou envio em menos de 3 s /
+ * sem a medição do navegador. Comentários que não vêm dos formulários do tema
+ * seguem só a moderação (e o Akismet, se houver).
  */
 function rac_filtrar_recado( $dados ) {
     $inicial = (int) get_option( 'page_on_front' );
-    if ( $inicial <= 0 || (int) $dados['comment_post_ID'] !== $inicial ) return $dados;
+    $da_home = $inicial > 0 && (int) $dados['comment_post_ID'] === $inicial;
+    if ( ! $da_home && empty( $_POST['rac_form'] ) ) return $dados;
 
     if ( ! empty( $_POST['rac_site'] ) ) {
         wp_die( 'Não foi possível enviar o recado.', 'Recado não enviado', array( 'response' => 400, 'back_link' => true ) );
     }
     $ms = isset( $_POST['rac_ms'] ) ? (int) $_POST['rac_ms'] : 0;
     if ( $ms < 3000 ) {
-        wp_die( 'Calma! Aguarde alguns segundos antes de enviar o recado.', 'Recado não enviado', array( 'response' => 400, 'back_link' => true ) );
+        wp_die( 'Calma! Aguarde alguns segundos antes de enviar.', 'Recado não enviado', array( 'response' => 400, 'back_link' => true ) );
     }
     return $dados;
 }

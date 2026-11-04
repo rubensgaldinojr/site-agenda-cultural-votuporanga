@@ -28,6 +28,8 @@
   --accent-soft: #fdeee2;   /* fundo de item ativo */
   --on-accent: #ffffff;     /* ícones e texto sobre o laranja */
   --on-photo: #ffffff;      /* texto sobre fotos (igual nos dois temas) */
+  --marca-whatsapp: #1fa855; /* botões de compartilhar (cores das marcas, iguais nos dois temas) */
+  --marca-facebook: #1877f2;
   --scrim: 18 14 10;        /* escurecimento sobre fotos, RGB (igual nos dois temas) */
   --live: #e2483d;          /* bolinha "ao vivo" */
   --live-text: #c23c32;     /* texto "ao vivo" */
@@ -60,6 +62,8 @@
   --accent-soft: #3a2618;
   --on-accent: #ffffff;
   --on-photo: #ffffff;
+  --marca-whatsapp: #1fa855;
+  --marca-facebook: #1877f2;
   --scrim: 18 14 10;
   --live: #ff5a4e;
   --live-text: #ff8a7f;

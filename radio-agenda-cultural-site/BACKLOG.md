@@ -18,8 +18,8 @@
 | 2 | CardEstacao, CardPost, PlayerFixo (visual), ThemeToggle | ✅ testada no site real e mergeada (PR #2) |
 | 3A | Listagem de Estações e Estação individual | ✅ testada no site real e mergeada (PR #3) |
 | 3B-1 | Home: topo, destaques, estações em destaque (mais ouvidas e descoberta), todas as estações e Sobre nós | ✅ testada no site real e mergeada (PR #4) |
-| 3B-2 | Home: carrosséis de Blog e Literatura, Podcasts e Recados dos ouvintes; "Da biblioteca" na página da estação | 🔨 código pronto; aguardando teste manual no site |
-| 4 | Blog, Post, Autor | ⏳ |
+| 3B-2 | Home: carrosséis de Blog e Literatura, Podcasts e Recados dos ouvintes; "Da biblioteca" na página da estação | ✅ testada no site real e mergeada (PR #5) |
+| 4 (4A+4B) | Blog (listagem, categorias, tags), página do Autor e Post com 7 formatos, compartilhar, caixa do autor, comentários e relacionados | 🔨 código pronto (tema 0.6.0); aguardando teste manual no site |
 | 5 | Sobre, Contato, revisão geral | ⏳ |
 
 ## Itens
@@ -73,16 +73,22 @@
 | B-41 | Página de Estações com cards grandes (imagem de fundo, nome, "Ao vivo", trecho, "Ver estação" e play) | 3A | ✅ | Feito: 4 colunas no desktop, 2 no mobile; placeholder em toda estação sem imagem destacada |
 | B-42 | Seção de livros na página da estação ("Da biblioteca") | 3B-2 | ✅ | Livros com categoria de mesmo nome da estação primeiro, depois os mais recentes; reaproveita o card de livro |
 | B-43 | Renomear a categoria padrão "Uncategorized" e apagar o post "Hello world!" | — | 💡 | Aparecem nos cards de post em inglês; ajuste no painel (Posts → Categorias) |
-| B-44 | Tags nos cards de post do Blog: hoje o card mostra só categoria, data, título e autor; as tags não aparecem em lugar nenhum | 4 | 💡 | A tratar na Fase 4. Opções: (a) manter o card sem tags, como no mockup; (b) mostrar até 2 tags no card; (c) tags só na página do post (o mockup tem) com página de arquivo por tag. Pode-se ligar a tag com o nome de uma estação à página dessa estação |
+| B-44 | Tags nos cards de post do Blog | 4 | ✅ | Resolvido: cards do Blog seguem sem tags (como no mockup); as tags aparecem como `#tag` no fim do post e levam à página da tag (`/tag/nome/`, mesma listagem do Blog). Na página da estação, o card mostra um selinho com o nome da estação quando o post tem a tag/categoria dela |
 | B-45 | Futuro: plugin próprio para cadastrar e gerenciar podcasts (séries e episódios) | — | 💡 | Ideia do Rubens; hoje Podcasts é uma categoria do Blog |
 | B-46 | Preencher os dados reais da Home: foto, nome, papel e texto do fundador; textos de topo, destaques e Sobre nós; foto do Sobre; "Ouvintes" de cada estação; imagem destacada da Home | — | ⏳ | Tudo provisório até o Rubens preencher |
 | B-47 | Home como página inicial estática (feito), comentários liberados nela (recados) e "O comentário deve ser aprovado manualmente" (feito) | 3B-2 | ⏳ | Falta ligar "Permitir comentários" na página Home |
 | B-48 | Livro: página individual e card com botão de baixar; hoje o card de livro da Home leva à página Literatura | 4–5 | 💡 | Depende do mockup da Literatura (B-03) |
 | B-49 | Spam nos recados: se aparecer mesmo com a moderação manual, instalar o Akismet ou outro anti-spam; o tema já tem campo-armadilha e tempo mínimo | — | 💡 | Só se for preciso |
+| B-50 | Fase 4 — ajustes de painel necessários: Configurações → Discussão (comentários aninhados em 2 níveis, quebrar em páginas de ~10, aprovar manualmente); criar os usuários (autores e "Equipe Agenda Cultural") e preencher "Página do autor" no perfil; regravar Links permanentes (para `/autor/`); escolher a página "Blog" em Configurações → Leitura → Página de posts | 4 | ⏳ | Passo a passo na mensagem de entrega da Fase 4 |
+| B-51 | Tirinhas: confirmar os direitos de uso de cada tirinha publicada (o campo "Direitos/referência" é opcional) | 4 | 💡 | Tirinhas de terceiros normalmente têm direitos autorais; o tema só exibe a referência |
+| B-52 | Spotify no formato Música: o player do Spotify toca só prévias de 30 s para quem não está logado no Spotify, e carrega conteúdo de terceiros (privacidade) | 4 | 💡 | Alternativa futura: link para abrir no Spotify |
+| B-53 | "Ordenar por autor(a)" usa SQL próprio (junta a tabela de usuários); testar no site real | 4 | ⏳ | O simulador não executa SQL |
 | B-40 | `catalogo-livros-rac.php` está duplicado na raiz do repositório (idêntico ao de `plugins/`) | 💡 | Remover a cópia da raiz? |
 
 ## Decisões tomadas
 
+- Fase 4: filtros do Blog são LINKS (`?categoria=&autor=&ordem=`), não formulários, para a navegação persistente não parar o áudio; 6 posts por página; categorias e tags usam a mesma listagem; autor em `/autor/nome/`; "Carregar mais posts" na página do autor.
+- Fase 4: formato do post = campo ACF "Formato" (Texto, Poesia, Vídeo, Música, Tirinha, Imagem, Citação); novos formatos = 1 linha em `rac_formatos_post()` + campos + um arquivo em `template-parts/formatos/`. Música = player do Spotify incorporado (campos país, nome, estilo, link) com título automático "Descoberta Musical: nome - país - estilo"; países com bandeira em imagem (funciona no Windows). Tirinha = imagem pelo editor + campos opcionais de direitos/referência. Compartilhar = WhatsApp, Facebook, X e Copiar link (botões grandes, com texto) + menu nativo do celular quando existir. Comentários = nativos do WordPress, enviados sem recarregar.
 - Sem headless: tema filho do Kadence com templates PHP.
 - `#primary` é o seletor da navegação persistente; todo template terá exatamente um `<main id="primary">`. O plugin não é alterado para isso.
 - Textos do rodapé são globais; textos da Home são editados na própria página Home.

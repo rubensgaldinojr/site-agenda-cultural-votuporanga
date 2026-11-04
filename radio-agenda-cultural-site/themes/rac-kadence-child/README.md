@@ -1,6 +1,6 @@
 # Tema filho do Kadence — Rádio Agenda Cultural
 
-Versão 0.5.0 (Fases 1, 2, 3A, 3B-1 e 3B-2). Requer o tema **Kadence** instalado (é o tema pai).
+Versão 0.6.0 (Fases 1, 2, 3A, 3B-1, 3B-2 e 4). Requer o tema **Kadence** instalado (é o tema pai).
 
 ## Instalação (site de desenvolvimento)
 
@@ -69,7 +69,7 @@ Versão 0.5.0 (Fases 1, 2, 3A, 3B-1 e 3B-2). Requer o tema **Kadence** instalado
   - O placeholder também aparece nos tiles de "Outras estações" e na capa/lista do player
     quando a estação não tem imagem destacada.
   - Imagem do topo: **Imagem destacada** da página. Sem ela, aparece a imagem placeholder do
-    tema (`assets/img/placeholder-topo.jpg`).
+    tema (`assets/img/placeholder-topo.jpg  assets/flags/*.svg`).
   - Título e texto do topo: escolha o modelo **"Estações"** em Atributos da página; aparecem os
     campos "Título do topo" e "Texto do topo" (vazios = texto padrão do mockup).
 - **Estação individual** (`single-estacao.php`, serve todas as estações):
@@ -126,6 +126,34 @@ Podcasts (só se houver séries) e Recados dos ouvintes.
 - **Página da estação — "Da biblioteca":** 6 livros; primeiro os cuja **categoria de livro** tem o
   mesmo nome da estação, completando com os mais recentes. Some se não houver livros.
 
+### Blog, Autor e Post (Fase 4)
+
+- **Blog** (`home.php` quando o Blog é a "Página de posts"; `page-blog.php` quando é uma página comum),
+  **categorias** (`category.php`, inclusive Podcasts) e **tags** (`tag.php`) usam a mesma listagem
+  (`template-parts/listagem.php`): 6 posts por página, filtros Categoria / Autor(a) / Ordenar por,
+  etiquetas removíveis, "Limpar filtros" e paginação numerada. Os filtros são **links** com
+  parâmetros na URL (`?categoria=&autor=&ordem=`): compartilháveis e sem recarregar (o áudio não para).
+  No celular os filtros ficam atrás do botão "Filtros".
+- **Página do autor** (`author.php`, endereço `/autor/nome/`): foto, papel, "escreve desde", bio,
+  balão "Citação favorita" e "Posts de Nome" com "Carregar mais posts". Os dados vêm do perfil do
+  usuário (grupo **"Página do autor"** do ACF); sem foto usa o Gravatar e, por fim, a inicial.
+- **Post** (`single.php`) com **7 formatos** (campo ACF "Formato do post", um arquivo por formato em
+  `template-parts/formatos/`): Texto/Crônica, Poesia, Vídeo (YouTube/Vimeo + capítulos clicáveis),
+  Música/Artista (Spotify incorporado, país com bandeira, estilo, estação em que toca; título
+  automático "Descoberta Musical: nome - país - estilo"), Tirinha (imagem pelo editor, direitos
+  opcionais, anterior/próxima), Imagem e Citação. Todos têm trilha, resumo, autoria, tempo de leitura,
+  tags, **Compartilhar** (WhatsApp, Facebook, X, Copiar link e o menu do celular), caixa "Escrito por",
+  **comentários** (`comments.php`) e posts relacionados.
+- **Comentários:** nativos do WordPress. Respostas em 1 nível, selo "Autor/Autora", "Aguardando
+  moderação", ordem (mais antigos/recentes) e paginação. Enviados por `fetch` (sem recarregar).
+  Mesmo anti-spam dos recados (campo-armadilha + 3 s).
+- **Ajustes no painel:** Configurações → Discussão (comentários aninhados em 2 níveis, quebrar em
+  páginas de ~10, aprovar manualmente) e regravar Links permanentes uma vez (endereço `/autor/`).
+- **Aviso da rádio:** vídeos e players de artista mostram "A rádio está tocando" com botão "Pausar a
+  rádio", porque o YouTube/Spotify tocam por conta própria e os sons se misturariam.
+- **Bandeiras:** `assets/flags/*.svg` (flag-icons, licença MIT, ver `LICENSE`); lista de países em
+  português em `inc/paises.php`.
+
 ## Regras que não podem ser quebradas
 
 - Todo template tem **exatamente um** `<main id="primary">`: é a área que o plugin
@@ -156,9 +184,11 @@ index.php  page.php  single.php  404.php          (genéricos; os definitivos v�
 page-componentes.php                              (prévia de teste dos componentes)
 page-estacoes.php  single-estacao.php             (Fase 3A)
 front-page.php                                    (Fases 3B-1 e 3B-2)
-inc/helpers.php  inc/customizer.php  inc/player.php  inc/acf-campos.php  inc/home.php  inc/conteudo.php  inc/recados.php
-template-parts/theme-toggle.php  player-fixo.php  card-estacao.php  card-estacao-imagem.php  card-post.php  card-livro.php  tile-estacao.php
-assets/css/tema.css  base.css  componentes.css  paginas.css  home.css
-assets/js/rac.js  player.js  estacao.js  carrossel.js  recados.js
-assets/img/placeholder-topo.jpg
+home.php  category.php  tag.php  page-blog.php  author.php   (Fase 4A)
+single.php  comments.php                          (Fase 4B; os formatos ficam em template-parts/formatos/)
+inc/helpers.php  inc/customizer.php  inc/player.php  inc/acf-campos.php  inc/home.php  inc/conteudo.php  inc/recados.php  inc/blog.php  inc/autor.php  inc/formatos.php  inc/comentarios.php  inc/paises.php
+template-parts/theme-toggle.php  player-fixo.php  card-estacao.php  card-estacao-imagem.php  card-post.php  card-livro.php  tile-estacao.php  filtro.php  listagem.php  caixa-autor.php  compartilhar.php  aviso-radio.php  formatos/
+assets/css/tema.css  base.css  componentes.css  paginas.css  home.css  blog.css
+assets/js/rac.js  player.js  estacao.js  carrossel.js  recados.js  blog.js  compartilhar.js  comentarios.js
+assets/img/placeholder-topo.jpg  assets/flags/*.svg
 ```

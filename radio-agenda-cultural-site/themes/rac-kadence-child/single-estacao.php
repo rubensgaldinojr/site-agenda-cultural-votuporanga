@@ -97,7 +97,13 @@ while ( have_posts() ) :
                 </div>
             </div>
             <div class="rac-grade-posts">
-                <?php foreach ( $posts as $post_id ) : get_template_part( 'template-parts/card-post', null, array( 'post' => $post_id ) ); endforeach; ?>
+                <?php
+                foreach ( $posts as $post_id ) :
+                    // selinho com o nome da estação quando o post tem a tag/categoria dela (e não é só um "mais recente" de preenchimento)
+                    $liga = has_term( $nome, 'post_tag', $post_id ) || has_term( $nome, 'category', $post_id );
+                    get_template_part( 'template-parts/card-post', null, array( 'post' => $post_id, 'etiqueta' => $liga ? $nome : '' ) );
+                endforeach;
+                ?>
             </div>
             <div class="rac-secao__rodape">
                 <a class="rac-botao-contorno" href="<?php echo esc_url( rac_url_pagina( 'blog' ) ); ?>">Ver todos os posts →</a>
