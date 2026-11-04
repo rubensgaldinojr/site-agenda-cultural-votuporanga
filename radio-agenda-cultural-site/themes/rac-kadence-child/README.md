@@ -1,6 +1,6 @@
 # Tema filho do Kadence — Rádio Agenda Cultural
 
-Versão 0.2.0 (Fases 1 e 2). Requer o tema **Kadence** instalado (é o tema pai).
+Versão 0.3.0 (Fases 1, 2 e 3A). Requer o tema **Kadence** instalado (é o tema pai).
 
 ## Instalação (site de desenvolvimento)
 
@@ -39,10 +39,42 @@ Versão 0.2.0 (Fases 1 e 2). Requer o tema **Kadence** instalado (é o tema pai)
   template "Componentes (apenas para teste)") e deixe como Rascunho/Privada. Ela mostra os
   cards com suas estações e posts reais e sai dos buscadores (noindex). Pode ser apagada
   quando as Fases 3 a 5 estiverem prontas.
-- O volume fica escondido no iPhone (o Safari não permite mudar o volume por JS). O controle
-  tem reset próprio porque o Kadence aplica estilo de campo de formulário a todo `input`.
-- A pílula de play + volume ocupa ~1/3 da barra (máx. 640px) e fica centralizada.
+- **Volume e mudo:** o ícone de alto-falante é um botão de mudo (o ícone mostra mudo / baixo / alto)
+  e o slider é curto. O próprio `<audio>` é a fonte da verdade (`volume` e `muted`); a tela só
+  reflete o evento `volumechange`. O estado fica salvo e sobrevive à troca de estação. No iPhone o
+  Safari ignora o volume por JS: o slider some, mas o botão de mudo funciona. O controle tem reset
+  próprio porque o Kadence aplica estilo de campo de formulário a todo `input`.
 - "Tocando agora": o plugin escreve "Artista - Música"; o tema divide no primeiro " - ".
+
+## Páginas (Fase 3A)
+
+- **Estações** (`page-estacoes.php`, página com o slug `estacoes`): topo com foto e selo
+  "N estações ao vivo agora" (N é calculado) e grade de **cards com imagem** em **ordem
+  alfabética**, sem filtro: 4 colunas no desktop e 2 no mobile.
+  - Card (`template-parts/card-estacao-imagem.php`): imagem destacada da estação ao fundo
+    (sem ela, o **placeholder** do tema), selo "Ao vivo" (vira "Tocando"), nome, trecho de
+    1–2 linhas do "Texto Sobre a Estação" (só no desktop e só se houver texto), link "Ver
+    estação" e botão de play. Texto branco sobre escurecimento, igual nos dois temas. Clicar em
+    qualquer ponto do card toca/pausa pelo player.
+  - O placeholder também aparece nos tiles de "Outras estações" e na capa/lista do player
+    quando a estação não tem imagem destacada.
+  - Imagem do topo: **Imagem destacada** da página. Sem ela, aparece a imagem placeholder do
+    tema (`assets/img/placeholder-topo.jpg`).
+  - Título e texto do topo: escolha o modelo **"Estações"** em Atributos da página; aparecem os
+    campos "Título do topo" e "Texto do topo" (vazios = texto padrão do mockup).
+- **Estação individual** (`single-estacao.php`, serve todas as estações):
+  - Topo com a **Imagem destacada da estação** (sem ela, o placeholder), selo "No ar agora",
+    nome, botão "Ouvir agora" (toca/pausa pelo player) e "Tocando agora" atualizado a cada 20 s.
+  - O "Tocando agora" usa o endpoint do plugin (cache de 15 s por estação), então não abre
+    conexões novas no Zeno.fm.
+  - Texto: campo ACF **"Texto Sobre a Estação"** (`texto_sobre_a_estacao`). O primeiro parágrafo
+    sai em destaque. Vazio = texto padrão curto com o nome da estação.
+  - "Outras estações": as 4 seguintes em ordem alfabética (volta ao início no fim da lista).
+  - "Para ler enquanto ouve": posts com **tag ou categoria de mesmo nome da estação** primeiro
+    e, se faltar, os mais recentes (3 no total).
+- Cada estação já é um gênero: não há linha de gênero nem filtro por grupo.
+- Os **campos novos** são criados por código em `inc/acf-campos.php` (ACF gratuito).
+- O player e o rodapé seguem a ordem do plugin (`ordem_de_exibicao` e depois alfabética).
 
 ## Regras que não podem ser quebradas
 
@@ -72,8 +104,10 @@ Veja `../../tests/harness/README.md`. Ele não substitui o teste no site real.
 style.css  functions.php  header.php  footer.php
 index.php  page.php  single.php  404.php          (genéricos; os definitivos vêm nas Fases 3–5)
 page-componentes.php                              (prévia de teste dos componentes)
-inc/helpers.php  inc/customizer.php  inc/player.php
-template-parts/theme-toggle.php  player-fixo.php  card-estacao.php  card-post.php
-assets/css/tema.css  base.css  componentes.css
-assets/js/rac.js  player.js
+page-estacoes.php  single-estacao.php             (Fase 3A)
+inc/helpers.php  inc/customizer.php  inc/player.php  inc/acf-campos.php
+template-parts/theme-toggle.php  player-fixo.php  card-estacao.php  card-post.php  tile-estacao.php
+assets/css/tema.css  base.css  componentes.css  paginas.css
+assets/js/rac.js  player.js  estacao.js
+assets/img/placeholder-topo.jpg
 ```

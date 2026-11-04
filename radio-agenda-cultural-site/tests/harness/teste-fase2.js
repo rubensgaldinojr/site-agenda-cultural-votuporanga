@@ -109,24 +109,58 @@ const esperar = (page, fn, arg, ms = 6000) => page.waitForFunction(fn, arg, { ti
   await esperar(page, () => location.pathname === '/componentes/');
   await page.waitForTimeout(500);
 
-  // pílula (play + volume) com ~1/3 da barra e volume sem o estilo de campo do tema pai
-  const pil = async (w) => { await page.setViewportSize({ width: w, height: 800 }); return page.evaluate(() => { const c = document.querySelector('.rac-player__controles').getBoundingClientRect(); const r = document.getElementById('rac-volume').getBoundingClientRect(); const e = document.querySelector('.rac-player__esq').getBoundingClientRect(); const d = document.querySelector('.rac-player__trocar').getBoundingClientRect(); const s = getComputedStyle(document.getElementById('rac-volume')); return { pilula: Math.round(c.width), vw: window.innerWidth, slider: Math.round(r.width), centro: Math.round(c.left + c.width / 2), meio: Math.round(window.innerWidth / 2), bg: s.backgroundColor, borda: s.borderTopWidth, pad: s.paddingLeft, app: s.appearance || s.webkitAppearance, esqFim: Math.round(e.right), pilIni: Math.round(c.left), pilFim: Math.round(c.right), dirIni: Math.round(d.left) }; }); };
+  // pílula (play + mudo + volume) compacta e centralizada; volume sem o estilo de campo do tema pai
+  const pil = async (w) => { await page.setViewportSize({ width: w, height: 800 }); return page.evaluate(() => { const c = document.querySelector('.rac-player__controles').getBoundingClientRect(); const r = document.getElementById('rac-volume').getBoundingClientRect(); const e = document.querySelector('.rac-player__esq').getBoundingClientRect(); const d = document.querySelector('.rac-player__trocar').getBoundingClientRect(); const s = getComputedStyle(document.getElementById('rac-volume')); const m = document.getElementById('rac-mudo').getBoundingClientRect(); return { pilula: Math.round(c.width), vw: window.innerWidth, slider: Math.round(r.width), centro: Math.round(c.left + c.width / 2), meio: Math.round(window.innerWidth / 2), bg: s.backgroundColor, borda: s.borderTopWidth, pad: s.paddingLeft, app: s.appearance || s.webkitAppearance, esqFim: Math.round(e.right), pilIni: Math.round(c.left), pilFim: Math.round(c.right), dirIni: Math.round(d.left), mudoW: Math.round(m.width), mudoAntesSlider: m.right <= r.left + 1 }; }); };
   const p1280 = await pil(1280);
-  ok(p1280.pilula / p1280.vw >= 0.29 && p1280.pilula / p1280.vw <= 0.36, `1280px: pílula ocupa ~1/3 da barra (${p1280.pilula}px de ${p1280.vw}px = ${(100 * p1280.pilula / p1280.vw).toFixed(0)}%)`);
+  ok(p1280.pilula >= 230 && p1280.pilula <= 320, `1280px: pílula compacta (${p1280.pilula}px)`);
   ok(Math.abs(p1280.centro - p1280.meio) <= 2, `1280px: pílula centralizada (centro ${p1280.centro}px, meio ${p1280.meio}px)`);
-  ok(p1280.slider >= 180, `1280px: barra de volume longa (${p1280.slider}px)`);
+  ok(p1280.slider >= 90 && p1280.slider <= 130 && p1280.mudoAntesSlider && p1280.mudoW >= 28, `1280px: slider curto (${p1280.slider}px) com botão de mudo antes dele (${p1280.mudoW}px)`);
   ok(p1280.bg === 'rgba(0, 0, 0, 0)' && p1280.borda === '0px' && p1280.pad === '0px' && p1280.app === 'none', `volume sem fundo/borda/padding do tema pai (bg=${p1280.bg}, borda=${p1280.borda}, padding=${p1280.pad}, appearance=${p1280.app})`);
   ok(p1280.esqFim <= p1280.pilIni && p1280.pilFim <= p1280.dirIni, '1280px: esquerda, pílula e botão não se sobrepõem');
   await page.screenshot({ path: 'capturas/f3-barra-1280.png', clip: { x: 0, y: 728, width: 1280, height: 72 } });
   const p1920 = await pil(1920);
-  ok(p1920.pilula / p1920.vw >= 0.29 && p1920.pilula <= 640, `1920px: pílula proporcional, limitada a 640px (${p1920.pilula}px)`);
+  ok(p1920.pilula === p1280.pilula && Math.abs(p1920.centro - p1920.meio) <= 2, `1920px: mesma pílula, centralizada (${p1920.pilula}px)`);
   await page.screenshot({ path: 'capturas/f3-barra-1920.png', clip: { x: 0, y: 728, width: 1920, height: 72 } });
   const p1000 = await pil(1000);
-  ok(p1000.esqFim <= p1000.pilIni && p1000.pilFim <= p1000.dirIni && p1000.slider >= 90, `1000px: sem sobreposição e volume utilizável (${p1000.slider}px)`);
+  ok(p1000.esqFim <= p1000.pilIni && p1000.pilFim <= p1000.dirIni, `1000px: sem sobreposição`);
   const p900 = await pil(900);
   ok(p900.esqFim <= p900.pilIni && p900.pilFim <= p900.dirIni, '900px: sem sobreposição');
   await page.screenshot({ path: 'capturas/f3-barra-900.png', clip: { x: 0, y: 728, width: 900, height: 72 } });
   await page.setViewportSize({ width: 1280, height: 800 });
+
+  // botão de mudo
+  const est = async () => { await page.waitForTimeout(80); return page.evaluate(() => ({ muted: document.getElementById('racr-audio').muted, vol: Math.round(document.getElementById('racr-audio').volume * 100), nivel: document.querySelector('.rac-player__volume').getAttribute('data-nivel'), pressed: document.getElementById('rac-mudo').getAttribute('aria-pressed'), label: document.getElementById('rac-mudo').getAttribute('aria-label'), slider: Number(document.getElementById('rac-volume').value), salvo: localStorage.getItem('rac-mudo'), onda2: getComputedStyle(document.querySelector('.rac-vol-onda2')).display, x: getComputedStyle(document.querySelector('.rac-vol-x')).display })); };
+  await page.fill('#rac-volume', '60'); await page.dispatchEvent('#rac-volume', 'input');
+  let v = await est();
+  ok(!v.muted && v.nivel === 'alto' && v.pressed === 'false' && v.label === 'Silenciar' && v.onda2 !== 'none' && v.x === 'none', `estado inicial: som ligado, ícone com ondas (nível ${v.nivel})`);
+  await page.click('#rac-mudo');
+  v = await est();
+  ok(v.muted && v.nivel === 'mudo' && v.pressed === 'true' && v.label === 'Ativar o som' && v.slider === 0 && v.salvo === '1' && v.x !== 'none' && v.onda2 === 'none', `clicar no ícone silencia: áudio mudo, ícone com X, slider em 0, estado salvo (${JSON.stringify({ n: v.nivel, s: v.slider })})`);
+  await page.click('#rac-mudo');
+  v = await est();
+  ok(!v.muted && v.vol === 60 && v.slider === 60 && v.nivel === 'alto' && v.salvo === '0', `clicar de novo restaura o volume anterior (${v.vol}%)`);
+  await page.fill('#rac-volume', '20'); await page.dispatchEvent('#rac-volume', 'input');
+  v = await est(); ok(v.nivel === 'baixo' && v.onda2 === 'none', `volume baixo (<50%): ícone com uma onda só (nível ${v.nivel})`);
+  await page.click('#rac-mudo');
+  await page.fill('#rac-volume', '50'); await page.dispatchEvent('#rac-volume', 'input');
+  v = await est(); ok(!v.muted && v.vol === 50 && v.nivel === 'alto', 'mexer no slider enquanto está mudo tira do mudo');
+  await page.fill('#rac-volume', '0'); await page.dispatchEvent('#rac-volume', 'input');
+  v = await est(); ok(v.nivel === 'mudo' && v.slider === 0, 'slider em 0 mostra o estado de mudo');
+  await page.click('#rac-mudo');
+  v = await est(); ok(!v.muted && v.vol > 0 && v.nivel !== 'mudo', `sair do mudo com volume 0 restaura um volume audível (${v.vol}%)`);
+  // mudo persiste: recarregar e trocar de estação
+  await page.click('#rac-mudo');
+  await page.reload();
+  v = await est(); ok(v.muted && v.nivel === 'mudo' && v.pressed === 'true', 'mudo lembrado após recarregar a página');
+  await page.evaluate(() => { window.__audio = document.getElementById('racr-audio'); });
+  await page.click('#racr-botao-expandir'); await page.click('.racr-estacao[data-indice="3"]');
+  await esperar(page, () => document.getElementById('racr-nome-estacao').textContent.trim() === 'Vozes da Cidade');
+  v = await est(); ok(v.muted && v.nivel === 'mudo', 'trocar de estação mantém o mudo');
+  await page.click('#rac-mudo');
+  v = await est(); ok(!v.muted, 'sair do mudo depois da troca de estação');
+  await page.fill('#rac-volume', '100'); await page.dispatchEvent('#rac-volume', 'input');
+  await page.screenshot({ path: 'capturas/f3-mudo.png', clip: { x: 340, y: 728, width: 600, height: 72 } });
+
   // a parte preenchida da barra acompanha o valor
   await page.fill('#rac-volume', '40'); await page.dispatchEvent('#rac-volume', 'input');
   ok(await page.evaluate(() => document.getElementById('rac-volume').style.getPropertyValue('--vol') === '40%'), 'preenchimento da barra de volume acompanha o valor (--vol=40%)');
@@ -206,6 +240,15 @@ const esperar = (page, fn, arg, ms = 6000) => page.waitForFunction(fn, arg, { ti
   const vis = await page.evaluate(() => { const l = document.getElementById('racr-lista-estacoes').getBoundingClientRect(); const a = document.querySelector('.racr-estacao-ativa').getBoundingClientRect(); return { dentro: a.top >= l.top - 1 && a.bottom <= l.bottom + 1, scrollY: window.scrollY }; });
   ok(vis.dentro && vis.scrollY === 0, `lista abre com a estação atual visível (dentro=${vis.dentro}, scrollY da página=${vis.scrollY})`);
   await page.keyboard.press('Escape');
+
+  /* ---------- Mobile: nenhum elemento da barra pode cobrir outro ---------- */
+  for (const w of [320, 360, 375, 412, 600, 899]) {
+    await page.setViewportSize({ width: w, height: 800 });
+    const g = await page.evaluate(() => { const q = s => { const r = document.querySelector(s).getBoundingClientRect(); return { l: r.left, r: r.right, w: r.width }; }; return { esq: q('.rac-player__esq'), capa: q('.rac-player__capa'), info: q('.rac-player__m-info'), ctrl: q('.rac-player__controles'), dir: q('.rac-player__dir'), vw: window.innerWidth }; });
+    ok(g.esq.w > 100 && g.info.w > 60 && g.capa.r <= g.info.l + 1 && g.info.r <= g.ctrl.l + 1 && g.ctrl.r <= g.dir.l + 1 && g.dir.r <= g.vw + 1,
+      `${w}px: capa, "Tocando agora", play e "Estações" lado a lado, sem sobreposição (info ${Math.round(g.info.w)}px, play em ${Math.round(g.ctrl.l)}px)`);
+  }
+  await page.setViewportSize({ width: 1280, height: 800 });
 
   /* ---------- Mobile ---------- */
   const ctx3 = await browser.newContext({ viewport: { width: 375, height: 800 }, deviceScaleFactor: 2 });

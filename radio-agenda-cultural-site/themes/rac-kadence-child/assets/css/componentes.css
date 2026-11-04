@@ -31,11 +31,7 @@
 .rac-player__barra {
   height: 72px; background: var(--bar); border-top: 1px solid var(--line);
   box-shadow: 0 -8px 24px -12px rgba(60, 40, 20, .12);
-  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 16px; padding: 0 24px;
-}
-/* telas de 900 a 1099px: dá mais espaço à esquerda (capa, estação, "tocando agora") */
-@media (min-width: 900px) and (max-width: 1099px) {
-  .rac-player__barra { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) auto; }
+  display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 16px; padding: 0 24px;
 }
 
 /* esquerda: capa, estação, "Tocando agora" */
@@ -56,8 +52,7 @@
 
 /* centro: pílula com play e volume */
 .rac-player__controles {
-  display: flex; align-items: center; gap: 16px; height: 44px; padding: 6px 20px;
-  width: 100%; max-width: 640px; justify-self: center; min-width: 0;
+  display: flex; align-items: center; gap: 14px; height: 44px; padding: 6px 18px 6px 16px;
   background: var(--surface2); border: 1px solid var(--line); border-radius: 999px;
 }
 .rac-body .racr-botao-play {
@@ -70,40 +65,48 @@
 .rac-player.racr-tocando .rac-ico-pause,
 .rac-player.racr-carregando .rac-ico-pause { display: flex; }
 .rac-player__sep-pilula { width: 1px; height: 22px; background: var(--line); flex: none; }
-.rac-player__volume { display: flex; align-items: center; gap: 10px; cursor: pointer; flex: 1; min-width: 0; }
-.rac-player__volume[hidden] { display: none; }
-.rac-player__volume-icone { display: flex; align-items: flex-end; gap: 2px; flex: none; }
-.rac-player__volume-icone i { display: block; width: 3px; border-radius: 1px; background: var(--muted); }
-.rac-player__volume-icone i:nth-child(1) { height: 6px; }
-.rac-player__volume-icone i:nth-child(2) { height: 9px; }
-.rac-player__volume-icone i:nth-child(3) { height: 12px; }
+.rac-player__volume { display: flex; align-items: center; gap: 6px; }
+
+/* Botão de mudo: o alto-falante mostra o nível (mudo / baixo / alto). */
+.rac-body .rac-player__mudo {
+  width: 32px; height: 32px; flex: none; padding: 0; border: 0; border-radius: 50%; cursor: pointer;
+  background: transparent; color: var(--text-body); display: flex; align-items: center; justify-content: center;
+}
+.rac-body .rac-player__mudo:hover { background: color-mix(in srgb, var(--text) 8%, transparent); color: var(--text); }
+.rac-player__mudo .rac-vol-x { display: none; }
+.rac-player__volume[data-nivel="baixo"] .rac-vol-onda2 { display: none; }
+.rac-player__volume[data-nivel="mudo"] .rac-vol-onda1,
+.rac-player__volume[data-nivel="mudo"] .rac-vol-onda2 { display: none; }
+.rac-player__volume[data-nivel="mudo"] .rac-vol-x { display: inline; }
+.rac-player__volume[data-nivel="mudo"] .rac-player__mudo { color: var(--muted); }
 
 /* Controle de volume. O Kadence aplica estilo de "campo de formulário" (fundo
    branco, borda, padding) a todo input, inclusive ao range; por isso o reset
    abaixo é explícito e tem especificidade maior que a do tema pai. */
 .rac-body .rac-player .rac-player__volume input[type="range"] {
   -webkit-appearance: none; appearance: none;
-  flex: 1; width: 100%; min-width: 0; max-width: none; height: 20px; margin: 0; padding: 0;
+  flex: none; width: 108px; min-width: 0; max-width: none; height: 20px; margin: 0; padding: 0;
   background: transparent; border: 0; border-radius: 0; box-shadow: none; outline-offset: 4px;
   color: var(--accent); accent-color: var(--accent); cursor: pointer;
   --vol: 100%;
 }
+.rac-body .rac-player .rac-player__volume input[type="range"][hidden] { display: none; }
 .rac-body .rac-player .rac-player__volume input[type="range"]::-webkit-slider-runnable-track {
-  height: 4px; border-radius: 2px;
+  height: 3px; border-radius: 2px;
   background: linear-gradient(to right, var(--accent) 0, var(--accent) var(--vol), color-mix(in srgb, var(--muted) 35%, transparent) var(--vol), color-mix(in srgb, var(--muted) 35%, transparent) 100%);
 }
 .rac-body .rac-player .rac-player__volume input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none; appearance: none;
-  width: 14px; height: 14px; margin-top: -5px; border-radius: 50%; border: 0;
+  width: 12px; height: 12px; margin-top: -4.5px; border-radius: 50%; border: 0;
   background: var(--accent); box-shadow: 0 1px 3px rgba(0, 0, 0, .25);
 }
 .rac-body .rac-player .rac-player__volume input[type="range"]:hover::-webkit-slider-thumb { background: var(--accent-dark); }
 .rac-body .rac-player .rac-player__volume input[type="range"]::-moz-range-track {
-  height: 4px; border: 0; border-radius: 2px; background: color-mix(in srgb, var(--muted) 35%, transparent);
+  height: 3px; border: 0; border-radius: 2px; background: color-mix(in srgb, var(--muted) 35%, transparent);
 }
-.rac-body .rac-player .rac-player__volume input[type="range"]::-moz-range-progress { height: 4px; border-radius: 2px; background: var(--accent); }
+.rac-body .rac-player .rac-player__volume input[type="range"]::-moz-range-progress { height: 3px; border-radius: 2px; background: var(--accent); }
 .rac-body .rac-player .rac-player__volume input[type="range"]::-moz-range-thumb {
-  width: 14px; height: 14px; border: 0; border-radius: 50%; background: var(--accent); box-shadow: 0 1px 3px rgba(0, 0, 0, .25);
+  width: 12px; height: 12px; border: 0; border-radius: 50%; background: var(--accent); box-shadow: 0 1px 3px rgba(0, 0, 0, .25);
 }
 
 /* direita: "Trocar estação" */
@@ -178,6 +181,58 @@
 .rac-card-est.is-tocando .rac-ico-pause { display: flex; }
 
 /* =========================================================
+   CARD DE ESTAÇÃO COM IMAGEM (página de Estações)
+   Foto ao fundo, escurecimento por baixo e texto branco nos dois temas.
+   ========================================================= */
+.rac-grade-img { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; padding-top: 20px; border-top: 1px solid var(--line); }
+.rac-grade-img--teste { border-top: 0; padding-top: 0; margin-bottom: 24px; }
+
+.rac-card-img {
+  position: relative; isolation: isolate; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;
+  min-height: 210px; padding: 14px; border-radius: 16px; cursor: pointer; background: var(--surface2);
+  font-family: 'DM Sans', sans-serif; transition: box-shadow .2s ease, transform .25s ease;
+}
+.rac-card-img:hover { transform: translateY(-2px); }
+.rac-card-img.is-tocando { box-shadow: 0 0 0 2px var(--accent); }
+.rac-card-img__foto { position: absolute; inset: 0; z-index: -2; }
+.rac-body .rac-card-img__foto img { display: block; width: 100%; height: 100%; max-width: none; object-fit: cover; transition: transform .5s ease; }
+.rac-card-img:hover .rac-card-img__foto img { transform: scale(1.04); }
+.rac-card-img__scrim {
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(to top, rgb(var(--scrim) / .92) 0%, rgb(var(--scrim) / .7) 45%, rgb(var(--scrim) / 0) 88%);
+}
+
+.rac-card-img__live {
+  align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 8px; border-radius: 999px;
+  background: rgb(var(--scrim) / .55); backdrop-filter: blur(6px);
+}
+.rac-card-img__dot { position: relative; width: 5px; height: 5px; flex: none; }
+.rac-card-img__dot i { position: absolute; inset: 0; border-radius: 50%; background: var(--live); }
+.rac-card-img__dot i:first-child { animation: livering 1.8s ease-out infinite; }
+.rac-card-img__rotulo { font-size: 9px; line-height: 10px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--on-photo); }
+
+.rac-card-img__corpo { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.rac-body .rac-card-img__nome { margin: 0; font-size: 19px; font-weight: 400; letter-spacing: -.01em; line-height: 1.2; color: var(--on-photo); }
+.rac-card-img__trecho {
+  margin: 0; font-size: 13px; line-height: 1.5; color: color-mix(in srgb, var(--on-photo) 86%, transparent);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.rac-card-img__rodape { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 6px; }
+.rac-body .rac-card-img__ver { font-size: 12px; font-weight: 500; color: var(--on-photo); white-space: nowrap; }
+.rac-body .rac-card-img__ver::after { content: ' ›'; }
+.rac-body .rac-card-img__ver:hover { color: var(--on-photo); text-decoration: underline; text-underline-offset: 3px; }
+.rac-body .rac-card-img__play {
+  flex: none; width: 40px; height: 40px; padding: 0; border: 0; border-radius: 50%; cursor: pointer;
+  background: var(--accent); display: flex; align-items: center; justify-content: center;
+}
+.rac-body .rac-card-img__play:hover { background: var(--accent-dark); }
+.rac-card-img__play .rac-ico-play { margin-left: 2px; }
+.rac-card-img__play .rac-ico-pause { gap: 3px; }
+.rac-card-img__play .rac-ico-pause i { width: 3px; height: 12px; }
+.rac-card-img.is-tocando .rac-ico-play { display: none; }
+.rac-card-img.is-tocando .rac-ico-pause { display: flex; }
+
+/* =========================================================
    CARD DE POST
    ========================================================= */
 .rac-card-post {
@@ -216,7 +271,7 @@
   .rac-player__m-info .rac-player__faixa { font-size: 12px; }
   .rac-player__m-info .rac-player__artista { font-size: 10px; }
 
-  .rac-player__controles { height: auto; padding: 0; background: none; border: none; gap: 0; }
+  .rac-player__controles { flex: none; width: auto; height: auto; padding: 0; background: none; border: none; gap: 0; }
   .rac-body .racr-botao-play { width: 40px; height: 40px; }
   .rac-ico-play { border-top-width: 6px; border-bottom-width: 6px; border-left-width: 8px; }
   .rac-ico-pause { gap: 3px; }
@@ -240,6 +295,16 @@
   .rac-body .racr-estacao { gap: 10px; padding: 8px 10px; min-height: 52px; border-radius: 10px; }
   .rac-est__capa { width: 36px; height: 36px; }
   .rac-est__ponto { width: 7px; height: 7px; }
+
+  /* card com imagem: 2 colunas, sem o trecho de texto */
+  .rac-grade-img { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding-top: 0; border-top: 0; }
+  .rac-card-img { min-height: 136px; padding: 10px; border-radius: 14px; }
+  .rac-card-img__trecho { display: none; }
+  .rac-body .rac-card-img__nome { font-size: 15px; }
+  .rac-card-img__rodape { margin-top: 2px; }
+  .rac-body .rac-card-img__ver { font-size: 11px; }
+  .rac-body .rac-card-img__play { width: 34px; height: 34px; }
+  .rac-card-img__live { padding: 3px 8px 3px 7px; }
 }
 
 /* Grades da página de teste de componentes (template "Componentes").

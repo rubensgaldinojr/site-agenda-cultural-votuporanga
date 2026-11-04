@@ -1,0 +1,187 @@
+/* =========================================================
+   Rádio Agenda Cultural — páginas (Fase 3A)
+   Topo (hero) das páginas, página de Estações e Estação individual.
+   Carregado em TODAS as páginas (a navegação persistente só troca o
+   #primary, então o CSS de cada página precisa já estar na tela).
+   Só cores via var(--token). Ponto de quebra: 900px.
+   ========================================================= */
+
+/* ---------- Peças comuns ---------- */
+.rac-body .rac-hero img, .rac-body .rac-tile-est img { max-width: none; }
+.rac-so-desktop-bloco { display: block; }
+.rac-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--accent-text); }
+
+.rac-live-dot { position: relative; width: 6px; height: 6px; flex: none; }
+.rac-live-dot i { position: absolute; inset: 0; border-radius: 50%; background: var(--live); }
+.rac-live-dot i:first-child { animation: livering 1.8s ease-out infinite; }
+.rac-selo-live {
+  display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
+  padding: 6px 14px 6px 11px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line);
+}
+.rac-selo-live__txt { font-size: 12px; font-weight: 500; color: var(--text-body); }
+.rac-selo-live--no-ar { gap: 7px; padding: 5px 12px 5px 10px; }
+.rac-selo-live--no-ar .rac-selo-live__txt { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--live-text); }
+
+.rac-secao__inner { max-width: 1280px; margin: 0 auto; padding: 0 40px; }
+.rac-secao__topo { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
+.rac-secao__topo h2 { margin: 0; font-size: 28px; letter-spacing: -.01em; }
+.rac-secao__topo > div { display: flex; flex-direction: column; gap: 6px; }
+.rac-body .rac-secao__topo > a { font-size: 14px; font-weight: 500; white-space: nowrap; }
+.rac-secao__rodape { display: flex; justify-content: center; padding-top: 8px; }
+.rac-body .rac-botao-contorno {
+  white-space: nowrap; padding: 12px 26px; border-radius: 999px; border: 1px solid var(--text);
+  font-size: 14px; font-weight: 500; color: var(--text); text-align: center;
+}
+.rac-body .rac-botao-contorno:hover { background: var(--text); color: var(--bg); }
+.rac-vazio { color: var(--muted); padding: 40px; }
+
+/* ---------- Topo (hero) ---------- */
+.rac-hero { position: relative; overflow: hidden; }
+.rac-hero__foto { position: absolute; top: 0; right: 0; bottom: 0; width: 64%; }
+.rac-body .rac-hero__foto img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.rac-hero__fade {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(90deg, var(--bg) 0%, var(--bg) 36%, color-mix(in srgb, var(--bg) 78%, transparent) 50%, color-mix(in srgb, var(--bg) 10%, transparent) 78%, color-mix(in srgb, var(--bg) 0%, transparent) 100%);
+}
+.rac-hero__fade-base {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 80px; pointer-events: none;
+  background: linear-gradient(to top, var(--bg), color-mix(in srgb, var(--bg) 0%, transparent));
+}
+.rac-hero__miolo { position: relative; max-width: 1280px; margin: 0 auto; }
+.rac-hero__conteudo { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; max-width: 640px; padding: 80px 40px 72px; }
+.rac-body .rac-hero__titulo {
+  margin: 0; font-size: 52px; letter-spacing: -.025em; line-height: 1.05; text-wrap: balance;
+}
+.rac-hero__texto { margin: 0; font-size: 16px; line-height: 1.75; color: var(--text-body); text-wrap: pretty; }
+.rac-hero--lista { margin-bottom: 32px; }
+
+/* Estação individual: foto de fundo inteira, conteúdo embaixo */
+.rac-hero--estacao { min-height: 500px; display: flex; align-items: flex-end; }
+.rac-hero--estacao .rac-hero__foto { width: 100%; }
+.rac-hero--estacao .rac-hero__fade {
+  background: linear-gradient(90deg, var(--bg) 0%, var(--bg) 30%, color-mix(in srgb, var(--bg) 82%, transparent) 48%, color-mix(in srgb, var(--bg) 15%, transparent) 76%, color-mix(in srgb, var(--bg) 0%, transparent) 100%);
+}
+.rac-hero--estacao .rac-hero__miolo { width: 100%; }
+.rac-hero--estacao .rac-hero__conteudo { max-width: 720px; padding: 56px 56px 52px; gap: 16px; }
+.rac-body .rac-hero__titulo--estacao { font-size: 58px; line-height: 1.02; }
+.rac-hero--estacao .rac-hero__texto { max-width: 520px; line-height: 1.7; }
+.rac-body .rac-hero__voltar { font-size: 12px; color: var(--muted); }
+.rac-body .rac-hero__voltar:hover { color: var(--accent-text); }
+.rac-hero__acoes { display: flex; align-items: center; gap: 16px; margin-top: 8px; max-width: 100%; }
+
+.rac-body .rac-cta-estacao {
+  display: flex; align-items: center; white-space: nowrap; padding: 13px 26px 13px 20px; border-radius: 999px;
+  background: var(--accent); border: 1px solid var(--accent); cursor: pointer;
+  font-family: inherit; font-size: 14px; font-weight: 500; color: var(--on-accent);
+}
+.rac-body .rac-cta-estacao:hover { opacity: .92; }
+.rac-cta-estacao__ouvir, .rac-cta-estacao__tocando { display: flex; align-items: center; gap: 10px; }
+.rac-cta-estacao__tocando { display: none; color: var(--accent-text); }
+.rac-cta-estacao .rac-ico-play { margin-left: 0; border-top-width: 5px; border-bottom-width: 5px; border-left-width: 8px; }
+.rac-cta-estacao .rac-ico-pause { display: flex; gap: 4px; }
+.rac-cta-estacao .rac-ico-pause i { width: 3px; height: 12px; border-radius: 1px; background: var(--accent-text); }
+.rac-body .rac-cta-estacao.is-tocando { background: var(--accent-soft); }
+.rac-cta-estacao.is-tocando .rac-cta-estacao__ouvir { display: none; }
+.rac-cta-estacao.is-tocando .rac-cta-estacao__tocando { display: flex; }
+
+.rac-agora-card {
+  display: flex; flex-direction: column; gap: 2px; min-width: 0; max-width: 320px; padding: 8px 16px; border-radius: 12px;
+  background: color-mix(in srgb, var(--surface) 72%, transparent); backdrop-filter: blur(8px);
+}
+.rac-agora-card__rotulo { font-size: 10px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.rac-agora-card__texto { font-size: 13px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rac-agora-card__texto .rac-mudo, .rac-agora-m .rac-mudo { color: var(--muted); }
+.rac-agora-m { display: none; }
+
+/* ---------- Texto da estação ---------- */
+.rac-estacao-texto__inner { max-width: 1280px; margin: 0 auto; padding: 56px 56px 64px; }
+.rac-estacao-texto__inner { display: flex; flex-direction: column; gap: 18px; }
+.rac-estacao-texto__inner > * { max-width: 764px; margin: 0; }
+.rac-estacao-texto__inner p { margin: 0; font-size: 16px; line-height: 1.8; color: var(--text-body); text-wrap: pretty; }
+.rac-estacao-texto__inner > p:first-child { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 300; line-height: 1.5; color: var(--text); }
+
+/* ---------- Outras estações ---------- */
+.rac-outras { padding: 48px 0 64px; border-top: 1px solid var(--line); background: var(--surface2); }
+.rac-grade-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+.rac-tile-est { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.rac-tile-est__imagem { position: relative; height: 150px; border-radius: 12px; overflow: hidden; transition: transform .25s ease; }
+.rac-tile-est__imagem:hover { transform: translateY(-2px); }
+.rac-tile-est__link { position: absolute; inset: 0; display: block; }
+.rac-body .rac-tile-est__link img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.rac-body .rac-tile-est__play {
+  position: absolute; right: 10px; bottom: 10px; width: 36px; height: 36px; border-radius: 50%; padding: 0;
+  background: var(--accent); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.rac-body .rac-tile-est__play:hover { background: var(--accent-dark); }
+.rac-tile-est__play .rac-ico-play { margin-left: 2px; border-top-width: 5px; border-bottom-width: 5px; border-left-width: 8px; }
+.rac-tile-est__play .rac-ico-pause { gap: 3px; }
+.rac-tile-est__play .rac-ico-pause i { width: 3px; height: 11px; border-radius: 1px; }
+.rac-tile-est.is-tocando .rac-ico-play { display: none; }
+.rac-tile-est.is-tocando .rac-ico-pause { display: flex; }
+.rac-body .rac-tile-est__nome { font-size: 14px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rac-body .rac-tile-est__nome:hover { color: var(--accent-text); }
+
+/* ---------- Para ler enquanto ouve ---------- */
+.rac-ler { padding: 56px 0 72px; border-top: 1px solid var(--line); }
+.rac-grade-posts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.rac-ler .rac-secao__rodape { padding-top: 22px; }
+
+/* ---------- Página de Estações ---------- */
+.rac-secao-lista { max-width: 1280px; margin: 0 auto; padding: 20px 40px 72px; }
+
+/* =========================================================
+   MOBILE (< 900px)
+   ========================================================= */
+@media (max-width: 899px) {
+  .rac-so-desktop-bloco { display: none; }
+  .rac-secao__inner { padding: 0 18px; }
+  .rac-secao__topo h2 { font-size: 20px; }
+  .rac-body .rac-secao__topo > a { font-size: 13px; }
+  .rac-body .rac-botao-contorno { display: flex; align-items: center; justify-content: center; width: 100%; height: 46px; padding: 0; }
+
+  .rac-hero__foto, .rac-hero--estacao .rac-hero__foto { inset: 0; width: auto; }
+  .rac-hero__fade, .rac-hero--estacao .rac-hero__fade {
+    background: linear-gradient(to top, var(--bg) 0%, var(--bg) 40%, color-mix(in srgb, var(--bg) 75%, transparent) 62%, color-mix(in srgb, var(--bg) 0%, transparent) 92%);
+  }
+  .rac-hero__fade-base { display: none; }
+  .rac-hero__conteudo { gap: 10px; max-width: none; padding: 20px 18px 10px; }
+  .rac-body .rac-hero__titulo { font-size: 31px; line-height: 1.08; letter-spacing: -.02em; }
+  .rac-hero__texto { font-size: 14px; line-height: 1.65; }
+  .rac-selo-live { gap: 7px; padding: 5px 11px 5px 9px; }
+  .rac-selo-live__txt { font-size: 11px; }
+  .rac-live-dot { width: 5px; height: 5px; }
+
+  .rac-hero--lista { min-height: 340px; display: flex; align-items: flex-end; margin-bottom: 12px; }
+  .rac-hero--lista .rac-hero__miolo { width: 100%; }
+
+  .rac-hero--estacao { min-height: 460px; }
+  .rac-hero--estacao .rac-hero__conteudo { padding: 20px 18px 22px; }
+  .rac-body .rac-hero__titulo--estacao { font-size: 34px; line-height: 1.05; }
+  .rac-selo-live--no-ar { gap: 6px; padding: 4px 10px 4px 8px; }
+  .rac-selo-live--no-ar .rac-selo-live__txt { font-size: 9px; }
+  .rac-hero__acoes { width: 100%; margin-top: 6px; }
+  .rac-body .rac-cta-estacao { width: 100%; height: 48px; justify-content: center; padding: 0; }
+  .rac-cta-estacao__ouvir, .rac-cta-estacao__tocando { justify-content: center; }
+  .rac-agora-card { display: none; }
+  .rac-agora-m { display: block; width: 100%; font-size: 12px; color: var(--muted); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .rac-estacao-texto__inner { padding: 24px 18px 32px; }
+  .rac-estacao-texto__inner { gap: 14px; }
+  .rac-estacao-texto__inner p { font-size: 14px; line-height: 1.75; }
+  .rac-estacao-texto__inner > p:first-child { font-size: 18px; }
+
+  .rac-outras { padding: 24px 0 28px; }
+  .rac-secao__topo { margin-bottom: 14px; }
+  .rac-grade-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 12px; }
+  .rac-tile-est { gap: 7px; }
+  .rac-tile-est__imagem { height: 104px; border-radius: 10px; }
+  .rac-body .rac-tile-est__play { display: none; }
+  .rac-body .rac-tile-est__nome { font-size: 13px; }
+
+  .rac-ler { padding: 28px 0 32px; }
+  .rac-eyebrow { font-size: 10px; }
+  .rac-grade-posts { grid-template-columns: 1fr; gap: 14px; }
+  .rac-ler .rac-secao__rodape { padding-top: 14px; }
+
+  .rac-secao-lista { padding: 14px 18px 32px; border-top: 1px solid var(--line); }
+}

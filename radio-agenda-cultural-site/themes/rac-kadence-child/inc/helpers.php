@@ -147,7 +147,8 @@ function rac_logo_html( $prioritaria = false ) {
  *
  * @return array Lista de ['id', 'nome', 'url', 'capa', 'indice'].
  *               'indice' é a posição no player (null sem o plugin) e
- *               'capa' é a imagem destacada em miniatura ('' se não houver).
+ *               'capa' é a imagem destacada em miniatura; sem ela, a URL da
+ *               imagem placeholder do tema (nunca vem vazia).
  */
 function rac_listar_estacoes() {
     static $lista = null;
@@ -161,7 +162,7 @@ function rac_listar_estacoes() {
                 'id'     => $e['id'],
                 'nome'   => $e['nome'],
                 'url'    => get_permalink( $e['id'] ),
-                'capa'   => (string) get_the_post_thumbnail_url( $e['id'], 'thumbnail' ),
+                'capa'   => rac_url_imagem_estacao( $e['id'], 'thumbnail' ),
                 'indice' => $indice,
             );
         }
@@ -181,9 +182,168 @@ function rac_listar_estacoes() {
             'id'     => $p->ID,
             'nome'   => get_the_title( $p ),
             'url'    => get_permalink( $p ),
-            'capa'   => (string) get_the_post_thumbnail_url( $p->ID, 'thumbnail' ),
+            'capa'   => rac_url_imagem_estacao( $p->ID, 'thumbnail' ),
             'indice' => null,
         );
     }
     return $lista;
+}
+
+/**
+ * Estações em ordem alfabética (ignora maiúsculas e acentos). É a ordem
+ * da página de Estações e das "Outras estações". O player e o rodapé
+ * seguem a ordem do plugin ("ordem_de_exibicao" e depois alfabética).
+ */
+function rac_listar_estacoes_alfabetica() {
+    $lista = rac_listar_estacoes();
+    usort( $lista, function ( $a, $b ) {
+        return strcmp( remove_accents( mb_strtolower( $a['nome'] ) ), remove_accents( mb_strtolower( $b['nome'] ) ) );
+    } );
+    return $lista;
+}
+
+/** Dados de uma estação tocável (com stream) pelo ID, ou null. */
+function rac_estacao_por_id( $id ) {
+    foreach ( rac_listar_estacoes() as $e ) {
+        if ( (int) $e['id'] === (int) $id ) return $e;
+    }
+    return null;
+}
+
+/**
+ * "Outras estações": as N seguintes à atual na ordem alfabética, voltando
+ * ao início quando chega no fim. Assim cada página mostra um conjunto
+ * diferente, sem repetir a estação atual.
+ */
+function rac_outras_estacoes( $id_atual, $n = 4 ) {
+    $lista  = rac_listar_estacoes_alfabetica();
+    $indice = -1;
+    foreach ( $lista as $i => $e ) {
+        if ( (int) $e['id'] === (int) $id_atual ) { $indice = $i; break; }
+    }
+    $total = count( $lista );
+    $saida = array();
+    for ( $passo = 1; $passo <= $total && count( $saida ) < $n; $passo++ ) {
+        $e = $lista[ ( $indice + $passo + $total ) % $total ];
+        if ( (int) $e['id'] !== (int) $id_atual ) $saida[] = $e;
+    }
+    return $saida;
+}
+
+/* ============================================================
+   PÁGINAS E CAMPOS
+   ============================================================ */
+
+/** Endereço de uma página pelo slug (ex.: "estacoes"), com plano B. */
+function rac_url_pagina( $slug ) {
+    $pagina = get_page_by_path( $slug );
+    return $pagina ? get_permalink( $pagina ) : home_url( '/' . $slug . '/' );
+}
+
+/**
+ * Lê um campo ACF; se o ACF estiver desativado ou o campo vazio, devolve
+ * o valor padrão.
+ */
+function rac_campo( $nome, $post_id = null, $padrao = '' ) {
+    if ( function_exists( 'get_field' ) ) {
+        $valor = get_field( $nome, $post_id );
+        if ( $valor !== null && $valor !== false && $valor !== '' ) return $valor;
+    }
+    return $padrao;
+}
+
+/** URL da imagem placeholder do tema. */
+function rac_url_placeholder() {
+    return get_stylesheet_directory_uri() . '/assets/img/placeholder-topo.jpg';
+}
+
+/** URL da imagem de uma estação (no tamanho pedido) ou, se não houver, a do placeholder. */
+function rac_url_imagem_estacao( $id, $tamanho = 'thumbnail' ) {
+    $url = get_the_post_thumbnail_url( $id, $tamanho );
+    return $url ? $url : rac_url_placeholder();
+}
+
+/** <img> de uma estação (imagem destacada ou placeholder), para cards e tiles. */
+function rac_html_imagem_estacao( $id, $tamanho = 'medium_large' ) {
+    if ( has_post_thumbnail( $id ) ) {
+        return get_the_post_thumbnail( $id, $tamanho, array( 'alt' => '', 'loading' => 'lazy', 'decoding' => 'async' ) );
+    }
+    return '<img src="' . esc_url( rac_url_placeholder() ) . '" alt="" width="1200" height="675" loading="lazy" decoding="async">';
+}
+
+/**
+ * Trecho curto do "Texto Sobre a Estação" (para o card grande). Junta os
+ * parágrafos com espaço antes de tirar as tags e corta em N palavras.
+ * Devolve '' quando a estação não tem texto.
+ */
+function rac_trecho_estacao( $id, $palavras = 18 ) {
+    $html = rac_campo( 'texto_sobre_a_estacao', $id, '' );
+    if ( ! $html ) return '';
+    $html  = preg_replace( '#</(p|li|div|h[1-6])>|<br\s*/?>#i', ' ', (string) $html );
+    $texto = trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( $html ) ) );
+    return $texto === '' ? '' : wp_trim_words( $texto, $palavras, '…' );
+}
+
+/**
+ * <img> do topo (hero): imagem destacada do post/página ou, se não
+ * houver, a imagem placeholder do tema (assets/img/placeholder-topo.jpg).
+ * Para trocar o placeholder, basta definir a imagem destacada.
+ */
+function rac_html_imagem_topo( $post_id, $classe = 'rac-hero__img' ) {
+    if ( $post_id && has_post_thumbnail( $post_id ) ) {
+        return get_the_post_thumbnail( $post_id, 'full', array(
+            'class'         => $classe,
+            'alt'           => '',
+            'loading'       => 'eager',
+            'fetchpriority' => 'high',
+            'decoding'      => 'async',
+        ) );
+    }
+    return '<img class="' . esc_attr( $classe ) . '" src="' . esc_url( rac_url_placeholder() ) . '" alt="" width="1200" height="675" loading="eager" decoding="async">';
+}
+
+/**
+ * Posts para "Para ler enquanto ouve" numa estação: primeiro os que têm
+ * tag ou categoria com o MESMO NOME da estação; se faltar, completa com
+ * os mais recentes.
+ *
+ * @return int[] IDs de posts.
+ */
+function rac_posts_para_estacao( $nome, $limite = 3 ) {
+    $ids       = array();
+    $tax_query = array( 'relation' => 'OR' );
+
+    foreach ( array( 'post_tag', 'category' ) as $taxonomia ) {
+        $termo = get_term_by( 'name', $nome, $taxonomia );
+        if ( ! $termo ) $termo = get_term_by( 'slug', sanitize_title( $nome ), $taxonomia );
+        if ( $termo && ! is_wp_error( $termo ) ) {
+            $tax_query[] = array( 'taxonomy' => $taxonomia, 'field' => 'term_id', 'terms' => (int) $termo->term_id );
+        }
+    }
+
+    if ( count( $tax_query ) > 1 ) {
+        $ids = get_posts( array(
+            'post_type'           => 'post',
+            'post_status'         => 'publish',
+            'posts_per_page'      => $limite,
+            'fields'              => 'ids',
+            'no_found_rows'       => true,
+            'ignore_sticky_posts' => true,
+            'tax_query'           => $tax_query,
+        ) );
+    }
+
+    if ( count( $ids ) < $limite ) {
+        $mais = get_posts( array(
+            'post_type'           => 'post',
+            'post_status'         => 'publish',
+            'posts_per_page'      => $limite - count( $ids ),
+            'fields'              => 'ids',
+            'no_found_rows'       => true,
+            'ignore_sticky_posts' => true,
+            'post__not_in'        => $ids ? $ids : array( 0 ),
+        ) );
+        $ids = array_merge( $ids, $mais );
+    }
+    return array_map( 'intval', $ids );
 }
