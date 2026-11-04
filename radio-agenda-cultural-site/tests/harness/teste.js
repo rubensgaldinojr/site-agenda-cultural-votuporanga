@@ -66,6 +66,7 @@ const ok = (c, msg) => { out((c ? 'OK   ' : 'FALHA') + ' ' + msg); if (!c) falha
   await page.click('#rac-header .rac-header__logo');
   await page.waitForFunction(() => location.pathname === '/');
   ok(await page.evaluate(() => window.__marcador === 'mesma-pagina' && !window.__audio.paused), 'logo → Home mantém áudio');
+  await page.evaluate(() => { const a = document.createElement('a'); a.href = '/pagina-inexistente-xyz/'; a.textContent = '404'; document.querySelector('#primary').appendChild(a); });
   await page.click('#primary a:has-text("404")');
   await page.waitForTimeout(1200);
   const s404 = await page.evaluate(() => ({ m: window.__marcador, h1: document.querySelector('#primary h1')?.textContent }));

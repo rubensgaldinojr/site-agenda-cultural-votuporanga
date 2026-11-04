@@ -24,10 +24,16 @@ do_action('after_setup_theme');
 
 $nav = '<p><a href="/">Home</a> · <a href="/estacoes/">Estações</a> · <a href="/blog/">Blog</a> · <a href="/blog/?c=Podcasts">Podcasts</a> · <a href="/blog/post-x/">Post X</a> · <a href="/sobre/">Sobre</a> · <a href="/contato/">Contato</a> · <a href="/pagina-inexistente-xyz/">404</a></p>';
 $rotas = [
-  '/'=>['Home','home'], '/estacoes/'=>['Estações','page'], '/blog/'=>['Blog','page'], '/blog/post-x/'=>['Post X','single'],
+  '/estacoes/'=>['Estações','page'], '/blog/'=>['Blog','page'], '/blog/post-x/'=>['Post X','single'],
   '/sobre/'=>['Sobre','page'], '/contato/'=>['Contato','page'],
 ];
 if ($uri==='/componentes/') { $GLOBALS['title']='Componentes'; include THEME_DIR.'/page-componentes.php'; return; }
+if ($uri==='/') {
+  $GLOBALS['queried']=1000; $GLOBALS['title']='Início'; $GLOBALS['fields'][1000] = $GLOBALS['fields'][1000] ?? [];
+  if (isset($_GET['semouv'])) { foreach ($GLOBALS['estacoes_posts'] as $p) unset($GLOBALS['fields'][$p->ID]['ouvintes']); }
+  if (isset($_GET['modo'])) { $GLOBALS['fields'][1000]['home_descoberta_modo']=$_GET['modo']; $GLOBALS['fields'][1000]['home_descoberta_estacao']=(int)($_GET['fixa']??0); }
+  if (isset($_GET['home'])) { $GLOBALS['fields'][1000]+=['home_hero_titulo'=>'Título da Home editado','home_hero_selo'=>'Selo editado','home_hero_texto'=>'Texto do topo editado.','home_fundador_foto'=>55,'home_fundador_nome'=>'Maria Souza','home_fundador_papel'=>'curadora','home_fundador_texto'=>'Texto do fundador editado.','home_sobre_foto'=>56,'home_sobre_titulo'=>'Sobre editado','home_sobre_texto'=>'Texto sobre editado.','home_destaque2_titulo'=>'Livros livres','home_estacoes_subtitulo'=>'Subtítulo editado']; }
+  include THEME_DIR.'/front-page.php'; return; }
 if ($uri==='/estacoes/') { $GLOBALS['queried']=900; if(isset($_GET['hero'])) { $GLOBALS['fields'][900]=['hero_titulo'=>'Título editado no painel','hero_texto'=>'Texto editado no painel.']; } $GLOBALS['title']='Estações'; include THEME_DIR.'/page-estacoes.php'; return; }
 if (preg_match('#^/estacao/(\d+)/$#',$uri,$m)) { $sid=(int)$m[1]; $nome=$GLOBALS['estacoes_posts'][$sid-100]->post_title ?? ('Estação '.$sid); $GLOBALS['title']=$nome; $GLOBALS['loop']['posts']=[['id'=>$sid,'title'=>$nome,'url'=>$uri,'content'=>'']]; include THEME_DIR.'/single-estacao.php'; return; }
 if (isset($rotas[$uri]) || isset($rotas[rtrim($uri,'/').'/'])) {

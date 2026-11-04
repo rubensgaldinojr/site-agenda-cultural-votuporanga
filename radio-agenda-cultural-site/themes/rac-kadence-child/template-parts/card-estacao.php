@@ -6,6 +6,7 @@
  *   'estacao'        array  ['id', 'nome', 'url'] (veja rac_listar_estacoes())
  *   'compact'        bool   versão compacta: o card inteiro toca a estação
  *   'mostrar_genero' bool   mostra a linha de gênero, se vier em 'genero'
+ *   'sem_link'       bool   esconde o link "Ver estação" (hoje nenhuma página usa)
  *   'genero'         string opcional. Cada estação já é um gênero, então
  *                           normalmente não é usado.
  *
@@ -34,7 +35,7 @@ $classes  = 'rac-card-est' . ( $compacto ? ' rac-card-est--compact' : '' );
         <div class="rac-card-est__live">
             <span class="rac-card-est__dot" aria-hidden="true"><i></i><i></i></span>
             <span class="rac-card-est__rotulo">Ao vivo</span>
-            <?php if ( ! $compacto && ! empty( $e['url'] ) ) : ?>
+            <?php if ( ! $compacto && ! empty( $e['url'] ) && empty( $args['sem_link'] ) ) : ?>
                 <a class="rac-card-est__ver" href="<?php echo esc_url( $e['url'] ); ?>" aria-label="<?php echo esc_attr( 'Ver a página da estação ' . $e['nome'] ); ?>">Ver estação</a>
             <?php endif; ?>
         </div>

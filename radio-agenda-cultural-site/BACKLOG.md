@@ -16,8 +16,9 @@
 | 0 | Leitura do README e levantamento de lacunas | ✅ |
 | 1 | Tema filho, tema claro/escuro, header e footer, navegação persistente | ✅ testada pelo Rubens no site real (menus desktop e mobile, cabeçalho e rodapé) |
 | 2 | CardEstacao, CardPost, PlayerFixo (visual), ThemeToggle | ✅ testada no site real e mergeada (PR #2) |
-| 3A | Listagem de Estações e Estação individual | 🔨 código pronto; aguardando teste manual no site |
-| 3B | Home | ⏳ |
+| 3A | Listagem de Estações e Estação individual | ✅ testada no site real e mergeada (PR #3) |
+| 3B-1 | Home: topo, destaques, estações em destaque (mais ouvidas e descoberta), todas as estações e Sobre nós | 🔨 código pronto; aguardando teste manual no site |
+| 3B-2 | Home: carrosséis de Blog e Literatura, Podcasts e Recados dos ouvintes | ⏳ |
 | 4 | Blog, Post, Autor | ⏳ |
 | 5 | Sobre, Contato, revisão geral | ⏳ |
 
@@ -39,13 +40,13 @@
 
 | ID | Item | Fase | Status | Notas |
 |---|---|---|---|---|
-| B-10 | Campos da Estação para a Home: "Ouvintes" (número) e "fixar como destaque" | 3B | ⏳ | Decidido: **sem** grupo/filtro nas Estações e sem campo de gênero (cada estação já é um gênero). Criar por código em `inc/acf-campos.php` |
+| B-10 | Campos da Estação para a Home: "Ouvintes" (número) e escolha da descoberta | 3B-1 | ✅ | Criados por código em `inc/acf-campos.php` (campo "Ouvintes" na estação; aba "Estações em destaque" na Home) |
 | B-11 | API do Zeno.fm para contagem de ouvintes | 3B | ✅ investigado | Não há API pública documentada de ouvintes (só a Metadata API, de música; "ouvintes atuais" só no painel web; a API privada `api.zeno.fm` exige pedir acesso). **Caminho:** campo manual "Ouvintes", que no futuro um script (ou a API, se liberada) pode atualizar |
-| B-12 | Lógica "Descoberta do editor": o editor fixa uma estação ou deixa sortear uma por dia entre as que não estão no top 2 | 3 | ⏳ | Sempre exibida na Home. Top 2 = mais ouvintes |
+| B-12 | Lógica "Descoberta do editor" (sorteio diário fora do top 2, ou estação fixada) | 3B-1 | ✅ | Em `inc/home.php`; coberta por `tests/harness/teste-home.php` (rotação ao longo de um ano) |
 | B-13 | Formato de post (Texto, Poesia, Vídeo, Música, Tirinha, Imagem, Citação) | 4 | ⏳ | Hoje nenhum existe. Os templates devem funcionar sem o campo (cai em "Texto") e aceitar formatos novos depois. ACF a criar em conjunto |
 | B-14 | Campos de autor: papel, "escreve desde", citação favorita, origem da citação, foto, exibir no Sobre + ordem | 4–5 | ⏳ | Criar em conjunto |
-| B-15 | Podcasts como subcategorias da categoria Podcasts | 3–4 | 💡 | Descrição do termo e contagem de posts alimentam os cards da Home |
-| B-16 | Textos da Home editáveis direto na página Home (ACF na própria página) | 3 | ⏳ | Rodapé: textos globais (ver B-05) |
+| B-15 | Podcasts na Home como subcategorias da categoria Podcasts | 3B-2 | 💡 | A seção de podcasts ainda não foi totalmente pensada: por ora Podcasts é só uma categoria do Blog. A seção da Home fica escondida até existirem subcategorias |
+| B-16 | Textos da Home editáveis direto na página Home (ACF na própria página) | 3B-1 | ✅ | Aba por seção; campo vazio mostra o texto provisório do mockup |
 | B-17 | PlayerFixo: capa, volume, "Tocando agora" separado em faixa/artista, bottom sheet no mobile | 2 | ✅ | Feito no tema, sem alterar o plugin. Falta validar com o Zeno.fm real (B-36) |
 | B-18 | Ajuste só visual do catálogo de livros para o modo escuro (cores fixas no CSS) | 2–3 | ⏳ | Sem mudar comportamento |
 | B-19 | Verificar se o catálogo de livros perde CSS/JS ao chegar por navegação AJAX | 1 | ⏳ | O plugin só carrega assets em `is_singular() \|\| is_page()` |
@@ -73,6 +74,9 @@
 | B-42 | Seção de livros na página da estação ("Da biblioteca"), reaproveitando o card de livro da Home | 3B | 💡 | Regra sugerida: livros com categoria de livro de mesmo nome da estação e, se faltar, os mais recentes; só depois do card de livro existir |
 | B-43 | Renomear a categoria padrão "Uncategorized" e apagar o post "Hello world!" | — | 💡 | Aparecem nos cards de post em inglês; ajuste no painel (Posts → Categorias) |
 | B-44 | Tags nos cards de post do Blog: hoje o card mostra só categoria, data, título e autor; as tags não aparecem em lugar nenhum | 4 | 💡 | A tratar na Fase 4. Opções: (a) manter o card sem tags, como no mockup; (b) mostrar até 2 tags no card; (c) tags só na página do post (o mockup tem) com página de arquivo por tag. Pode-se ligar a tag com o nome de uma estação à página dessa estação |
+| B-45 | Futuro: plugin próprio para cadastrar e gerenciar podcasts (séries e episódios) | — | 💡 | Ideia do Rubens; hoje Podcasts é uma categoria do Blog |
+| B-46 | Preencher os dados reais da Home: foto, nome, papel e texto do fundador; textos de topo, destaques e Sobre nós; foto do Sobre; "Ouvintes" de cada estação; imagem destacada da Home | — | ⏳ | Tudo provisório até o Rubens preencher |
+| B-47 | Home como página inicial estática, comentários liberados nela (recados) e "O comentário deve ser aprovado manualmente" em Configurações → Discussão | 3B-2 | ⏳ | Moderação feita pelo Rubens; os recados usam os comentários da própria Home |
 | B-40 | `catalogo-livros-rac.php` está duplicado na raiz do repositório (idêntico ao de `plugins/`) | 💡 | Remover a cópia da raiz? |
 
 ## Decisões tomadas
@@ -84,6 +88,9 @@
 - Descoberta do editor: sempre visível, fixa ou sorteada diariamente entre as estações fora do top 2.
 - Ouvintes: tentar a API do Zeno.fm; se não der, campo manual atualizado por script no futuro (valor estático até a próxima atualização).
 - Endereços reais: `/estacoes/`, `/blog/`, `/literatura/`, `/sobre/`, `/category/podcasts/`.
+- Formulários (3): **Recados** na Home = comentários nativos da própria página Home (moderados); **Comentários nos posts** = nativos do WordPress; **Recomendação de músicas/pedidos** = formulário de Contato (Fase 5, e-mail).
+- Home: "Todas as estações" mantém o link "Ver estação ›" no canto do card (desktop); no mobile os cards compactos não têm link.
+- Home: mais ouvidas pelo campo manual "Ouvintes"; descoberta fora do top 2 (sorteio diário ou fixada); "Ouvir agora" toca a mais ouvida; dados provisórios do mockup até o Rubens preencher.
 - Estações: sem filtro por grupo; listagem em ordem alfabética; "Outras estações" = as 4 seguintes em ordem alfabética; "Para ler enquanto ouve" = posts com tag/categoria de mesmo nome da estação e, se faltar, os mais recentes.
 - Estações: card grande com imagem, 4 colunas no desktop; placeholder em toda estação sem imagem destacada (cards, tiles e player). Posts sem imagem continuam com o listrado.
 - Imagens: uma única imagem placeholder para todos os topos até chegarem as imagens reais (B-38).
