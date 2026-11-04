@@ -55,7 +55,14 @@ function wp_json_encode($d,$f=0){ return json_encode($d,$f); }
 function get_field($n,$id){ return $GLOBALS['fields'][$id][$n] ?? ''; }
 function get_the_title($p=null){ if(is_object($p)) return $p->post_title; return $GLOBALS['loop']['posts'][$GLOBALS['loop']['i']]['title']; }
 class WP_Query { public $posts=[]; function __construct($a){ $this->posts=$GLOBALS['estacoes_posts']; } }
-function get_posts($a){ if(($a['post_type']??'')==='estacao') return $GLOBALS['estacoes_posts']; return array_map('get_post', array_keys($GLOBALS['posts_db'])); }
+function get_posts($a){
+  if(($a['post_type']??'')==='estacao') return $GLOBALS['estacoes_posts'];
+  $ids=array_keys($GLOBALS['posts_db']);
+  if(!empty($a['tax_query'])){ $alvo=[]; foreach($a['tax_query'] as $q){ if(is_array($q)&&isset($q['terms'])&&isset($GLOBALS['tag_map'][$q['terms']])) $alvo=array_merge($alvo,$GLOBALS['tag_map'][$q['terms']]); } $ids=array_values(array_unique($alvo)); }
+  if(!empty($a['post__not_in'])) $ids=array_values(array_diff($ids,$a['post__not_in']));
+  $ids=array_slice($ids,0,$a['posts_per_page']??10);
+  return (($a['fields']??'')==='ids') ? $ids : array_map('get_post',$ids);
+}
 function wp_robots_no_robots($r){ return $r; }
 function get_transient($k){ if(strpos($k,'racr_metadado_')===0){ return ((int)substr($k,14)%2===0)?'Willie Dixon - Save My Child':'Barry White - Just the Way You Are'; } return false; } function set_transient(...$a){} function wp_send_json_success($d){ echo json_encode(['success'=>true,'data'=>$d]); exit; } function wp_send_json_error(){ echo json_encode(['success'=>false]); exit; }
 function is_admin(){ return false; }
@@ -82,7 +89,18 @@ $GLOBALS['autores']=[1=>'Marina Alves',2=>'Igor Bastos',3=>'Nome do Fundador'];
 function get_post($p=null){ if(is_object($p)) return $p; if(is_int($p)&&isset($GLOBALS['posts_db'][$p])) return (object)['ID'=>$p,'post_title'=>$GLOBALS['posts_db'][$p]['title'],'post_author'=>$GLOBALS['posts_db'][$p]['aid']]; return null; }
 function get_the_category($id){ return isset($GLOBALS['posts_db'][$id]) ? [(object)['name'=>$GLOBALS['posts_db'][$id]['cat']]] : []; }
 function is_wp_error($x){ return false; }
-function get_the_post_thumbnail($id,$size='',$attr=[]){ $t=$GLOBALS['posts_db'][$id]['thumb']??''; return $t ? '<img src="'.$t.'" alt="" loading="lazy">' : ''; }
+function get_the_post_thumbnail($id,$size='',$attr=[]){ $t=$GLOBALS['posts_db'][$id]['thumb']??''; if(!$t){ $n=$id-100; if($n>=0&&$n<4) $t='/h/capa-'.$n.'.svg'; } $c=isset($attr['class'])?' class="'.$attr['class'].'"':''; return $t ? '<img'.$c.' src="'.$t.'" alt="" loading="lazy">' : ''; }
+function has_post_thumbnail($id=null){ return get_the_post_thumbnail($id)!==''; }
 function get_the_post_thumbnail_url($id,$size=''){ if(isset($GLOBALS['posts_db'][$id])) return $GLOBALS['posts_db'][$id]['thumb']; $n=$id-100; return ($n>=0&&$n<4) ? '/h/capa-'.$n.'.svg' : ''; }
 function get_author_posts_url($aid){ return '/autor/'.$aid.'/'; }
 function get_the_author_meta($k,$aid=null){ return $GLOBALS['autores'][$aid]??''; }
+
+function get_queried_object_id(){ return $GLOBALS['queried'] ?? 0; }
+function get_the_ID(){ return $GLOBALS['loop']['posts'][$GLOBALS['loop']['i']]['id'] ?? 0; }
+function get_page_by_path($p){ return null; }
+function sanitize_title($t){ return strtolower(trim(preg_replace('/[^a-z0-9]+/i','-',remove_accents($t)),'-')); }
+function remove_accents($s){ return strtr($s, ['á'=>'a','à'=>'a','ã'=>'a','â'=>'a','é'=>'e','ê'=>'e','í'=>'i','ó'=>'o','õ'=>'o','ô'=>'o','ú'=>'u','ç'=>'c','Á'=>'A','Ã'=>'A','É'=>'E','Ó'=>'O','Ç'=>'C']); }
+function wp_kses_post($h){ return $h; }
+function get_term_by($campo,$valor,$tax){ if($tax==='post_tag' && $campo==='name' && $valor==='Blues & Jazz Clube') return (object)['term_id'=>77]; return false; }
+$GLOBALS['tag_map']=[77=>[502]];
+$GLOBALS['fields'][100]['texto_sobre_a_estacao']='<p>Primeiro parágrafo da estação Blues, que funciona como abertura.</p><p>Segundo parágrafo com mais detalhes sobre a programação.</p><p>Terceiro parágrafo de fechamento.</p>';

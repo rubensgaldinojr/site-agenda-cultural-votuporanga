@@ -7,9 +7,11 @@
         #racr-status) em duas linhas, "faixa" e "artista";
      2. mantém a capa da estação atual no player;
      3. controla o volume (audio.volume) e lembra o valor;
-     4. liga os cards de estação ao player — clicar em qualquer ponto do
-        card (menos no link "Ver estação") aciona o botão correspondente do
-        próprio plugin — e marca .is-tocando no card da estação que toca;
+     4. liga os cards de estação (.rac-card-est), os tiles (.rac-tile-est) e o
+        botão "Ouvir agora" da página da estação (.rac-cta-estacao) ao player:
+        clicar aciona o botão correspondente do próprio plugin, e o elemento da
+        estação que está tocando recebe .is-tocando. No card, qualquer ponto
+        toca (menos o link "Ver estação"); no tile e no botão, só o botão;
      5. fecha o painel de estações (✕, clicar fora, Esc).
 
    O que o plugin controla, e este script apenas observa/aciona:
@@ -111,18 +113,21 @@
     return player.classList.contains('racr-tocando') || player.classList.contains('racr-carregando');
   }
 
+  // Elementos de estação que acompanham o estado do player.
+  var SELETOR_ESTACOES = '.rac-card-est, .rac-tile-est, .rac-cta-estacao';
+
   function sincronizarCards() {
     var ativa = estacaoAtiva();
     var idAtual = ativa ? ativa.getAttribute('data-estacao-id') : null;
     var tocando = tocandoOuCarregando();
 
-    todos('.rac-card-est').forEach(function (card) {
-      var ligado = tocando && idAtual !== null && card.getAttribute('data-estacao-id') === idAtual;
-      card.classList.toggle('is-tocando', ligado);
-      var botao = card.querySelector('[data-rac-tocar]');
+    todos(SELETOR_ESTACOES).forEach(function (el) {
+      var ligado = tocando && idAtual !== null && el.getAttribute('data-estacao-id') === idAtual;
+      el.classList.toggle('is-tocando', ligado);
+      var botao = el.hasAttribute('data-rac-tocar') ? el : el.querySelector('[data-rac-tocar]');
       if (botao) botao.setAttribute('aria-pressed', ligado ? 'true' : 'false');
-      if (card.classList.contains('rac-card-est--compact')) {
-        var rotulo = card.querySelector('.rac-card-est__rotulo');
+      if (el.classList.contains('rac-card-est--compact')) {
+        var rotulo = el.querySelector('.rac-card-est__rotulo');
         if (rotulo) rotulo.textContent = ligado ? 'Tocando' : 'Ao vivo';
       }
     });
@@ -139,9 +144,16 @@
   }
 
   document.addEventListener('click', function (e) {
+    // botão de tocar (tile, "Ouvir agora")
+    var botao = e.target.closest('[data-rac-tocar]');
+    if (botao) {
+      var dono = botao.closest('[data-estacao-id]');
+      if (dono) tocarEstacaoPorId(dono.getAttribute('data-estacao-id'));
+      return;
+    }
+    // card: qualquer ponto toca, menos links ("Ver estação" navega normalmente)
     var card = e.target.closest('.rac-card-est');
-    if (!card) return;
-    if (e.target.closest('a')) return; // "Ver estação" navega normalmente
+    if (!card || e.target.closest('a')) return;
     tocarEstacaoPorId(card.getAttribute('data-estacao-id'));
   });
 

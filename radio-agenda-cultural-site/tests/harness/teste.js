@@ -31,7 +31,9 @@ const ok = (c, msg) => { out((c ? 'OK   ' : 'FALHA') + ' ' + msg); if (!c) falha
 
   async function irPara(texto, rota, ativoEsperado) {
     const antes = await page.evaluate(() => window.__audio.currentTime);
-    await page.click(`#primary a:has-text("${texto}")`);
+    // usa o menu do cabeçalho quando o item existe lá; senão, o link dentro do #primary
+    const noMenu = await page.$(`.rac-nav a:has-text("${texto}")`);
+    await page.click(noMenu ? `.rac-nav a:has-text("${texto}")` : `#primary a:has-text("${texto}")`);
     await page.waitForFunction(r => location.pathname + location.search === r, rota, { timeout: 5000 });
     await page.waitForFunction(t => document.querySelector('#primary h1').textContent.trim().length > 0, null);
     const s = await page.evaluate(() => ({

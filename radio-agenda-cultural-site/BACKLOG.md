@@ -15,8 +15,9 @@
 |---|---|---|
 | 0 | Leitura do README e levantamento de lacunas | ✅ |
 | 1 | Tema filho, tema claro/escuro, header e footer, navegação persistente | ✅ testada pelo Rubens no site real (menus desktop e mobile, cabeçalho e rodapé) |
-| 2 | CardEstacao, CardPost, PlayerFixo (visual), ThemeToggle | 🔨 código pronto; aguardando teste manual no site |
-| 3 | Home, listagem de Estações, Estação individual | ⏳ |
+| 2 | CardEstacao, CardPost, PlayerFixo (visual), ThemeToggle | ✅ testada no site real e mergeada (PR #2) |
+| 3A | Listagem de Estações e Estação individual | 🔨 código pronto; aguardando teste manual no site |
+| 3B | Home | ⏳ |
 | 4 | Blog, Post, Autor | ⏳ |
 | 5 | Sobre, Contato, revisão geral | ⏳ |
 
@@ -38,8 +39,8 @@
 
 | ID | Item | Fase | Status | Notas |
 |---|---|---|---|---|
-| B-10 | Campos da Estação: grupo (taxonomia, para o filtro), ouvintes e "fixar como destaque" | 3 | ⏳ | Não é preciso campo de gênero: cada estação já é um gênero e o nome da estação faz esse papel |
-| B-11 | Investigar API do Zeno.fm para contagem de ouvintes | 3 | ⏳ | Se não houver API: campo manual, que no futuro pode ser alimentado por script que lê o dashboard do Zeno |
+| B-10 | Campos da Estação para a Home: "Ouvintes" (número) e "fixar como destaque" | 3B | ⏳ | Decidido: **sem** grupo/filtro nas Estações e sem campo de gênero (cada estação já é um gênero). Criar por código em `inc/acf-campos.php` |
+| B-11 | API do Zeno.fm para contagem de ouvintes | 3B | ✅ investigado | Não há API pública documentada de ouvintes (só a Metadata API, de música; "ouvintes atuais" só no painel web; a API privada `api.zeno.fm` exige pedir acesso). **Caminho:** campo manual "Ouvintes", que no futuro um script (ou a API, se liberada) pode atualizar |
 | B-12 | Lógica "Descoberta do editor": o editor fixa uma estação ou deixa sortear uma por dia entre as que não estão no top 2 | 3 | ⏳ | Sempre exibida na Home. Top 2 = mais ouvintes |
 | B-13 | Formato de post (Texto, Poesia, Vídeo, Música, Tirinha, Imagem, Citação) | 4 | ⏳ | Hoje nenhum existe. Os templates devem funcionar sem o campo (cai em "Texto") e aceitar formatos novos depois. ACF a criar em conjunto |
 | B-14 | Campos de autor: papel, "escreve desde", citação favorita, origem da citação, foto, exibir no Sobre + ordem | 4–5 | ⏳ | Criar em conjunto |
@@ -65,8 +66,9 @@
 |---|---|---|---|
 | B-34 | Confirmar os endereços reais das páginas | ✅ | `/estacoes/`, `/blog/`, `/literatura/`, `/sobre/` e `/category/podcasts/` (Podcasts é categoria). `/contato/` ainda a confirmar na Fase 5 |
 | B-35 | Testar o tema no site real (Kadence, LiteSpeed, ACF) | ✅ | Menus e mobile funcionando. Falta só confirmar o catálogo de livros via navegação AJAX (B-19) |
-| B-36 | Validar no site real: player novo com os streams do Zeno.fm ("Artista - Música" dividido, capa, volume, dropdown, bottom sheet) e os cards na página `componentes` | ⏳ | Roteiro na seção "Componentes" do README do tema |
-| B-37 | Imagem destacada em cada Estação (capa do player e do dropdown) | 💡 | Sem imagem, aparece o placeholder listrado |
+| B-36 | Validar no site real: player com os streams do Zeno.fm e os cards | ✅ | Testado pelo Rubens |
+| B-37 | Imagem destacada em cada Estação (capa do player e topo da página da estação) | 💡 | Sem imagem, a capa mostra o placeholder listrado e o topo usa a imagem placeholder do tema. Algumas estações ainda estão sem imagem |
+| B-38 | Trocar a imagem placeholder única (`assets/img/placeholder-topo.jpg`) pelas imagens reais de cada topo (Estações, estações, Home, Sobre) e confirmar a licença de uso da imagem atual | ⏳ | Para trocar: definir a Imagem destacada da página/estação; o placeholder só aparece quando não há imagem |
 | B-40 | `catalogo-livros-rac.php` está duplicado na raiz do repositório (idêntico ao de `plugins/`) | 💡 | Remover a cópia da raiz? |
 
 ## Decisões tomadas
@@ -78,6 +80,8 @@
 - Descoberta do editor: sempre visível, fixa ou sorteada diariamente entre as estações fora do top 2.
 - Ouvintes: tentar a API do Zeno.fm; se não der, campo manual atualizado por script no futuro (valor estático até a próxima atualização).
 - Endereços reais: `/estacoes/`, `/blog/`, `/literatura/`, `/sobre/`, `/category/podcasts/`.
+- Estações: sem filtro por grupo; listagem em ordem alfabética; "Outras estações" = as 4 seguintes em ordem alfabética; "Para ler enquanto ouve" = posts com tag/categoria de mesmo nome da estação e, se faltar, os mais recentes.
+- Imagens: uma única imagem placeholder para todos os topos até chegarem as imagens reais (B-38).
 - Estações: cada estação é um gênero; o nome da estação substitui o "gênero" do mockup (sem campo novo).
 - PlayerFixo: o tema desenha o player com os mesmos IDs do plugin (`remove_action` do render antigo); o plugin não é editado. "Tocando agora" vem como "Artista - Música" e é dividido no primeiro " - ".
 - CardEstacao: o título não é link; o card inteiro toca e há um link "Ver estação" para a página (card compacto sem link).
