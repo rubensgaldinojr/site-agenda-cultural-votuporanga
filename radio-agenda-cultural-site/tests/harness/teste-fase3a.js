@@ -77,7 +77,9 @@ const ALFA = [...NOMES].sort((a, b) => (norm(a) < norm(b) ? -1 : norm(a) > norm(
   ok(d.trechos.slice(1).every(x => x === null), 'estações sem texto cadastrado não mostram trecho');
   ok(d.links === 12, 'cada card tem o link "Ver estação"');
   ok(d.nomeCor === 'rgb(255, 255, 255)', `nome em branco sobre a foto (${d.nomeCor})`);
-  ok(d.prop >= 1.0 && d.prop <= 1.15, `proporção do card (altura/largura = ${d.prop})`);
+  const alt = await page.evaluate(() => { const cards = [...document.querySelectorAll('.rac-grade-img .rac-card-img')]; return cards.map(c => { const r = c.getBoundingClientRect(); const live = c.querySelector('.rac-card-img__live').getBoundingClientRect(); const corpo = c.querySelector('.rac-card-img__corpo').getBoundingClientRect(); return { h: Math.round(r.height), w: Math.round(r.width), cortado: c.scrollHeight > c.clientHeight + 1, sobrepoe: live.bottom > corpo.top - 2 }; }); });
+  ok(alt.every(x => x.h >= 205 && x.h <= 225), `altura do card ≈210px, 33% menor que antes (${[...new Set(alt.map(x => x.h))].join('/')}px com ${alt[0].w}px de largura)`);
+  ok(alt.every(x => !x.cortado && !x.sobrepoe), 'conteúdo do card cabe sem corte e sem encostar no selo "Ao vivo"');
   ok(d.ativo === 'Estações', 'menu: "Estações" fica ativo na página');
   await page.screenshot({ path: 'capturas/f3a-estacoes-d.png', fullPage: true });
 

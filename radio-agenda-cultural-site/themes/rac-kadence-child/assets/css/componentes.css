@@ -189,7 +189,7 @@
 
 .rac-card-img {
   position: relative; isolation: isolate; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;
-  aspect-ratio: 1 / 1.08; padding: 14px; border-radius: 16px; cursor: pointer; background: var(--surface2);
+  min-height: 210px; padding: 14px; border-radius: 16px; cursor: pointer; background: var(--surface2);
   font-family: 'DM Sans', sans-serif; transition: box-shadow .2s ease, transform .25s ease;
 }
 .rac-card-img:hover { transform: translateY(-2px); }
@@ -199,7 +199,7 @@
 .rac-card-img:hover .rac-card-img__foto img { transform: scale(1.04); }
 .rac-card-img__scrim {
   position: absolute; inset: 0; z-index: -1; pointer-events: none;
-  background: linear-gradient(to top, rgb(var(--scrim) / .92) 0%, rgb(var(--scrim) / .62) 42%, rgb(var(--scrim) / 0) 78%);
+  background: linear-gradient(to top, rgb(var(--scrim) / .92) 0%, rgb(var(--scrim) / .7) 45%, rgb(var(--scrim) / 0) 88%);
 }
 
 .rac-card-img__live {
@@ -298,7 +298,7 @@
 
   /* card com imagem: 2 colunas, sem o trecho de texto */
   .rac-grade-img { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding-top: 0; border-top: 0; }
-  .rac-card-img { aspect-ratio: 1 / 1.2; padding: 10px; border-radius: 14px; }
+  .rac-card-img { min-height: 136px; padding: 10px; border-radius: 14px; }
   .rac-card-img__trecho { display: none; }
   .rac-body .rac-card-img__nome { font-size: 15px; }
   .rac-card-img__rodape { margin-top: 2px; }
