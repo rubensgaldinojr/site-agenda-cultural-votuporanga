@@ -10,6 +10,8 @@
  * - "Outras estações": as 4 seguintes em ordem alfabética.
  * - "Para ler enquanto ouve": posts com tag/categoria de mesmo nome da
  *   estação e, se faltar, os mais recentes.
+ * - "Da biblioteca": livros com categoria de livro de mesmo nome da estação
+ *   e, se faltar, os mais recentes (some se não houver nenhum livro).
  *
  * Cada estação já é um gênero, então não há linha de "gênero".
  */
@@ -28,6 +30,7 @@ while ( have_posts() ) :
     $texto  = rac_campo( 'texto_sobre_a_estacao', $id, '' );
     $outras = rac_outras_estacoes( $id, 4 );
     $posts  = rac_posts_para_estacao( $nome, 3 );
+    $livros = rac_livros_para_estacao( $nome, 6 );
     ?>
     <section class="rac-hero rac-hero--estacao"<?php echo $est && $est['indice'] !== null ? ' data-indice="' . esc_attr( $est['indice'] ) . '" data-ajax="' . esc_url( admin_url( 'admin-ajax.php' ) ) . '"' : ''; ?>>
         <div class="rac-hero__foto rac-foto"><?php echo rac_html_imagem_topo( $id ); // phpcs:ignore WordPress.Security.EscapeOutput ?></div>
@@ -98,6 +101,24 @@ while ( have_posts() ) :
             </div>
             <div class="rac-secao__rodape">
                 <a class="rac-botao-contorno" href="<?php echo esc_url( rac_url_pagina( 'blog' ) ); ?>">Ver todos os posts →</a>
+            </div>
+        </div>
+    </section>
+    <?php endif; ?>
+    <?php if ( $livros ) : ?>
+    <section class="rac-biblioteca">
+        <div class="rac-secao__inner">
+            <div class="rac-secao__topo rac-secao__topo--titulo">
+                <div>
+                    <span class="rac-eyebrow">Literatura</span>
+                    <h2>Da biblioteca</h2>
+                </div>
+                <a href="<?php echo esc_url( rac_url_pagina( 'literatura' ) ); ?>">Ver a biblioteca →</a>
+            </div>
+            <div class="rac-biblioteca__lista">
+                <?php foreach ( $livros as $livro_id ) : ?>
+                    <div class="rac-biblioteca__item"><?php get_template_part( 'template-parts/card-livro', null, array( 'livro' => $livro_id ) ); ?></div>
+                <?php endforeach; ?>
             </div>
         </div>
     </section>

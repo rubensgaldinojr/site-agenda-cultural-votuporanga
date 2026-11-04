@@ -1,10 +1,20 @@
 # Tema filho do Kadence — Rádio Agenda Cultural
 
-Versão 0.4.0 (Fases 1, 2, 3A e 3B-1). Requer o tema **Kadence** instalado (é o tema pai).
+Versão 0.5.0 (Fases 1, 2, 3A, 3B-1 e 3B-2). Requer o tema **Kadence** instalado (é o tema pai).
 
 ## Instalação (site de desenvolvimento)
 
-1. Compacte a pasta `rac-kadence-child` em um `.zip`.
+1. Gere o `.zip` com o script (dentro da pasta do projeto):
+
+   ```bash
+   ./radio-agenda-cultural-site/scripts/gerar-zip-tema.sh
+   ```
+
+   Ele mostra a **branch, o último commit e a versão**, avisa se você parece estar na branch errada
+   (por exemplo, na `main` com uma branch de trabalho à frente) ou desatualizado, **apaga os zips
+   antigos do tema** (`rac-kadence-child*.zip`, só esses) da pasta `radio-agenda-cultural-site/themes/`
+   e cria `rac-kadence-child-<versão>.zip` ali mesmo (a pasta ignora `*.zip` no git). No Mac, abre o
+   Finder já no arquivo. A versão aparece em destaque no fim; confira se é a esperada antes de subir.
 2. Painel → Aparência → Temas → Adicionar novo → Enviar tema → ativar.
 3. Limpe o cache do LiteSpeed (LiteSpeed Cache → Gerenciar → Limpar tudo).
 4. Rollback, se algo der errado: reative o tema **Kadence**.
@@ -79,7 +89,8 @@ Versão 0.4.0 (Fases 1, 2, 3A e 3B-1). Requer o tema **Kadence** instalado (é o
 ## Página inicial (Fase 3B-1)
 
 `front-page.php` vale para a página definida como **Página inicial** em Configurações → Leitura.
-Blog, Literatura, Podcasts e Recados dos ouvintes chegam na 3B-2.
+Seções: topo, destaques, estações em destaque, todas as estações, Blog, Literatura, Sobre nós,
+Podcasts (só se houver séries) e Recados dos ouvintes.
 
 - **Textos e fotos:** em "Textos da página inicial" (abas Topo, Fundador, Destaques, Estações em
   destaque e Sobre nós) da própria página. Campos vazios mostram o texto provisório do mockup (os do
@@ -96,6 +107,24 @@ Blog, Literatura, Podcasts e Recados dos ouvintes chegam na 3B-2.
 - **Cache (LiteSpeed):** um evento diário às 00:05 limpa só a página inicial; salvar uma estação
   também limpa. (Depende do WP-Cron, que roda quando há visitas.)
 - **Todas as estações:** cards clicáveis em ordem alfabética; no desktop cada card tem o link "Ver estação ›" no canto (os compactos do mobile não têm link).
+
+### Blog, Literatura, Podcasts e Recados (3B-2)
+
+- **Blog:** os 6 posts mais recentes (card de post). **Literatura:** os 8 livros mais recentes (CPT
+  "livro" do plugin de catálogo; card com capa, título e autor; o clique leva à página Literatura).
+- **Carrossel (só desktop):** infinito, com setas e avanço a cada 4,5 s; pausa com o mouse/foco, com a
+  aba escondida e em "reduzir movimento". Com poucos itens (que cabem na tela) vira uma grade simples,
+  sem setas. No **mobile** é rolagem lateral com encaixe (sem JS).
+- **Podcasts:** subcategorias da categoria "Podcasts" que já têm posts (título, descrição do termo e
+  "N episódios"). Sem subcategorias, a seção não aparece. (A seção ainda não foi totalmente pensada.)
+- **Recados:** comentários nativos **da própria página Home** (ligue "Permitir comentários" nela e deixe
+  "O comentário deve ser aprovado manualmente" em Configurações → Discussão). 3 por página no desktop
+  (com números) e 4 no mobile ("1 de N"). O formulário envia sem recarregar a página (o áudio não
+  para) para o `wp-comments-post.php`, então a moderação e o Akismet do WordPress continuam valendo.
+  Proteção extra só nos comentários da Home: campo-armadilha escondido e tempo mínimo de 3 s entre
+  abrir o formulário e enviar. Sem recados e com comentários fechados, a seção não aparece.
+- **Página da estação — "Da biblioteca":** 6 livros; primeiro os cuja **categoria de livro** tem o
+  mesmo nome da estação, completando com os mais recentes. Some se não houver livros.
 
 ## Regras que não podem ser quebradas
 
@@ -126,10 +155,10 @@ style.css  functions.php  header.php  footer.php
 index.php  page.php  single.php  404.php          (genéricos; os definitivos vêm nas Fases 3–5)
 page-componentes.php                              (prévia de teste dos componentes)
 page-estacoes.php  single-estacao.php             (Fase 3A)
-front-page.php                                    (Fase 3B-1)
-inc/helpers.php  inc/customizer.php  inc/player.php  inc/acf-campos.php  inc/home.php
-template-parts/theme-toggle.php  player-fixo.php  card-estacao.php  card-estacao-imagem.php  card-post.php  tile-estacao.php
+front-page.php                                    (Fases 3B-1 e 3B-2)
+inc/helpers.php  inc/customizer.php  inc/player.php  inc/acf-campos.php  inc/home.php  inc/conteudo.php  inc/recados.php
+template-parts/theme-toggle.php  player-fixo.php  card-estacao.php  card-estacao-imagem.php  card-post.php  card-livro.php  tile-estacao.php
 assets/css/tema.css  base.css  componentes.css  paginas.css  home.css
-assets/js/rac.js  player.js  estacao.js
+assets/js/rac.js  player.js  estacao.js  carrossel.js  recados.js
 assets/img/placeholder-topo.jpg
 ```

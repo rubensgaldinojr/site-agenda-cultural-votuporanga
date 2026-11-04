@@ -17,8 +17,8 @@
 | 1 | Tema filho, tema claro/escuro, header e footer, navegação persistente | ✅ testada pelo Rubens no site real (menus desktop e mobile, cabeçalho e rodapé) |
 | 2 | CardEstacao, CardPost, PlayerFixo (visual), ThemeToggle | ✅ testada no site real e mergeada (PR #2) |
 | 3A | Listagem de Estações e Estação individual | ✅ testada no site real e mergeada (PR #3) |
-| 3B-1 | Home: topo, destaques, estações em destaque (mais ouvidas e descoberta), todas as estações e Sobre nós | 🔨 código pronto; aguardando teste manual no site |
-| 3B-2 | Home: carrosséis de Blog e Literatura, Podcasts e Recados dos ouvintes | ⏳ |
+| 3B-1 | Home: topo, destaques, estações em destaque (mais ouvidas e descoberta), todas as estações e Sobre nós | ✅ testada no site real e mergeada (PR #4) |
+| 3B-2 | Home: carrosséis de Blog e Literatura, Podcasts e Recados dos ouvintes; "Da biblioteca" na página da estação | 🔨 código pronto; aguardando teste manual no site |
 | 4 | Blog, Post, Autor | ⏳ |
 | 5 | Sobre, Contato, revisão geral | ⏳ |
 
@@ -71,12 +71,14 @@
 | B-37 | Imagem destacada em cada Estação (capa do player e topo da página da estação) | 💡 | Sem imagem, a capa mostra o placeholder listrado e o topo usa a imagem placeholder do tema. Algumas estações ainda estão sem imagem |
 | B-38 | Trocar a imagem placeholder única (`assets/img/placeholder-topo.jpg`) pelas imagens reais de cada topo (Estações, estações, Home, Sobre) e confirmar a licença de uso da imagem atual | ⏳ | Para trocar: definir a Imagem destacada da página/estação; o placeholder só aparece quando não há imagem |
 | B-41 | Página de Estações com cards grandes (imagem de fundo, nome, "Ao vivo", trecho, "Ver estação" e play) | 3A | ✅ | Feito: 4 colunas no desktop, 2 no mobile; placeholder em toda estação sem imagem destacada |
-| B-42 | Seção de livros na página da estação ("Da biblioteca"), reaproveitando o card de livro da Home | 3B | 💡 | Regra sugerida: livros com categoria de livro de mesmo nome da estação e, se faltar, os mais recentes; só depois do card de livro existir |
+| B-42 | Seção de livros na página da estação ("Da biblioteca") | 3B-2 | ✅ | Livros com categoria de mesmo nome da estação primeiro, depois os mais recentes; reaproveita o card de livro |
 | B-43 | Renomear a categoria padrão "Uncategorized" e apagar o post "Hello world!" | — | 💡 | Aparecem nos cards de post em inglês; ajuste no painel (Posts → Categorias) |
 | B-44 | Tags nos cards de post do Blog: hoje o card mostra só categoria, data, título e autor; as tags não aparecem em lugar nenhum | 4 | 💡 | A tratar na Fase 4. Opções: (a) manter o card sem tags, como no mockup; (b) mostrar até 2 tags no card; (c) tags só na página do post (o mockup tem) com página de arquivo por tag. Pode-se ligar a tag com o nome de uma estação à página dessa estação |
 | B-45 | Futuro: plugin próprio para cadastrar e gerenciar podcasts (séries e episódios) | — | 💡 | Ideia do Rubens; hoje Podcasts é uma categoria do Blog |
 | B-46 | Preencher os dados reais da Home: foto, nome, papel e texto do fundador; textos de topo, destaques e Sobre nós; foto do Sobre; "Ouvintes" de cada estação; imagem destacada da Home | — | ⏳ | Tudo provisório até o Rubens preencher |
-| B-47 | Home como página inicial estática, comentários liberados nela (recados) e "O comentário deve ser aprovado manualmente" em Configurações → Discussão | 3B-2 | ⏳ | Moderação feita pelo Rubens; os recados usam os comentários da própria Home |
+| B-47 | Home como página inicial estática (feito), comentários liberados nela (recados) e "O comentário deve ser aprovado manualmente" (feito) | 3B-2 | ⏳ | Falta ligar "Permitir comentários" na página Home |
+| B-48 | Livro: página individual e card com botão de baixar; hoje o card de livro da Home leva à página Literatura | 4–5 | 💡 | Depende do mockup da Literatura (B-03) |
+| B-49 | Spam nos recados: se aparecer mesmo com a moderação manual, instalar o Akismet ou outro anti-spam; o tema já tem campo-armadilha e tempo mínimo | — | 💡 | Só se for preciso |
 | B-40 | `catalogo-livros-rac.php` está duplicado na raiz do repositório (idêntico ao de `plugins/`) | 💡 | Remover a cópia da raiz? |
 
 ## Decisões tomadas
@@ -88,7 +90,9 @@
 - Descoberta do editor: sempre visível, fixa ou sorteada diariamente entre as estações fora do top 2.
 - Ouvintes: tentar a API do Zeno.fm; se não der, campo manual atualizado por script no futuro (valor estático até a próxima atualização).
 - Endereços reais: `/estacoes/`, `/blog/`, `/literatura/`, `/sobre/`, `/category/podcasts/`.
+- Entrega do tema: a cada etapa, o Claude passa um comando único (git fetch/checkout/pull + `scripts/gerar-zip-tema.sh`) que apaga o zip antigo, gera `rac-kadence-child-<versão>.zip` em `radio-agenda-cultural-site/themes/` e destaca a versão; o Claude também destaca o número da versão ao pedir o upload.
 - Formulários (3): **Recados** na Home = comentários nativos da própria página Home (moderados); **Comentários nos posts** = nativos do WordPress; **Recomendação de músicas/pedidos** = formulário de Contato (Fase 5, e-mail).
+- Home (3B-2): Blog = 6 posts mais recentes; Literatura = 8 livros mais recentes; carrossel infinito só no desktop e só com itens suficientes (mobile = rolagem lateral); Podcasts escondido até existirem subcategorias; Recados = comentários da própria Home, moderados, enviados sem recarregar a página.
 - Home: "Todas as estações" mantém o link "Ver estação ›" no canto do card (desktop); no mobile os cards compactos não têm link.
 - Home: mais ouvidas pelo campo manual "Ouvintes"; descoberta fora do top 2 (sorteio diário ou fixada); "Ouvir agora" toca a mais ouvida; dados provisórios do mockup até o Rubens preencher.
 - Estações: sem filtro por grupo; listagem em ordem alfabética; "Outras estações" = as 4 seguintes em ordem alfabética; "Para ler enquanto ouve" = posts com tag/categoria de mesmo nome da estação e, se faltar, os mais recentes.

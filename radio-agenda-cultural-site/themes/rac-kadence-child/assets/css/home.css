@@ -133,3 +133,185 @@
   .rac-home-sobre__texto p { font-size: 14px; line-height: 1.65; }
   .rac-body .rac-home-sobre__texto .rac-botao-contorno { width: 100%; margin-top: 2px; }
 }
+
+/* =========================================================
+   FAIXAS COM CARROSSEL (Blog e Literatura) — Fase 3B-2
+   ========================================================= */
+.rac-faixa { padding: 48px 0; border-top: 1px solid var(--line); }
+.rac-faixa--suave { background: var(--surface2); }
+.rac-faixa__inner { max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+.rac-faixa__topo { padding: 0 40px; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+.rac-faixa__titulo { display: flex; flex-direction: column; gap: 4px; max-width: 620px; }
+.rac-faixa__titulo h2 { margin: 0; font-size: 28px; letter-spacing: -.01em; }
+.rac-faixa__titulo span { font-size: 14px; line-height: 1.6; color: var(--text-body); }
+.rac-faixa__rodape { display: flex; justify-content: center; padding-top: 6px; }
+
+.rac-carrossel__setas { display: none; gap: 8px; }
+.rac-carrossel.is-infinito .rac-carrossel__setas { display: flex; }
+.rac-body .rac-carrossel__setas button {
+  width: 42px; height: 42px; padding: 0; border-radius: 50%; background: var(--surface); border: 1px solid var(--line);
+  cursor: pointer; font-size: 20px; line-height: 1; color: var(--text); display: flex; align-items: center; justify-content: center;
+}
+.rac-body .rac-carrossel__setas button:hover { background: var(--surface2); }
+.rac-faixa--suave .rac-carrossel__setas button:hover { background: var(--bg); }
+
+.rac-carrossel__janela { overflow: hidden; padding: 0 40px; }
+.rac-carrossel__trilho { display: flex; gap: 20px; }
+.rac-carrossel__item { flex: none; width: 296px; display: flex; }
+.rac-carrossel__item > * { width: 100%; }
+.rac-carrossel--livros .rac-carrossel__item { width: 168px; }
+.rac-carrossel .rac-card-post__imagem { height: 160px; }
+
+.rac-body .rac-botao-cheio {
+  display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; padding: 12px 26px; border-radius: 999px;
+  background: var(--accent); border: 0; cursor: pointer; font-family: inherit; font-size: 14px; font-weight: 500; color: var(--on-accent);
+}
+.rac-body .rac-botao-cheio:hover { background: var(--accent-dark); color: var(--on-accent); }
+.rac-body .rac-botao-texto { background: none; border: 0; padding: 11px 16px; cursor: pointer; font-family: inherit; font-size: 13px; color: var(--muted); }
+.rac-body .rac-botao-texto:hover { color: var(--text); }
+.rac-faixa .rac-botao-contorno { background: transparent; }
+
+/* ---------- Card de livro ---------- */
+.rac-body .rac-livro { display: flex; flex-direction: column; gap: 8px; min-width: 0; color: inherit; }
+.rac-livro__capa {
+  display: block; aspect-ratio: 168 / 236; border-radius: 10px; overflow: hidden; box-shadow: 0 10px 24px -14px rgba(60, 40, 20, .4);
+}
+.rac-body .rac-livro__capa img { display: block; width: 100%; height: 100%; max-width: none; object-fit: cover; transition: transform .4s ease; }
+.rac-body .rac-livro:hover .rac-livro__capa img { transform: scale(1.03); }
+.rac-livro__titulo { font-size: 13px; font-weight: 500; line-height: 1.3; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rac-body .rac-livro:hover .rac-livro__titulo { color: var(--accent-text); }
+.rac-livro__autor { font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ---------- "Da biblioteca" (página da estação) ---------- */
+.rac-biblioteca { padding: 48px 0 56px; border-top: 1px solid var(--line); background: var(--surface2); }
+.rac-biblioteca__lista { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 20px; }
+
+/* ---------- Podcasts ---------- */
+.rac-podcasts { border-top: 1px solid var(--line); }
+.rac-podcasts__inner { max-width: 1280px; margin: 0 auto; padding: 48px 40px; display: flex; flex-direction: column; gap: 20px; }
+.rac-podcasts__inner h2 { margin: 0; font-size: 28px; letter-spacing: -.01em; }
+.rac-podcasts__grade { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.rac-podcast { display: flex; align-items: center; gap: 18px; padding: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; }
+.rac-podcast__capa { width: 88px; height: 88px; border-radius: 10px; flex: none; }
+.rac-podcast__texto { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }
+.rac-body .rac-podcast__titulo { font-size: 16px; font-weight: 500; color: var(--text); }
+.rac-body .rac-podcast__titulo:hover { color: var(--accent-text); }
+.rac-podcast__desc { font-size: 13px; color: var(--text-body); }
+.rac-podcast__eps { font-size: 11px; color: var(--muted); }
+.rac-body .rac-podcast__ir { flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; }
+.rac-body .rac-podcast__ir:hover { background: var(--accent-dark); }
+.rac-podcast__ir .rac-ico-play { margin-left: 3px; border-top-width: 7px; border-bottom-width: 7px; border-left-width: 9px; }
+
+/* ---------- Recados dos ouvintes ---------- */
+.rac-recados { border-top: 1px solid var(--line); }
+.rac-recados__inner { max-width: 1280px; margin: 0 auto; padding: 48px 40px; display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 48px; }
+.rac-recados__lado { display: flex; flex-direction: column; gap: 12px; }
+.rac-recados__cab h2 { margin: 0; font-size: 28px; letter-spacing: -.01em; }
+.rac-recados__contagem--m { display: none; }
+.rac-recados__texto { margin: 0; font-size: 14px; line-height: 1.6; color: var(--text-body); }
+.rac-recados__texto a { font-weight: 500; }
+.rac-recados__contagem--d { font-size: 12px; color: var(--muted); }
+.rac-recados__acao { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+.rac-recados__abrir { width: fit-content; padding: 12px 22px; }
+.rac-recados__form { display: flex; flex-direction: column; gap: 8px; }
+.rac-recados__form[hidden], .rac-recados__abrir[hidden], .rac-recados__ok[hidden], .rac-recados__erro[hidden], .rac-recado[hidden], .rac-recados__paginas[hidden] { display: none; }
+.rac-recados__form input[type="text"], .rac-recados__form input[type="email"], .rac-recados__form textarea {
+  -webkit-appearance: none; appearance: none; width: 100%; max-width: none; padding: 11px 14px; border-radius: 10px; border: 1px solid var(--line);
+  background: var(--surface); box-shadow: none; font-family: inherit; font-size: 13px; line-height: 1.4; color: var(--text);
+}
+.rac-recados__form textarea { resize: vertical; min-height: 84px; }
+.rac-recados__form input::placeholder, .rac-recados__form textarea::placeholder { color: var(--muted); }
+.rac-recados__form input:focus, .rac-recados__form textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.rac-recados__armadilha { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.rac-recados__botoes { display: flex; gap: 8px; }
+.rac-recados__botoes .rac-botao-cheio { padding: 11px 20px; font-size: 13px; }
+.rac-recados__botoes .rac-botao-cheio:disabled { opacity: .6; cursor: progress; }
+.rac-recados__ok { margin: 6px 0 0; padding: 12px 14px; border-radius: 12px; background: var(--accent-soft); font-size: 13px; font-weight: 500; color: var(--accent-text); }
+.rac-recados__erro { margin: 0; padding: 10px 14px; border-radius: 10px; background: color-mix(in srgb, var(--live) 12%, transparent); font-size: 13px; color: var(--live-text); }
+
+.rac-recados__corpo { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.rac-recados__lista { display: flex; flex-direction: column; gap: 14px; }
+.rac-recado { display: flex; gap: 14px; padding: 16px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+.rac-recado__avatar {
+  flex: none; width: 38px; height: 38px; border-radius: 50%; background: var(--accent-soft);
+  display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 500; color: var(--accent-text);
+}
+.rac-recado__corpo { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.rac-recado__cab { display: flex; align-items: baseline; gap: 10px; }
+.rac-recado__nome { font-size: 14px; font-weight: 500; color: var(--text); }
+.rac-recado__data { font-size: 12px; color: var(--muted); }
+.rac-recado__texto { font-size: 13px; line-height: 1.55; color: var(--text-body); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+.rac-pag--d { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
+.rac-pag--d > span { display: flex; gap: 6px; }
+.rac-pag--m { display: none; }
+.rac-body .rac-pag--d button {
+  width: 34px; height: 34px; padding: 0; border-radius: 50%; background: var(--surface); border: 1px solid var(--line); cursor: pointer;
+  font-family: inherit; font-size: 13px; font-weight: 500; color: var(--text);
+}
+.rac-body .rac-pag--d button.is-ativa { background: var(--accent-soft); border-color: var(--accent); }
+
+/* =========================================================
+   MOBILE (< 900px) — Fase 3B-2
+   ========================================================= */
+@media (max-width: 899px) {
+  .rac-faixa { padding: 22px 0; }
+  .rac-faixa__inner { gap: 14px; }
+  .rac-faixa__topo { padding: 0 18px; }
+  .rac-faixa__titulo { gap: 4px; }
+  .rac-faixa__titulo h2 { font-size: 20px; }
+  .rac-faixa__titulo span { font-size: 13px; line-height: 1.55; }
+  .rac-faixa__rodape { padding: 4px 18px 0; }
+  .rac-faixa__rodape > a { width: 100%; padding: 13px; }
+
+  /* Blog e Literatura: rolagem lateral com encaixe (sem infinito) */
+  .rac-carrossel__setas, .rac-carrossel.is-infinito .rac-carrossel__setas { display: none; }
+  .rac-carrossel__janela { overflow-x: auto; overflow-y: hidden; padding: 0 18px; scroll-padding: 0 18px; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .rac-carrossel__janela::-webkit-scrollbar { display: none; }
+  .rac-carrossel__trilho { gap: 12px; }
+  .rac-carrossel__item { scroll-snap-align: start; width: 250px; }
+  .rac-carrossel--livros .rac-carrossel__item { width: 120px; }
+  .rac-carrossel .rac-card-post { gap: 8px; padding: 10px 10px 14px; border-radius: 14px; }
+  .rac-carrossel .rac-card-post__imagem { height: 130px; }
+  .rac-body .rac-carrossel .rac-card-post__titulo { font-size: 14px; min-height: 0; }
+  .rac-carrossel .rac-card-post__autor { display: none; }
+  .rac-livro { gap: 6px; }
+  .rac-livro__capa { aspect-ratio: auto; height: 170px; border-radius: 8px; }
+  .rac-livro__titulo { font-size: 12px; }
+  .rac-livro__autor { display: none; }
+
+  .rac-biblioteca { padding: 24px 0 28px; }
+  .rac-biblioteca__lista { display: flex; overflow-x: auto; gap: 12px; margin: 0 -18px; padding: 0 18px 4px; scroll-padding: 0 18px; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .rac-biblioteca__lista::-webkit-scrollbar { display: none; }
+  .rac-biblioteca__item { flex: none; width: 120px; scroll-snap-align: start; }
+
+  .rac-podcasts__inner { padding: 28px 18px; gap: 14px; }
+  .rac-podcasts__inner h2 { font-size: 20px; }
+  .rac-podcasts__grade { grid-template-columns: 1fr; gap: 12px; }
+  .rac-podcast { gap: 12px; padding: 12px; }
+  .rac-podcast__capa { width: 64px; height: 64px; }
+
+  .rac-recados__inner { display: flex; flex-direction: column; gap: 12px; padding: 22px 18px; }
+  .rac-recados__lado { display: contents; }
+  .rac-recados__cab { order: 1; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .rac-recados__cab h2 { font-size: 20px; }
+  .rac-recados__contagem--m { display: inline; font-size: 11px; color: var(--muted); }
+  .rac-recados__texto, .rac-recados__contagem--d { display: none; }
+  .rac-recados__corpo { order: 2; gap: 12px; }
+  .rac-recados__acao { order: 3; margin-top: 0; }
+  .rac-recados__abrir { width: 100%; padding: 13px; }
+  .rac-recados__lista { gap: 12px; }
+  .rac-recado { gap: 10px; padding: 12px 14px; border-radius: 12px; }
+  .rac-recado__avatar { width: 32px; height: 32px; font-size: 12px; }
+  .rac-recado__cab { display: block; }
+  .rac-recado__nome { font-size: 12px; }
+  .rac-recado__data { font-size: 12px; }
+  .rac-recado__data::before { content: '· '; }
+  .rac-recado__texto { font-size: 12px; line-height: 1.5; -webkit-line-clamp: 3; }
+  .rac-pag--d { display: none; }
+  .rac-pag--m { display: flex; align-items: center; justify-content: space-between; }
+  .rac-pag--m > span { font-size: 12px; color: var(--muted); }
+  .rac-body .rac-pag--m button {
+    min-height: 40px; padding: 0 16px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); cursor: pointer;
+    font-family: inherit; font-size: 12px; font-weight: 500; color: var(--text);
+  }
+}

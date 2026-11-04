@@ -8,6 +8,7 @@
  * Fase 3A: página Estações e Estação individual (page-estacoes.php,
  *          single-estacao.php).
  * Fase 3B-1: página inicial (front-page.php, inc/home.php).
+ * Fase 3B-2: carrosséis, podcasts e recados (inc/conteudo.php, inc/recados.php).
  *
  * REGRA CRÍTICA: o plugin troca via AJAX apenas o conteúdo de "#primary".
  * Todo template deste tema precisa ter exatamente UM <main id="primary">,
@@ -16,13 +17,15 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'RAC_TEMA_VERSAO', '0.4.0' );
+define( 'RAC_TEMA_VERSAO', '0.5.0' );
 
 require_once get_stylesheet_directory() . '/inc/helpers.php';
 require_once get_stylesheet_directory() . '/inc/customizer.php';
 require_once get_stylesheet_directory() . '/inc/player.php';
 require_once get_stylesheet_directory() . '/inc/acf-campos.php';
 require_once get_stylesheet_directory() . '/inc/home.php';
+require_once get_stylesheet_directory() . '/inc/conteudo.php';
+require_once get_stylesheet_directory() . '/inc/recados.php';
 
 /* ============================================================
    1. CONFIGURAÇÃO DO TEMA
@@ -99,6 +102,10 @@ function rac_enqueue_assets() {
     wp_enqueue_style( 'rac-home', $uri . '/assets/css/home.css', array( 'rac-paginas' ), filemtime( $dir . '/assets/css/home.css' ) );
 
     wp_enqueue_script( 'rac-tema-js', $uri . '/assets/js/rac.js', array(), filemtime( $dir . '/assets/js/rac.js' ), true );
+    // Carrosséis e recados da Home (Fase 3B-2): carregados em todas as páginas.
+    wp_enqueue_script( 'rac-carrossel-js', $uri . '/assets/js/carrossel.js', array( 'rac-tema-js' ), filemtime( $dir . '/assets/js/carrossel.js' ), true );
+    wp_enqueue_script( 'rac-recados-js', $uri . '/assets/js/recados.js', array( 'rac-tema-js' ), filemtime( $dir . '/assets/js/recados.js' ), true );
+
     // Player fixo e cards de estação (Fase 2). Só quando há player na página.
     if ( rac_tem_player() ) {
         wp_enqueue_script( 'rac-player-js', $uri . '/assets/js/player.js', array(), filemtime( $dir . '/assets/js/player.js' ), true );
