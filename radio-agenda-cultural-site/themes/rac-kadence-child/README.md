@@ -4,7 +4,15 @@ Versão 0.5.0 (Fases 1, 2, 3A, 3B-1 e 3B-2). Requer o tema **Kadence** instalado
 
 ## Instalação (site de desenvolvimento)
 
-1. Compacte a pasta `rac-kadence-child` em um `.zip`.
+1. Gere o `.zip` com o script, que também mostra a **branch, o último commit e a versão** do tema (confira
+   se é a versão esperada antes de subir):
+
+   ```bash
+   ./radio-agenda-cultural-site/scripts/gerar-zip-tema.sh
+   ```
+
+   O zip é salvo em `~/Downloads/rac-kadence-child.zip`. (Se preferir, compacte a pasta
+   `rac-kadence-child` à mão; mas então confira a versão em `style.css`.)
 2. Painel → Aparência → Temas → Adicionar novo → Enviar tema → ativar.
 3. Limpe o cache do LiteSpeed (LiteSpeed Cache → Gerenciar → Limpar tudo).
 4. Rollback, se algo der errado: reative o tema **Kadence**.
