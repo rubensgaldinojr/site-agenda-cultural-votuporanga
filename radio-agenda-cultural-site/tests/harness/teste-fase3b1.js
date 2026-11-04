@@ -23,7 +23,9 @@ const lerHome = (page) => page.evaluate(() => {
     sub: q('.rac-home-estacoes__topo span').textContent.trim(),
     cards: cards.map(c => ({ nome: c.querySelector('.rac-card-img__nome').textContent.trim(), badge: c.querySelector('.rac-card-img__badge')?.textContent.trim(), id: c.getAttribute('data-estacao-id'), desc: c.classList.contains('rac-card-img--descoberta') })),
     todas: qa('.rac-todas__grade--d .rac-card-est__nome').map(n => n.textContent.trim()),
-    todasLinks: qa('.rac-todas__grade--d a').length,
+    todasLinks: qa('.rac-todas__grade--d a.rac-card-est__ver').length,
+    todasHrefs: qa('.rac-todas__grade--d a.rac-card-est__ver').map(a => a.getAttribute('href')),
+    todasLinksM: qa('.rac-todas__grade--m a').length,
     todasTitulo: q('.rac-todas__titulo').textContent.replace(/\s+/g, ' ').trim(),
     sobreTitulo: q('.rac-home-sobre h2').textContent.trim(), sobreTexto: q('.rac-home-sobre p').textContent.trim(), sobreImg: q('.rac-home-sobre__foto img').src,
     sobreLink: q('.rac-home-sobre .rac-botao-contorno').getAttribute('href'), verTodas: q('.rac-botao-claro').getAttribute('href'), conheca: q('.rac-fundador__bio a').getAttribute('href'),
@@ -54,7 +56,8 @@ const lerHome = (page) => page.evaluate(() => {
   ok(h.cards[0].badge === 'Mais ouvida #1' && h.cards[0].nome === 'Bossa & Violão' && h.cards[1].badge === 'Mais ouvida #2' && h.cards[1].nome === 'MPB de Ouro', `mais ouvidas pelo campo "Ouvintes": #1 ${h.cards[0].nome}, #2 ${h.cards[1].nome}`);
   ok(h.cards[2].badge === 'Descoberta do editor' && h.cards[2].desc && !['Bossa & Violão', 'MPB de Ouro'].includes(h.cards[2].nome), `descoberta do editor fora do top 2 (${h.cards[2].nome})`);
   ok(h.ctaId === '101', 'botão "Ouvir agora" do topo aponta para a estação mais ouvida');
-  ok(JSON.stringify(h.todas) === JSON.stringify(ALFA) && h.todasLinks === 0, `"Todas as estações": 12 cards em ordem alfabética e sem link "Ver estação"`);
+  ok(JSON.stringify(h.todas) === JSON.stringify(ALFA), `"Todas as estações": 12 cards em ordem alfabética`);
+  ok(h.todasLinks === 12 && h.todasHrefs.every(u => /^\/estacao\/\d+\/$/.test(u)) && h.todasLinksM === 0, `cada card (desktop) tem o link "Ver estação ›" para a página da estação; os compactos do mobile não têm link`);
   ok(h.todasTitulo === 'Todas as estações · 12 estações', `título da lista (${h.todasTitulo})`);
   ok(h.sobreTitulo === 'Uma rádio que nasceu de uma coleção de discos' && h.sobreImg.includes('placeholder-topo.jpg') && h.sobreLink.endsWith('/sobre/') && h.verTodas.endsWith('/estacoes/'), '"Sobre nós" provisório com placeholder e links para /sobre/ e /estacoes/');
   ok(h.sub === 'As duas mais ouvidas e uma descoberta escolhida pelo editor.', 'subtítulo padrão da seção de estações');
@@ -106,6 +109,11 @@ const lerHome = (page) => page.evaluate(() => {
   ok(await esperar(page, n => !window.__audio.paused && document.getElementById('racr-nome-estacao').textContent.trim() === n, desc), `clicar no card da descoberta toca a estação (${desc})`);
   await page.click('.rac-todas__grade--d .rac-card-est:nth-child(1)');
   ok(await esperar(page, () => document.getElementById('racr-nome-estacao').textContent.trim() === 'Blues & Jazz Clube'), 'clicar num card de "Todas as estações" toca aquela estação');
+  const linkAnte = await page.evaluate(() => window.__audio.currentTime);
+  await page.click('.rac-todas__grade--d .rac-card-est:nth-child(2) a.rac-card-est__ver');
+  ok(await esperar(page, () => location.pathname === '/estacao/101/'), '"Ver estação" de um card da lista abre a página daquela estação (Bossa & Violão)');
+  ok(await page.evaluate(a => window.__marcador === 'mesma-pagina' && !window.__audio.paused && document.getElementById('racr-nome-estacao').textContent.trim() === 'Blues & Jazz Clube', linkAnte), 'o link navega sem recarregar e sem trocar a estação que está tocando');
+  await page.goBack(); await esperar(page, () => location.pathname === '/'); await page.waitForTimeout(400);
   const antes = await page.evaluate(() => window.__audio.currentTime);
   await page.click('.rac-botao-claro');
   ok(await esperar(page, () => location.pathname === '/estacoes/'), '"Ver todas as estações" abre a página de Estações');

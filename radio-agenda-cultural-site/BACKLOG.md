@@ -89,6 +89,7 @@
 - Ouvintes: tentar a API do Zeno.fm; se não der, campo manual atualizado por script no futuro (valor estático até a próxima atualização).
 - Endereços reais: `/estacoes/`, `/blog/`, `/literatura/`, `/sobre/`, `/category/podcasts/`.
 - Formulários (3): **Recados** na Home = comentários nativos da própria página Home (moderados); **Comentários nos posts** = nativos do WordPress; **Recomendação de músicas/pedidos** = formulário de Contato (Fase 5, e-mail).
+- Home: "Todas as estações" mantém o link "Ver estação ›" no canto do card (desktop); no mobile os cards compactos não têm link.
 - Home: mais ouvidas pelo campo manual "Ouvintes"; descoberta fora do top 2 (sorteio diário ou fixada); "Ouvir agora" toca a mais ouvida; dados provisórios do mockup até o Rubens preencher.
 - Estações: sem filtro por grupo; listagem em ordem alfabética; "Outras estações" = as 4 seguintes em ordem alfabética; "Para ler enquanto ouve" = posts com tag/categoria de mesmo nome da estação e, se faltar, os mais recentes.
 - Estações: card grande com imagem, 4 colunas no desktop; placeholder em toda estação sem imagem destacada (cards, tiles e player). Posts sem imagem continuam com o listrado.

@@ -6,7 +6,7 @@
  *   'estacao'        array  ['id', 'nome', 'url'] (veja rac_listar_estacoes())
  *   'compact'        bool   versão compacta: o card inteiro toca a estação
  *   'mostrar_genero' bool   mostra a linha de gênero, se vier em 'genero'
- *   'sem_link'       bool   esconde o link "Ver estação" (usado na Home, "Clique para ouvir")
+ *   'sem_link'       bool   esconde o link "Ver estação" (hoje nenhuma página usa)
  *   'genero'         string opcional. Cada estação já é um gênero, então
  *                           normalmente não é usado.
  *

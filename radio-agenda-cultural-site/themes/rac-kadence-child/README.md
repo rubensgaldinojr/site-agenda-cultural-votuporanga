@@ -95,7 +95,7 @@ Blog, Literatura, Podcasts e Recados dos ouvintes chegam na 3B-2.
   ciclo sem repetir. Se a estação fixada estiver no top 2, usa o sorteio.
 - **Cache (LiteSpeed):** um evento diário às 00:05 limpa só a página inicial; salvar uma estação
   também limpa. (Depende do WP-Cron, que roda quando há visitas.)
-- **Todas as estações:** cards clicáveis em ordem alfabética, sem o link "Ver estação" (como no mockup).
+- **Todas as estações:** cards clicáveis em ordem alfabética; no desktop cada card tem o link "Ver estação ›" no canto (os compactos do mobile não têm link).
 
 ## Regras que não podem ser quebradas
 

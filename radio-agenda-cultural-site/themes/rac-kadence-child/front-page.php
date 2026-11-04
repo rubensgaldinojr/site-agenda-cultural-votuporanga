@@ -106,7 +106,7 @@ get_header();
                 <span class="rac-todas__dica">Clique para ouvir</span>
             </div>
             <div class="rac-todas__grade rac-todas__grade--d">
-                <?php foreach ( $estacoes as $e ) : get_template_part( 'template-parts/card-estacao', null, array( 'estacao' => $e, 'sem_link' => true ) ); endforeach; ?>
+                <?php foreach ( $estacoes as $e ) : get_template_part( 'template-parts/card-estacao', null, array( 'estacao' => $e ) ); endforeach; ?>
             </div>
             <div class="rac-todas__grade rac-todas__grade--m">
                 <?php foreach ( $estacoes as $e ) : get_template_part( 'template-parts/card-estacao', null, array( 'estacao' => $e, 'compact' => true ) ); endforeach; ?>
