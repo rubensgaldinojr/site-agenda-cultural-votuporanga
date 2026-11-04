@@ -90,6 +90,7 @@
 - Descoberta do editor: sempre visível, fixa ou sorteada diariamente entre as estações fora do top 2.
 - Ouvintes: tentar a API do Zeno.fm; se não der, campo manual atualizado por script no futuro (valor estático até a próxima atualização).
 - Endereços reais: `/estacoes/`, `/blog/`, `/literatura/`, `/sobre/`, `/category/podcasts/`.
+- Entrega do tema: a cada etapa, o Claude passa um comando único (git fetch/checkout/pull + `scripts/gerar-zip-tema.sh`) que apaga o zip antigo, gera `rac-kadence-child-<versão>.zip` em `radio-agenda-cultural-site/themes/` e destaca a versão; o Claude também destaca o número da versão ao pedir o upload.
 - Formulários (3): **Recados** na Home = comentários nativos da própria página Home (moderados); **Comentários nos posts** = nativos do WordPress; **Recomendação de músicas/pedidos** = formulário de Contato (Fase 5, e-mail).
 - Home (3B-2): Blog = 6 posts mais recentes; Literatura = 8 livros mais recentes; carrossel infinito só no desktop e só com itens suficientes (mobile = rolagem lateral); Podcasts escondido até existirem subcategorias; Recados = comentários da própria Home, moderados, enviados sem recarregar a página.
 - Home: "Todas as estações" mantém o link "Ver estação ›" no canto do card (desktop); no mobile os cards compactos não têm link.
