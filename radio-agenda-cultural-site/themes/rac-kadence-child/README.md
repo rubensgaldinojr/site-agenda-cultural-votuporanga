@@ -39,9 +39,11 @@ Versão 0.3.0 (Fases 1, 2 e 3A). Requer o tema **Kadence** instalado (é o tema 
   template "Componentes (apenas para teste)") e deixe como Rascunho/Privada. Ela mostra os
   cards com suas estações e posts reais e sai dos buscadores (noindex). Pode ser apagada
   quando as Fases 3 a 5 estiverem prontas.
-- O volume fica escondido no iPhone (o Safari não permite mudar o volume por JS). O controle
-  tem reset próprio porque o Kadence aplica estilo de campo de formulário a todo `input`.
-- A pílula de play + volume ocupa ~1/3 da barra (máx. 640px) e fica centralizada.
+- **Volume e mudo:** o ícone de alto-falante é um botão de mudo (o ícone mostra mudo / baixo / alto)
+  e o slider é curto. O próprio `<audio>` é a fonte da verdade (`volume` e `muted`); a tela só
+  reflete o evento `volumechange`. O estado fica salvo e sobrevive à troca de estação. No iPhone o
+  Safari ignora o volume por JS: o slider some, mas o botão de mudo funciona. O controle tem reset
+  próprio porque o Kadence aplica estilo de campo de formulário a todo `input`.
 - "Tocando agora": o plugin escreve "Artista - Música"; o tema divide no primeiro " - ".
 
 ## Páginas (Fase 3A)

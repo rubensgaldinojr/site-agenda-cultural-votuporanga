@@ -69,6 +69,9 @@
 | B-36 | Validar no site real: player com os streams do Zeno.fm e os cards | ✅ | Testado pelo Rubens |
 | B-37 | Imagem destacada em cada Estação (capa do player e topo da página da estação) | 💡 | Sem imagem, a capa mostra o placeholder listrado e o topo usa a imagem placeholder do tema. Algumas estações ainda estão sem imagem |
 | B-38 | Trocar a imagem placeholder única (`assets/img/placeholder-topo.jpg`) pelas imagens reais de cada topo (Estações, estações, Home, Sobre) e confirmar a licença de uso da imagem atual | ⏳ | Para trocar: definir a Imagem destacada da página/estação; o placeholder só aparece quando não há imagem |
+| B-41 | Página de Estações com cards grandes (imagem de fundo, nome, "Ao vivo", trecho de 1–2 linhas do texto, "Ver estação" e play), unindo o card atual ao tile de "Outras estações" | 3A | 💡 | Desvia do mockup; aguardando decisão do Rubens (ver proposta no chat) |
+| B-42 | Seção de livros na página da estação ("Da biblioteca"), reaproveitando o card de livro da Home | 3B | 💡 | Regra sugerida: livros com categoria de livro de mesmo nome da estação e, se faltar, os mais recentes; só depois do card de livro existir |
+| B-43 | Renomear a categoria padrão "Uncategorized" e apagar o post "Hello world!" | — | 💡 | Aparecem nos cards de post em inglês; ajuste no painel (Posts → Categorias) |
 | B-40 | `catalogo-livros-rac.php` está duplicado na raiz do repositório (idêntico ao de `plugins/`) | 💡 | Remover a cópia da raiz? |
 
 ## Decisões tomadas

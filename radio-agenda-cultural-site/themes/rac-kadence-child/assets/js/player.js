@@ -6,7 +6,7 @@
      1. divide o texto "Artista - Música" (escrito pelo plugin em
         #racr-status) em duas linhas, "faixa" e "artista";
      2. mantém a capa da estação atual no player;
-     3. controla o volume (audio.volume) e lembra o valor;
+     3. controla o volume e o mudo (audio.volume / audio.muted) e lembra os valores;
      4. liga os cards de estação (.rac-card-est), os tiles (.rac-tile-est) e o
         botão "Ouvir agora" da página da estação (.rac-cta-estacao) ao player:
         clicar aciona o botão correspondente do próprio plugin, e o elemento da
@@ -77,35 +77,73 @@
     });
   }
 
-  /* ---------- 3. Volume ---------- */
+  /* ---------- 3. Volume e mudo ----------
+     O próprio <audio> é a fonte da verdade (propriedades volume e muted); o
+     ícone, o botão e o slider apenas refletem o evento "volumechange". O
+     plugin não mexe em volume nem em muted, e eles sobrevivem à troca de
+     estação. No iOS/Safari o volume por JS é ignorado: o slider some, mas o
+     botão de mudo continua funcionando. */
   function iniciarVolume() {
     var campo = document.getElementById('rac-volume');
-    if (!campo) return;
-    var caixa = campo.closest('.rac-player__volume');
+    var botao = document.getElementById('rac-mudo');
+    var caixa = botao ? botao.closest('.rac-player__volume') : null;
+    if (!campo || !botao || !caixa) return;
 
-    // iOS/Safari ignora audio.volume: nesse caso o controle não aparece.
     var suporta = false;
     try {
-      var anterior = audio.volume;
+      var anteriorVol = audio.volume;
       audio.volume = 0.5;
       suporta = Math.abs(audio.volume - 0.5) < 0.01;
-      audio.volume = anterior;
+      audio.volume = anteriorVol;
     } catch (e) {}
-    if (!suporta) { if (caixa) caixa.hidden = true; return; }
+    if (!suporta) campo.hidden = true;
 
-    var salvo = null;
-    try { salvo = localStorage.getItem('rac-volume'); } catch (e) {}
+    function ler(chave) { try { return localStorage.getItem(chave); } catch (e) { return null; } }
+    function gravar(chave, valor) { try { localStorage.setItem(chave, valor); } catch (e) {} }
+
+    var salvo = ler('rac-volume');
     var inicial = (salvo !== null && salvo !== '' && !isNaN(Number(salvo))) ? Math.min(100, Math.max(0, Number(salvo))) : 100;
-    campo.value = inicial;
-    campo.style.setProperty('--vol', inicial + '%');   // parte preenchida da barra
-    audio.volume = inicial / 100;
+    var anterior = inicial > 0 ? inicial : 70; // volume a restaurar ao sair do mudo
+    if (suporta) audio.volume = inicial / 100;
+    audio.muted = ler('rac-mudo') === '1';
+
+    function emMudo() { return audio.muted || (suporta && audio.volume === 0); }
+
+    function atualizar() {
+      var mudo = emMudo();
+      var nivel = mudo ? 'mudo' : ((suporta && audio.volume < 0.5) ? 'baixo' : 'alto');
+      caixa.setAttribute('data-nivel', nivel);
+      botao.setAttribute('aria-pressed', mudo ? 'true' : 'false');
+      botao.setAttribute('aria-label', mudo ? 'Ativar o som' : 'Silenciar');
+      var v = (mudo || !suporta) ? 0 : Math.round(audio.volume * 100);
+      if (suporta) { campo.value = v; campo.style.setProperty('--vol', v + '%'); }
+    }
+
+    function salvar() {
+      if (suporta) gravar('rac-volume', String(Math.round(audio.volume * 100)));
+      gravar('rac-mudo', audio.muted ? '1' : '0');
+    }
+
+    botao.addEventListener('click', function () {
+      if (emMudo()) {
+        audio.muted = false;
+        if (suporta && audio.volume === 0) audio.volume = anterior / 100;
+      } else {
+        if (suporta && audio.volume > 0) anterior = Math.round(audio.volume * 100);
+        audio.muted = true;
+      }
+      salvar();
+    });
 
     campo.addEventListener('input', function () {
       var v = Number(campo.value);
-      campo.style.setProperty('--vol', v + '%');
+      if (v > 0) { anterior = v; audio.muted = false; } // mexer no slider tira do mudo
       audio.volume = v / 100;
-      try { localStorage.setItem('rac-volume', String(v)); } catch (e) {}
+      salvar();
     });
+
+    audio.addEventListener('volumechange', atualizar);
+    atualizar();
   }
 
   /* ---------- 4. Cards de estação ---------- */

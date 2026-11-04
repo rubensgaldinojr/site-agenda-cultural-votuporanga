@@ -80,11 +80,17 @@ $estilo_capa = $primeira['capa'] ? ' style="background-image:url(\'' . esc_url( 
                 <span class="rac-ico-pause racr-icone-pause" aria-hidden="true"><i></i><i></i></span>
             </button>
             <span class="rac-player__sep-pilula" aria-hidden="true"></span>
-            <label class="rac-player__volume">
-                <span class="rac-player__volume-icone" aria-hidden="true"><i></i><i></i><i></i></span>
-                <span class="rac-sr-only">Volume</span>
-                <input type="range" id="rac-volume" min="0" max="100" value="100">
-            </label>
+            <div class="rac-player__volume" data-nivel="alto">
+                <button type="button" class="rac-player__mudo" id="rac-mudo" aria-pressed="false" aria-label="Silenciar">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M11 5 6 9H3v6h3l5 4V5z"/>
+                        <path class="rac-vol-onda1" d="M15.5 9a4 4 0 0 1 0 6"/>
+                        <path class="rac-vol-onda2" d="M18.5 6.5a8 8 0 0 1 0 11"/>
+                        <path class="rac-vol-x" d="M16 9.5l5 5M21 9.5l-5 5"/>
+                    </svg>
+                </button>
+                <input type="range" id="rac-volume" min="0" max="100" value="100" aria-label="Volume">
+            </div>
         </div>
 
         <div class="rac-player__dir">

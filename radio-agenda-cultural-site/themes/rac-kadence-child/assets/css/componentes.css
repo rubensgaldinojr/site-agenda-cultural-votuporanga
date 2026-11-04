@@ -31,11 +31,7 @@
 .rac-player__barra {
   height: 72px; background: var(--bar); border-top: 1px solid var(--line);
   box-shadow: 0 -8px 24px -12px rgba(60, 40, 20, .12);
-  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 16px; padding: 0 24px;
-}
-/* telas de 900 a 1099px: dá mais espaço à esquerda (capa, estação, "tocando agora") */
-@media (min-width: 900px) and (max-width: 1099px) {
-  .rac-player__barra { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) auto; }
+  display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 16px; padding: 0 24px;
 }
 
 /* esquerda: capa, estação, "Tocando agora" */
@@ -56,8 +52,7 @@
 
 /* centro: pílula com play e volume */
 .rac-player__controles {
-  display: flex; align-items: center; gap: 16px; height: 44px; padding: 6px 20px;
-  width: 100%; max-width: 640px; justify-self: center; min-width: 0;
+  display: flex; align-items: center; gap: 14px; height: 44px; padding: 6px 18px 6px 16px;
   background: var(--surface2); border: 1px solid var(--line); border-radius: 999px;
 }
 .rac-body .racr-botao-play {
@@ -70,40 +65,48 @@
 .rac-player.racr-tocando .rac-ico-pause,
 .rac-player.racr-carregando .rac-ico-pause { display: flex; }
 .rac-player__sep-pilula { width: 1px; height: 22px; background: var(--line); flex: none; }
-.rac-player__volume { display: flex; align-items: center; gap: 10px; cursor: pointer; flex: 1; min-width: 0; }
-.rac-player__volume[hidden] { display: none; }
-.rac-player__volume-icone { display: flex; align-items: flex-end; gap: 2px; flex: none; }
-.rac-player__volume-icone i { display: block; width: 3px; border-radius: 1px; background: var(--muted); }
-.rac-player__volume-icone i:nth-child(1) { height: 6px; }
-.rac-player__volume-icone i:nth-child(2) { height: 9px; }
-.rac-player__volume-icone i:nth-child(3) { height: 12px; }
+.rac-player__volume { display: flex; align-items: center; gap: 6px; }
+
+/* Botão de mudo: o alto-falante mostra o nível (mudo / baixo / alto). */
+.rac-body .rac-player__mudo {
+  width: 32px; height: 32px; flex: none; padding: 0; border: 0; border-radius: 50%; cursor: pointer;
+  background: transparent; color: var(--text-body); display: flex; align-items: center; justify-content: center;
+}
+.rac-body .rac-player__mudo:hover { background: color-mix(in srgb, var(--text) 8%, transparent); color: var(--text); }
+.rac-player__mudo .rac-vol-x { display: none; }
+.rac-player__volume[data-nivel="baixo"] .rac-vol-onda2 { display: none; }
+.rac-player__volume[data-nivel="mudo"] .rac-vol-onda1,
+.rac-player__volume[data-nivel="mudo"] .rac-vol-onda2 { display: none; }
+.rac-player__volume[data-nivel="mudo"] .rac-vol-x { display: inline; }
+.rac-player__volume[data-nivel="mudo"] .rac-player__mudo { color: var(--muted); }
 
 /* Controle de volume. O Kadence aplica estilo de "campo de formulário" (fundo
    branco, borda, padding) a todo input, inclusive ao range; por isso o reset
    abaixo é explícito e tem especificidade maior que a do tema pai. */
 .rac-body .rac-player .rac-player__volume input[type="range"] {
   -webkit-appearance: none; appearance: none;
-  flex: 1; width: 100%; min-width: 0; max-width: none; height: 20px; margin: 0; padding: 0;
+  flex: none; width: 108px; min-width: 0; max-width: none; height: 20px; margin: 0; padding: 0;
   background: transparent; border: 0; border-radius: 0; box-shadow: none; outline-offset: 4px;
   color: var(--accent); accent-color: var(--accent); cursor: pointer;
   --vol: 100%;
 }
+.rac-body .rac-player .rac-player__volume input[type="range"][hidden] { display: none; }
 .rac-body .rac-player .rac-player__volume input[type="range"]::-webkit-slider-runnable-track {
-  height: 4px; border-radius: 2px;
+  height: 3px; border-radius: 2px;
   background: linear-gradient(to right, var(--accent) 0, var(--accent) var(--vol), color-mix(in srgb, var(--muted) 35%, transparent) var(--vol), color-mix(in srgb, var(--muted) 35%, transparent) 100%);
 }
 .rac-body .rac-player .rac-player__volume input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none; appearance: none;
-  width: 14px; height: 14px; margin-top: -5px; border-radius: 50%; border: 0;
+  width: 12px; height: 12px; margin-top: -4.5px; border-radius: 50%; border: 0;
   background: var(--accent); box-shadow: 0 1px 3px rgba(0, 0, 0, .25);
 }
 .rac-body .rac-player .rac-player__volume input[type="range"]:hover::-webkit-slider-thumb { background: var(--accent-dark); }
 .rac-body .rac-player .rac-player__volume input[type="range"]::-moz-range-track {
-  height: 4px; border: 0; border-radius: 2px; background: color-mix(in srgb, var(--muted) 35%, transparent);
+  height: 3px; border: 0; border-radius: 2px; background: color-mix(in srgb, var(--muted) 35%, transparent);
 }
-.rac-body .rac-player .rac-player__volume input[type="range"]::-moz-range-progress { height: 4px; border-radius: 2px; background: var(--accent); }
+.rac-body .rac-player .rac-player__volume input[type="range"]::-moz-range-progress { height: 3px; border-radius: 2px; background: var(--accent); }
 .rac-body .rac-player .rac-player__volume input[type="range"]::-moz-range-thumb {
-  width: 14px; height: 14px; border: 0; border-radius: 50%; background: var(--accent); box-shadow: 0 1px 3px rgba(0, 0, 0, .25);
+  width: 12px; height: 12px; border: 0; border-radius: 50%; background: var(--accent); box-shadow: 0 1px 3px rgba(0, 0, 0, .25);
 }
 
 /* direita: "Trocar estação" */
@@ -216,7 +219,7 @@
   .rac-player__m-info .rac-player__faixa { font-size: 12px; }
   .rac-player__m-info .rac-player__artista { font-size: 10px; }
 
-  .rac-player__controles { height: auto; padding: 0; background: none; border: none; gap: 0; }
+  .rac-player__controles { flex: none; width: auto; height: auto; padding: 0; background: none; border: none; gap: 0; }
   .rac-body .racr-botao-play { width: 40px; height: 40px; }
   .rac-ico-play { border-top-width: 6px; border-bottom-width: 6px; border-left-width: 8px; }
   .rac-ico-pause { gap: 3px; }
