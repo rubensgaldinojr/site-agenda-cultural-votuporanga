@@ -8,7 +8,8 @@
  *
  * - Imagem do topo: "Imagem destacada" da página (sem ela, placeholder).
  * - Estações em ordem alfabética; sem filtro por grupo.
- * - Desktop: cards completos em 4 colunas. Mobile: cards compactos em 2.
+ * - Cards com imagem (template-parts/card-estacao-imagem.php): 4 colunas no
+ *   desktop e 2 no mobile. Estação sem imagem destacada usa o placeholder.
  */
 if ( ! defined( 'ABSPATH' ) ) exit;
 
@@ -41,11 +42,8 @@ get_header();
 
     <section class="rac-secao-lista">
         <?php if ( $estacoes ) : ?>
-            <div class="rac-grade-estacoes rac-grade-estacoes--d">
-                <?php foreach ( $estacoes as $e ) : get_template_part( 'template-parts/card-estacao', null, array( 'estacao' => $e ) ); endforeach; ?>
-            </div>
-            <div class="rac-grade-estacoes rac-grade-estacoes--m">
-                <?php foreach ( $estacoes as $e ) : get_template_part( 'template-parts/card-estacao', null, array( 'estacao' => $e, 'compact' => true ) ); endforeach; ?>
+            <div class="rac-grade-img">
+                <?php foreach ( $estacoes as $e ) : get_template_part( 'template-parts/card-estacao-imagem', null, array( 'estacao' => $e ) ); endforeach; ?>
             </div>
         <?php else : ?>
             <p class="rac-vazio">Nenhuma estação publicada ainda.</p>

@@ -29,7 +29,8 @@ const ALFA = [...NOMES].sort((a, b) => (norm(a) < norm(b) ? -1 : norm(a) > norm(
   /* ---------- HTML: Estação individual ---------- */
   const htmlS = await (await rq.get(B + '/estacao/100/')).text();
   ok((htmlS.match(/id="primary"/g) || []).length === 1 && htmlS.indexOf('id="racr-player"') > htmlS.indexOf('</main>'), '/estacao/100/: 1 #primary e player fora dele');
-  ok(/class="rac-hero__img"[^>]*src="\/h\/capa-0\.svg"|src="\/h\/capa-0\.svg"[^>]*class="rac-hero__img"/.test(htmlS) && !/placeholder-topo/.test(htmlS), '/estacao/100/: topo usa a imagem destacada da estação');
+  const heroS = (htmlS.match(/<section class="rac-hero rac-hero--estacao"[\s\S]*?<\/section>/) || [''])[0];
+  ok(/src="\/h\/capa-0\.svg"/.test(heroS) && !/placeholder-topo/.test(heroS), '/estacao/100/: topo usa a imagem destacada da estação');
   const htmlS2 = await (await rq.get(B + '/estacao/105/')).text();
   ok(/placeholder-topo\.jpg/.test(htmlS2), '/estacao/105/: estação sem imagem destacada usa o placeholder');
 
@@ -44,35 +45,54 @@ const ALFA = [...NOMES].sort((a, b) => (norm(a) < norm(b) ? -1 : norm(a) > norm(
   const d = await page.evaluate(() => {
     const hero = document.querySelector('.rac-hero--lista').getBoundingClientRect();
     const foto = document.querySelector('.rac-hero__foto').getBoundingClientRect();
-    const grade = document.querySelector('.rac-grade-estacoes--d');
+    const grade = document.querySelector('.rac-grade-img');
+    const cards = [...grade.querySelectorAll('.rac-card-img')];
+    const r0 = cards[0].getBoundingClientRect();
     return {
       selo: document.querySelector('[data-rac="total-estacoes"]').textContent.trim(),
       h1: document.querySelector('.rac-hero__titulo').textContent.trim(),
       fotoPct: Math.round(100 * foto.width / hero.width),
       colunas: getComputedStyle(grade).gridTemplateColumns.split(' ').length,
-      nomes: [...grade.querySelectorAll('.rac-card-est__nome')].map(n => n.textContent.trim()),
-      mVisivel: getComputedStyle(document.querySelector('.rac-grade-estacoes--m')).display,
-      dVisivel: getComputedStyle(grade).display,
-      links: [...grade.querySelectorAll('a.rac-card-est__ver')].length,
+      nomes: cards.map(c => c.querySelector('.rac-card-img__nome').textContent.trim()),
+      imgs: cards.map(c => (c.querySelector('.rac-card-img__foto img') || {}).src || ''),
+      trechos: cards.map(c => c.querySelector('.rac-card-img__trecho')?.textContent || null),
+      links: grade.querySelectorAll('a.rac-card-img__ver').length,
       ativo: document.querySelector('.rac-nav a.is-ativo')?.textContent.trim(),
+      outraGrade: !!document.querySelector('.rac-grade-estacoes--d, .rac-grade-estacoes--m'),
+      prop: Math.round(100 * r0.height / r0.width) / 100,
+      nomeCor: getComputedStyle(cards[0].querySelector('.rac-card-img__nome')).color,
+      imgCobre: Math.round(cards[0].querySelector('.rac-card-img__foto img').getBoundingClientRect().width) === Math.round(r0.width),
+      lh: getComputedStyle(cards[0].querySelector('.rac-card-img__trecho') || cards[0]).display,
     };
   });
   ok(d.selo === '12 estações ao vivo agora', `selo com a contagem real ("${d.selo}")`);
   ok(d.fotoPct === 64, `foto ocupa 64% do topo no desktop (${d.fotoPct}%)`);
   ok(d.colunas === 4, `grade com 4 colunas no desktop (${d.colunas})`);
-  ok(JSON.stringify(d.nomes) === JSON.stringify(ALFA), `estações em ordem alfabética (${d.nomes.slice(0, 4).join(', ')}…)`);
-  ok(d.dVisivel === 'grid' && d.mVisivel === 'none', 'desktop mostra a grade completa e esconde a compacta');
-  ok(d.links === 12, 'cada card completo tem o link "Ver estação"');
+  ok(d.nomes.length === 12 && JSON.stringify(d.nomes) === JSON.stringify(ALFA), `12 cards com imagem em ordem alfabética (${d.nomes.slice(0, 4).join(', ')}…)`);
+  ok(!d.outraGrade, 'só uma grade (os cards antigos saíram da página)');
+  const COM_IMAGEM = { 'Blues & Jazz Clube': 'capa-0', 'Bossa & Violão': 'capa-1', 'Clássicos Contemporâneos': 'capa-2', 'Vozes da Cidade': 'capa-3' };
+  ok(d.nomes.every((n, i) => COM_IMAGEM[n] ? d.imgs[i].endsWith('/h/' + COM_IMAGEM[n] + '.svg') : d.imgs[i].includes('placeholder-topo.jpg')), `estações com imagem destacada usam ela; as demais usam o placeholder (${d.imgs.filter(u => u.includes('placeholder-topo')).length} placeholders, ${d.imgs.filter(u => u.includes('/h/capa-')).length} imagens)`);
+  ok(d.imgCobre, 'a imagem cobre o card inteiro');
+  ok(d.trechos[0] !== null && d.trechos[0].startsWith('Primeiro parágrafo da estação Blues') && !/\.Segundo|abertura\.Segundo/.test(d.trechos[0]) && d.trechos[0].split(' ').length <= 19, `trecho do texto da estação (≤18 palavras, parágrafos separados): "${d.trechos[0]}"`);
+  ok(d.trechos.slice(1).every(x => x === null), 'estações sem texto cadastrado não mostram trecho');
+  ok(d.links === 12, 'cada card tem o link "Ver estação"');
+  ok(d.nomeCor === 'rgb(255, 255, 255)', `nome em branco sobre a foto (${d.nomeCor})`);
+  ok(d.prop >= 1.0 && d.prop <= 1.15, `proporção do card (altura/largura = ${d.prop})`);
   ok(d.ativo === 'Estações', 'menu: "Estações" fica ativo na página');
   await page.screenshot({ path: 'capturas/f3a-estacoes-d.png', fullPage: true });
 
   // tocar pelo card; "Ver estação" navega pela navegação persistente
-  await page.click('.rac-grade-estacoes--d .rac-card-est:nth-child(3)');
+  await page.click('.rac-grade-img .rac-card-img:nth-child(3) .rac-card-img__nome');
   ok(await esperar(page, () => !window.__audio.paused && window.__audio.currentTime > 0.2), 'clicar num card da página toca a estação');
-  const tocando = await page.evaluate(() => [...document.querySelectorAll('.rac-grade-estacoes--d .rac-card-est.is-tocando .rac-card-est__nome')].map(n => n.textContent.trim()));
+  const tocando = await page.evaluate(() => [...document.querySelectorAll('.rac-grade-img .rac-card-img.is-tocando .rac-card-img__nome')].map(n => n.textContent.trim()));
   ok(tocando.length === 1 && tocando[0] === ALFA[2], `só o card tocando fica destacado (${tocando[0]})`);
+  ok(await page.evaluate(() => document.querySelector('.rac-grade-img .rac-card-img.is-tocando .rac-card-img__rotulo').textContent === 'Tocando' && document.querySelector('.rac-grade-img .rac-card-img.is-tocando .rac-card-img__play').getAttribute('aria-pressed') === 'true'), 'card tocando: selo vira "Tocando" e o botão fica aria-pressed');
+  await page.click('.rac-grade-img .rac-card-img:nth-child(3) .rac-card-img__play');
+  ok(await esperar(page, () => window.__audio.paused && document.querySelectorAll('.rac-grade-img .is-tocando').length === 0), 'o botão de play do card pausa a estação');
+  await page.click('.rac-grade-img .rac-card-img:nth-child(3)', { position: { x: 30, y: 60 } });
+  ok(await esperar(page, () => !window.__audio.paused), 'clicar na imagem do card volta a tocar');
   const antes = await page.evaluate(() => window.__audio.currentTime);
-  await page.click('.rac-grade-estacoes--d .rac-card-est:nth-child(1) a.rac-card-est__ver');
+  await page.click('.rac-grade-img .rac-card-img:nth-child(1) a.rac-card-img__ver');
   ok(await esperar(page, () => /^\/estacao\/\d+\/$/.test(location.pathname)), '"Ver estação" abre a página da estação');
   const nav1 = await page.evaluate(() => ({ m: window.__marcador, p: window.__audio.paused, t: window.__audio.currentTime, h1: document.querySelector('.rac-hero__titulo')?.textContent.trim() }));
   ok(nav1.m === 'mesma-pagina' && !nav1.p && nav1.t >= antes, `navegação sem recarregar e com o áudio tocando (t ${antes.toFixed(2)} → ${nav1.t.toFixed(2)}) → "${nav1.h1}"`);
@@ -109,6 +129,8 @@ const ALFA = [...NOMES].sort((a, b) => (norm(a) < norm(b) ? -1 : norm(a) > norm(
   const outrasEsperadas = (() => { const i = ALFA.indexOf('Blues & Jazz Clube'); return [1, 2, 3, 4].map(k => ALFA[(i + k) % ALFA.length]); })();
   ok(JSON.stringify(e.tiles) === JSON.stringify(outrasEsperadas) && !e.tiles.includes('Blues & Jazz Clube'), `"Outras estações": as 4 seguintes em ordem alfabética, sem a atual (${e.tiles.join(', ')})`);
   ok(e.tilesCols === 4, 'tiles em 4 colunas no desktop');
+  const tilesImg = await page.evaluate(() => [...document.querySelectorAll('.rac-tile-est__link img')].map(i => i.src));
+  ok(tilesImg.length === 4 && tilesImg.every(u => u.includes('placeholder-topo.jpg') || u.includes('/h/capa-')), `os 4 tiles de "Outras estações" têm imagem (placeholder quando a estação não tem) (${tilesImg.length})`);
   ok(JSON.stringify(e.posts) === JSON.stringify(['/blog/post-502/', '/blog/post-501/', '/blog/post-503/']), `"Para ler": post com tag da estação primeiro e depois os recentes (${e.posts.join(' ')})`);
   ok(e.eyebrow === 'Do blog' && e.verTodos.endsWith('/blog/') && e.outrasVer.endsWith('/estacoes/'), 'links "Ver todos os posts" e "Ver todas" corretos');
   ok(e.agoraM === 'none' && e.cardAgora === 'flex', 'desktop: "Tocando agora" no cartão; linha do mobile escondida');
@@ -159,13 +181,14 @@ const ALFA = [...NOMES].sort((a, b) => (norm(a) < norm(b) ? -1 : norm(a) > norm(
   const m = await ctx3.newPage();
   m.on('pageerror', er => errosJs.push(er.message));
   await m.goto(B + '/estacoes/');
-  const mm = await m.evaluate(() => ({ minH: Math.round(document.querySelector('.rac-hero--lista').getBoundingClientRect().height), fotoCobre: Math.round(document.querySelector('.rac-hero__foto').getBoundingClientRect().width), larg: window.innerWidth, dDisp: getComputedStyle(document.querySelector('.rac-grade-estacoes--d')).display, cols: getComputedStyle(document.querySelector('.rac-grade-estacoes--m')).gridTemplateColumns.split(' ').length, ver: getComputedStyle(document.querySelector('.rac-grade-estacoes--m .rac-card-est')).cursor, play: !!document.querySelector('.rac-grade-estacoes--m .rac-card-est__play'), h1: getComputedStyle(document.querySelector('.rac-hero__titulo')).fontSize }));
+  const mm = await m.evaluate(() => { const g = document.querySelector('.rac-grade-img'); const c = g.querySelector('.rac-card-img'); const r = c.getBoundingClientRect(); return { minH: Math.round(document.querySelector('.rac-hero--lista').getBoundingClientRect().height), fotoCobre: Math.round(document.querySelector('.rac-hero__foto').getBoundingClientRect().width), larg: window.innerWidth, cols: getComputedStyle(g).gridTemplateColumns.split(' ').length, trecho: getComputedStyle(g.querySelector('.rac-card-img__trecho') || document.body).display, play: getComputedStyle(c.querySelector('.rac-card-img__play')).display, ver: getComputedStyle(c.querySelector('.rac-card-img__ver')).display, nomes: g.querySelectorAll('.rac-card-img').length, h1: getComputedStyle(document.querySelector('.rac-hero__titulo')).fontSize, larguraCard: Math.round(r.width), altura: Math.round(r.height) }; });
   ok(mm.minH >= 340 && mm.fotoCobre === mm.larg, `mobile: topo ≥340px com a foto cobrindo a largura (${mm.minH}px)`);
-  ok(mm.dDisp === 'none' && mm.cols === 2 && !mm.play, 'mobile: grade compacta em 2 colunas e sem botão de play nos cards');
+  ok(mm.cols === 2 && mm.nomes === 12, `mobile: cards com imagem em 2 colunas (${mm.larguraCard}x${mm.altura}px)`);
+  ok(mm.play !== 'none' && mm.ver !== 'none', 'mobile: card mantém o play e o link "Ver estação"');
   ok(mm.h1 === '31px', `mobile: título do topo com 31px (${mm.h1})`);
-  await m.click('.rac-grade-estacoes--m .rac-card-est:nth-child(2)');
-  ok(await esperar(m, () => !document.getElementById('racr-audio').paused && document.querySelectorAll('.rac-grade-estacoes--m .rac-card-est.is-tocando').length === 1), 'mobile: tocar pelo card compacto');
-  ok(await m.evaluate(() => document.querySelector('.rac-grade-estacoes--m .rac-card-est.is-tocando .rac-card-est__rotulo').textContent === 'Tocando'), 'mobile: rótulo "Tocando" no card compacto');
+  ok(await m.evaluate(() => [...document.querySelectorAll('.rac-grade-img .rac-card-img__trecho')].every(t => getComputedStyle(t).display === 'none')), 'mobile: o trecho de texto fica escondido');
+  await m.click('.rac-grade-img .rac-card-img:nth-child(2) .rac-card-img__nome');
+  ok(await esperar(m, () => !document.getElementById('racr-audio').paused && document.querySelectorAll('.rac-grade-img .rac-card-img.is-tocando').length === 1), 'mobile: tocar pelo card');
   await m.screenshot({ path: 'capturas/f3a-estacoes-m.png', fullPage: true });
 
   await m.goto(B + '/estacao/100/');

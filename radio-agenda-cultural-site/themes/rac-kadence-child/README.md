@@ -49,8 +49,15 @@ Versão 0.3.0 (Fases 1, 2 e 3A). Requer o tema **Kadence** instalado (é o tema 
 ## Páginas (Fase 3A)
 
 - **Estações** (`page-estacoes.php`, página com o slug `estacoes`): topo com foto e selo
-  "N estações ao vivo agora" (N é calculado), grade de cards em **ordem alfabética**, sem
-  filtro. Desktop: cards completos em 4 colunas; mobile: cards compactos em 2.
+  "N estações ao vivo agora" (N é calculado) e grade de **cards com imagem** em **ordem
+  alfabética**, sem filtro: 4 colunas no desktop e 2 no mobile.
+  - Card (`template-parts/card-estacao-imagem.php`): imagem destacada da estação ao fundo
+    (sem ela, o **placeholder** do tema), selo "Ao vivo" (vira "Tocando"), nome, trecho de
+    1–2 linhas do "Texto Sobre a Estação" (só no desktop e só se houver texto), link "Ver
+    estação" e botão de play. Texto branco sobre escurecimento, igual nos dois temas. Clicar em
+    qualquer ponto do card toca/pausa pelo player.
+  - O placeholder também aparece nos tiles de "Outras estações" e na capa/lista do player
+    quando a estação não tem imagem destacada.
   - Imagem do topo: **Imagem destacada** da página. Sem ela, aparece a imagem placeholder do
     tema (`assets/img/placeholder-topo.jpg`).
   - Título e texto do topo: escolha o modelo **"Estações"** em Atributos da página; aparecem os

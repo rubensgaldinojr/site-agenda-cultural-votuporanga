@@ -43,6 +43,13 @@ get_header();
             <p>Nenhuma estação publicada com URL de stream.</p>
         <?php endif; ?>
 
+        <?php if ( $estacoes ) : ?>
+            <h2>Card de estação com imagem</h2>
+            <div id="grade-img" class="rac-grade-img rac-grade-img--teste">
+                <?php foreach ( array_slice( $estacoes, 0, 4 ) as $e ) : get_template_part( 'template-parts/card-estacao-imagem', null, array( 'estacao' => $e ) ); endforeach; ?>
+            </div>
+        <?php endif; ?>
+
         <h2>CardPost</h2>
         <?php if ( $posts ) : ?>
             <div id="grade-posts" class="rac-grade-teste rac-grade-teste--posts">

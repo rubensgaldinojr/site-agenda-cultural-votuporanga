@@ -147,7 +147,8 @@ function rac_logo_html( $prioritaria = false ) {
  *
  * @return array Lista de ['id', 'nome', 'url', 'capa', 'indice'].
  *               'indice' é a posição no player (null sem o plugin) e
- *               'capa' é a imagem destacada em miniatura ('' se não houver).
+ *               'capa' é a imagem destacada em miniatura; sem ela, a URL da
+ *               imagem placeholder do tema (nunca vem vazia).
  */
 function rac_listar_estacoes() {
     static $lista = null;
@@ -161,7 +162,7 @@ function rac_listar_estacoes() {
                 'id'     => $e['id'],
                 'nome'   => $e['nome'],
                 'url'    => get_permalink( $e['id'] ),
-                'capa'   => (string) get_the_post_thumbnail_url( $e['id'], 'thumbnail' ),
+                'capa'   => rac_url_imagem_estacao( $e['id'], 'thumbnail' ),
                 'indice' => $indice,
             );
         }
@@ -181,7 +182,7 @@ function rac_listar_estacoes() {
             'id'     => $p->ID,
             'nome'   => get_the_title( $p ),
             'url'    => get_permalink( $p ),
-            'capa'   => (string) get_the_post_thumbnail_url( $p->ID, 'thumbnail' ),
+            'capa'   => rac_url_imagem_estacao( $p->ID, 'thumbnail' ),
             'indice' => null,
         );
     }
@@ -251,6 +252,38 @@ function rac_campo( $nome, $post_id = null, $padrao = '' ) {
     return $padrao;
 }
 
+/** URL da imagem placeholder do tema. */
+function rac_url_placeholder() {
+    return get_stylesheet_directory_uri() . '/assets/img/placeholder-topo.jpg';
+}
+
+/** URL da imagem de uma estação (no tamanho pedido) ou, se não houver, a do placeholder. */
+function rac_url_imagem_estacao( $id, $tamanho = 'thumbnail' ) {
+    $url = get_the_post_thumbnail_url( $id, $tamanho );
+    return $url ? $url : rac_url_placeholder();
+}
+
+/** <img> de uma estação (imagem destacada ou placeholder), para cards e tiles. */
+function rac_html_imagem_estacao( $id, $tamanho = 'medium_large' ) {
+    if ( has_post_thumbnail( $id ) ) {
+        return get_the_post_thumbnail( $id, $tamanho, array( 'alt' => '', 'loading' => 'lazy', 'decoding' => 'async' ) );
+    }
+    return '<img src="' . esc_url( rac_url_placeholder() ) . '" alt="" width="1200" height="675" loading="lazy" decoding="async">';
+}
+
+/**
+ * Trecho curto do "Texto Sobre a Estação" (para o card grande). Junta os
+ * parágrafos com espaço antes de tirar as tags e corta em N palavras.
+ * Devolve '' quando a estação não tem texto.
+ */
+function rac_trecho_estacao( $id, $palavras = 18 ) {
+    $html = rac_campo( 'texto_sobre_a_estacao', $id, '' );
+    if ( ! $html ) return '';
+    $html  = preg_replace( '#</(p|li|div|h[1-6])>|<br\s*/?>#i', ' ', (string) $html );
+    $texto = trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( $html ) ) );
+    return $texto === '' ? '' : wp_trim_words( $texto, $palavras, '…' );
+}
+
 /**
  * <img> do topo (hero): imagem destacada do post/página ou, se não
  * houver, a imagem placeholder do tema (assets/img/placeholder-topo.jpg).
@@ -266,7 +299,7 @@ function rac_html_imagem_topo( $post_id, $classe = 'rac-hero__img' ) {
             'decoding'      => 'async',
         ) );
     }
-    return '<img class="' . esc_attr( $classe ) . '" src="' . esc_url( get_stylesheet_directory_uri() . '/assets/img/placeholder-topo.jpg' ) . '" alt="" width="1200" height="675" loading="eager" decoding="async">';
+    return '<img class="' . esc_attr( $classe ) . '" src="' . esc_url( rac_url_placeholder() ) . '" alt="" width="1200" height="675" loading="eager" decoding="async">';
 }
 
 /**

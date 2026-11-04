@@ -7,7 +7,7 @@
         #racr-status) em duas linhas, "faixa" e "artista";
      2. mantém a capa da estação atual no player;
      3. controla o volume e o mudo (audio.volume / audio.muted) e lembra os valores;
-     4. liga os cards de estação (.rac-card-est), os tiles (.rac-tile-est) e o
+     4. liga os cards de estação (.rac-card-est, .rac-card-img), os tiles (.rac-tile-est) e o
         botão "Ouvir agora" da página da estação (.rac-cta-estacao) ao player:
         clicar aciona o botão correspondente do próprio plugin, e o elemento da
         estação que está tocando recebe .is-tocando. No card, qualquer ponto
@@ -152,7 +152,7 @@
   }
 
   // Elementos de estação que acompanham o estado do player.
-  var SELETOR_ESTACOES = '.rac-card-est, .rac-tile-est, .rac-cta-estacao';
+  var SELETOR_ESTACOES = '.rac-card-est, .rac-card-img, .rac-tile-est, .rac-cta-estacao';
 
   function sincronizarCards() {
     var ativa = estacaoAtiva();
@@ -164,10 +164,10 @@
       el.classList.toggle('is-tocando', ligado);
       var botao = el.hasAttribute('data-rac-tocar') ? el : el.querySelector('[data-rac-tocar]');
       if (botao) botao.setAttribute('aria-pressed', ligado ? 'true' : 'false');
-      if (el.classList.contains('rac-card-est--compact')) {
-        var rotulo = el.querySelector('.rac-card-est__rotulo');
-        if (rotulo) rotulo.textContent = ligado ? 'Tocando' : 'Ao vivo';
-      }
+      // card compacto e card com imagem trocam o rótulo "Ao vivo" por "Tocando"
+      var rotulo = el.classList.contains('rac-card-est--compact') ? el.querySelector('.rac-card-est__rotulo')
+        : (el.classList.contains('rac-card-img') ? el.querySelector('.rac-card-img__rotulo') : null);
+      if (rotulo) rotulo.textContent = ligado ? 'Tocando' : 'Ao vivo';
     });
   }
 
@@ -190,7 +190,7 @@
       return;
     }
     // card: qualquer ponto toca, menos links ("Ver estação" navega normalmente)
-    var card = e.target.closest('.rac-card-est');
+    var card = e.target.closest('.rac-card-est, .rac-card-img');
     if (!card || e.target.closest('a')) return;
     tocarEstacaoPorId(card.getAttribute('data-estacao-id'));
   });

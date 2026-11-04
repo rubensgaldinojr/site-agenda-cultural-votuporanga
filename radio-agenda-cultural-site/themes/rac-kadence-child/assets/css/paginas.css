@@ -128,9 +128,6 @@
 
 /* ---------- Página de Estações ---------- */
 .rac-secao-lista { max-width: 1280px; margin: 0 auto; padding: 20px 40px 72px; }
-.rac-grade-estacoes { display: grid; gap: 12px; padding-top: 20px; border-top: 1px solid var(--line); }
-.rac-grade-estacoes--d { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.rac-grade-estacoes--m { display: none; }
 
 /* =========================================================
    MOBILE (< 900px)
@@ -187,7 +184,4 @@
   .rac-ler .rac-secao__rodape { padding-top: 14px; }
 
   .rac-secao-lista { padding: 14px 18px 32px; border-top: 1px solid var(--line); }
-  .rac-grade-estacoes { padding-top: 0; border-top: 0; }
-  .rac-grade-estacoes--d { display: none; }
-  .rac-grade-estacoes--m { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 }

@@ -69,9 +69,10 @@
 | B-36 | Validar no site real: player com os streams do Zeno.fm e os cards | ✅ | Testado pelo Rubens |
 | B-37 | Imagem destacada em cada Estação (capa do player e topo da página da estação) | 💡 | Sem imagem, a capa mostra o placeholder listrado e o topo usa a imagem placeholder do tema. Algumas estações ainda estão sem imagem |
 | B-38 | Trocar a imagem placeholder única (`assets/img/placeholder-topo.jpg`) pelas imagens reais de cada topo (Estações, estações, Home, Sobre) e confirmar a licença de uso da imagem atual | ⏳ | Para trocar: definir a Imagem destacada da página/estação; o placeholder só aparece quando não há imagem |
-| B-41 | Página de Estações com cards grandes (imagem de fundo, nome, "Ao vivo", trecho de 1–2 linhas do texto, "Ver estação" e play), unindo o card atual ao tile de "Outras estações" | 3A | 💡 | Desvia do mockup; aguardando decisão do Rubens (ver proposta no chat) |
+| B-41 | Página de Estações com cards grandes (imagem de fundo, nome, "Ao vivo", trecho, "Ver estação" e play) | 3A | ✅ | Feito: 4 colunas no desktop, 2 no mobile; placeholder em toda estação sem imagem destacada |
 | B-42 | Seção de livros na página da estação ("Da biblioteca"), reaproveitando o card de livro da Home | 3B | 💡 | Regra sugerida: livros com categoria de livro de mesmo nome da estação e, se faltar, os mais recentes; só depois do card de livro existir |
 | B-43 | Renomear a categoria padrão "Uncategorized" e apagar o post "Hello world!" | — | 💡 | Aparecem nos cards de post em inglês; ajuste no painel (Posts → Categorias) |
+| B-44 | Tags nos cards de post do Blog: hoje o card mostra só categoria, data, título e autor; as tags não aparecem em lugar nenhum | 4 | 💡 | A tratar na Fase 4. Opções: (a) manter o card sem tags, como no mockup; (b) mostrar até 2 tags no card; (c) tags só na página do post (o mockup tem) com página de arquivo por tag. Pode-se ligar a tag com o nome de uma estação à página dessa estação |
 | B-40 | `catalogo-livros-rac.php` está duplicado na raiz do repositório (idêntico ao de `plugins/`) | 💡 | Remover a cópia da raiz? |
 
 ## Decisões tomadas
@@ -84,6 +85,7 @@
 - Ouvintes: tentar a API do Zeno.fm; se não der, campo manual atualizado por script no futuro (valor estático até a próxima atualização).
 - Endereços reais: `/estacoes/`, `/blog/`, `/literatura/`, `/sobre/`, `/category/podcasts/`.
 - Estações: sem filtro por grupo; listagem em ordem alfabética; "Outras estações" = as 4 seguintes em ordem alfabética; "Para ler enquanto ouve" = posts com tag/categoria de mesmo nome da estação e, se faltar, os mais recentes.
+- Estações: card grande com imagem, 4 colunas no desktop; placeholder em toda estação sem imagem destacada (cards, tiles e player). Posts sem imagem continuam com o listrado.
 - Imagens: uma única imagem placeholder para todos os topos até chegarem as imagens reais (B-38).
 - Estações: cada estação é um gênero; o nome da estação substitui o "gênero" do mockup (sem campo novo).
 - PlayerFixo: o tema desenha o player com os mesmos IDs do plugin (`remove_action` do render antigo); o plugin não é editado. "Tocando agora" vem como "Artista - Música" e é dividido no primeiro " - ".

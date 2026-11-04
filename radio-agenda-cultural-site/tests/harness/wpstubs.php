@@ -104,3 +104,6 @@ function wp_kses_post($h){ return $h; }
 function get_term_by($campo,$valor,$tax){ if($tax==='post_tag' && $campo==='name' && $valor==='Blues & Jazz Clube') return (object)['term_id'=>77]; return false; }
 $GLOBALS['tag_map']=[77=>[502]];
 $GLOBALS['fields'][100]['texto_sobre_a_estacao']='<p>Primeiro parágrafo da estação Blues, que funciona como abertura.</p><p>Segundo parágrafo com mais detalhes sobre a programação.</p><p>Terceiro parágrafo de fechamento.</p>';
+
+function wp_strip_all_tags($t){ return strip_tags($t); }
+function wp_trim_words($t,$n=55,$mais='...'){ $p=preg_split('/\s+/',trim($t)); if(count($p)<=$n) return implode(' ',$p); return implode(' ',array_slice($p,0,$n)).$mais; }

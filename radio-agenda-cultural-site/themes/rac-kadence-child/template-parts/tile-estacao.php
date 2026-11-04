@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 $e = isset( $args['estacao'] ) ? $args['estacao'] : null;
 if ( empty( $e ) ) return;
 
-$imagem = get_the_post_thumbnail( $e['id'], 'medium', array( 'alt' => '', 'loading' => 'lazy' ) );
+$imagem = rac_html_imagem_estacao( $e['id'], 'medium' ); // imagem da estação ou placeholder
 ?>
 <div class="rac-tile-est" data-estacao-id="<?php echo esc_attr( $e['id'] ); ?>">
     <div class="rac-tile-est__imagem rac-foto stripe-cover">
