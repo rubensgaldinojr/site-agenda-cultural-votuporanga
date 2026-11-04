@@ -42,12 +42,12 @@ function antispambot($e){ return $e; }
 function wp_unslash($s){ return $s; }
 function wp_parse_url($u,$c=-1){ return $c===-1 ? parse_url($u) : parse_url($u,$c); }
 function untrailingslashit($s){ return rtrim($s,'/\\'); }
-function wp_date($f){ if($f==='Y-m-d' && isset($_GET['dia'])) return $_GET['dia']; return date($f); }
+function wp_date($f,$ts=null){ if($f==='Y-m-d' && isset($_GET['dia']) && $ts===null) return $_GET['dia']; $r=date($f,$ts ?? time()); return strpos($f,'M')!==false ? strtr($r,['Jan'=>'jan','Feb'=>'fev','Mar'=>'mar','Apr'=>'abr','May'=>'mai','Jun'=>'jun','Jul'=>'jul','Aug'=>'ago','Sep'=>'set','Oct'=>'out','Nov'=>'nov','Dec'=>'dez']) : $r; }
 function get_theme_mod($k,$d=false){ return array_key_exists($k,$GLOBALS['mods']) ? $GLOBALS['mods'][$k] : $d; }
 function get_nav_menu_locations(){ return []; } function wp_get_nav_menu_items($m){ return []; }
-function get_option($k,$d=false){ return 0; }
+function get_option($k,$d=false){ return $k==='page_on_front' ? 1000 : 0; }
 function get_permalink($p=null){ $id = is_object($p)?$p->ID:($p??($GLOBALS['loop']['posts'][$GLOBALS['loop']['i']]['url']??0)); if(is_int($id)&&isset($GLOBALS['posts_db'][$id])) return '/blog/post-'.$id.'/'; return is_string($id)?$id:'/estacao/'.$id.'/'; }
-function get_category_by_slug($s){ return false; } function get_category_link($c){ return '/'; }
+function get_category_by_slug($s){ return ($s==='podcasts' && !empty($GLOBALS['com_podcasts'])) ? (object)['term_id'=>5] : false; } function get_category_link($c){ return '/'; }
 function wp_get_attachment_image($id,$size,$icon,$attr){ $src = ($id==7)?'/h/logo-claro.svg':(($id==55)?'/h/capa-1.svg':(($id==56)?'/h/foto2.svg':'/h/logo-escuro.svg')); return '<img src="'.$src.'" class="'.esc_attr($attr['class']??'').'" alt="'.esc_attr($attr['alt']??'').'" height="34">'; }
 function get_template_part($slug,$name=null,$args=[]){ include THEME_DIR.'/'.$slug.'.php'; }
 function get_header(){ include THEME_DIR.'/header.php'; } function get_footer(){ include THEME_DIR.'/footer.php'; }
@@ -56,9 +56,10 @@ function get_field($n,$id){ return $GLOBALS['fields'][$id][$n] ?? ''; }
 function get_the_title($p=null){ if(is_object($p)) return $p->post_title; return $GLOBALS['loop']['posts'][$GLOBALS['loop']['i']]['title']; }
 class WP_Query { public $posts=[]; function __construct($a){ $this->posts=$GLOBALS['estacoes_posts']; } }
 function get_posts($a){
-  if(($a['post_type']??'')==='estacao') return $GLOBALS['estacoes_posts'];
-  $ids=array_keys($GLOBALS['posts_db']);
-  if(!empty($a['tax_query'])){ $alvo=[]; foreach($a['tax_query'] as $q){ if(is_array($q)&&isset($q['terms'])&&isset($GLOBALS['tag_map'][$q['terms']])) $alvo=array_merge($alvo,$GLOBALS['tag_map'][$q['terms']]); } $ids=array_values(array_unique($alvo)); }
+  $tipo=$a['post_type']??'post';
+  if($tipo==='estacao') return $GLOBALS['estacoes_posts'];
+  $ids = ($tipo==='livro') ? array_keys($GLOBALS['livros_db']) : array_keys($GLOBALS['posts_db']);
+  if(!empty($a['tax_query'])){ $alvo=[]; foreach($a['tax_query'] as $q){ if(is_array($q)&&isset($q['terms'])&&isset($GLOBALS['tag_map'][$q['terms']])) $alvo=array_merge($alvo,$GLOBALS['tag_map'][$q['terms']]); } $ids=array_values(array_intersect($ids,array_unique($alvo))); }
   if(!empty($a['post__not_in'])) $ids=array_values(array_diff($ids,$a['post__not_in']));
   $ids=array_slice($ids,0,$a['posts_per_page']??10);
   return (($a['fields']??'')==='ids') ? $ids : array_map('get_post',$ids);
@@ -86,10 +87,10 @@ $GLOBALS['posts_db']=[
  503=>['title'=>'Por que ainda ouvimos rádio (post sem imagem)','cat'=>'Reflexões','data'=>'22 out 2026','aid'=>3,'thumb'=>''],
 ];
 $GLOBALS['autores']=[1=>'Marina Alves',2=>'Igor Bastos',3=>'Nome do Fundador'];
-function get_post($p=null){ if(is_object($p)) return $p; if(is_int($p)&&isset($GLOBALS['posts_db'][$p])) return (object)['ID'=>$p,'post_title'=>$GLOBALS['posts_db'][$p]['title'],'post_author'=>$GLOBALS['posts_db'][$p]['aid']]; return null; }
+function get_post($p=null){ if(is_object($p)) return $p; if(is_int($p)&&isset($GLOBALS['livros_db'][$p])) return (object)['ID'=>$p,'post_title'=>$GLOBALS['livros_db'][$p]['title'],'post_author'=>$GLOBALS['livros_db'][$p]['aid']]; if(is_int($p)&&isset($GLOBALS['posts_db'][$p])) return (object)['ID'=>$p,'post_title'=>$GLOBALS['posts_db'][$p]['title'],'post_author'=>$GLOBALS['posts_db'][$p]['aid']]; return null; }
 function get_the_category($id){ return isset($GLOBALS['posts_db'][$id]) ? [(object)['name'=>$GLOBALS['posts_db'][$id]['cat']]] : []; }
 function is_wp_error($x){ return false; }
-function get_the_post_thumbnail($id,$size='',$attr=[]){ $t=$GLOBALS['posts_db'][$id]['thumb']??''; if(!$t){ $n=$id-100; if($n>=0&&$n<4) $t='/h/capa-'.$n.'.svg'; } $c=isset($attr['class'])?' class="'.$attr['class'].'"':''; return $t ? '<img'.$c.' src="'.$t.'" alt="" loading="lazy">' : ''; }
+function get_the_post_thumbnail($id,$size='',$attr=[]){ $t=$GLOBALS['posts_db'][$id]['thumb']??($GLOBALS['livros_db'][$id]['thumb']??''); if(!$t){ $n=$id-100; if($n>=0&&$n<4) $t='/h/capa-'.$n.'.svg'; } $c=isset($attr['class'])?' class="'.$attr['class'].'"':''; return $t ? '<img'.$c.' src="'.$t.'" alt="" loading="lazy">' : ''; }
 function has_post_thumbnail($id=null){ return get_the_post_thumbnail($id)!==''; }
 function get_the_post_thumbnail_url($id,$size=''){ if(isset($GLOBALS['posts_db'][$id])) return $GLOBALS['posts_db'][$id]['thumb']; $n=$id-100; return ($n>=0&&$n<4) ? '/h/capa-'.$n.'.svg' : ''; }
 function get_author_posts_url($aid){ return '/autor/'.$aid.'/'; }
@@ -101,8 +102,8 @@ function get_page_by_path($p){ return null; }
 function sanitize_title($t){ return strtolower(trim(preg_replace('/[^a-z0-9]+/i','-',remove_accents($t)),'-')); }
 function remove_accents($s){ return strtr($s, ['á'=>'a','à'=>'a','ã'=>'a','â'=>'a','é'=>'e','ê'=>'e','í'=>'i','ó'=>'o','õ'=>'o','ô'=>'o','ú'=>'u','ç'=>'c','Á'=>'A','Ã'=>'A','É'=>'E','Ó'=>'O','Ç'=>'C']); }
 function wp_kses_post($h){ return $h; }
-function get_term_by($campo,$valor,$tax){ if($tax==='post_tag' && $campo==='name' && $valor==='Blues & Jazz Clube') return (object)['term_id'=>77]; return false; }
-$GLOBALS['tag_map']=[77=>[502]];
+function get_term_by($campo,$valor,$tax){ if($tax==='post_tag' && $campo==='name' && $valor==='Blues & Jazz Clube') return (object)['term_id'=>77]; if($tax==='categoria_livro' && $campo==='name' && $valor==='Blues & Jazz Clube') return (object)['term_id'=>88]; return false; }
+$GLOBALS['tag_map']=[77=>[502], 88=>[703,705]];
 $GLOBALS['fields'][100]['texto_sobre_a_estacao']='<p>Primeiro parágrafo da estação Blues, que funciona como abertura.</p><p>Segundo parágrafo com mais detalhes sobre a programação.</p><p>Terceiro parágrafo de fechamento.</p>';
 
 function wp_strip_all_tags($t){ return strip_tags($t); }
@@ -116,3 +117,36 @@ function wp_list_pluck($l,$campo){ return array_map(function($x) use($campo){ re
 // audiência das estações (números do mockup) e página inicial
 $ouv=[100=>980,101=>1240,102=>610,103=>420,104=>870,105=>310,106=>290,107=>540,108=>1120,109=>760,110=>690,111=>450];
 foreach($ouv as $id=>$n){ $GLOBALS['fields'][$id]['ouvintes']=$n; }
+
+// ---- 3B-2: livros, podcasts, comentários ----
+define('DAY_IN_SECONDS', 86400);
+$GLOBALS['livros_db']=[
+ 701=>['title'=>'Contos da Cidade Baixa','aid'=>1,'thumb'=>'/h/foto1.svg'],
+ 702=>['title'=>'Antologia da MPB Poética','aid'=>2,'thumb'=>'/h/foto2.svg'],
+ 703=>['title'=>'Cadernos de Improviso (título bem longo para cortar na linha)','aid'=>3,'thumb'=>''],
+ 704=>['title'=>'Versos do Interior','aid'=>1,'thumb'=>'/h/capa-1.svg'],
+ 705=>['title'=>'Crônicas de Rádio','aid'=>2,'thumb'=>'/h/capa-2.svg'],
+ 706=>['title'=>'Pequeno Guia do Choro','aid'=>3,'thumb'=>''],
+ 707=>['title'=>'Histórias de Votuporanga','aid'=>1,'thumb'=>'/h/foto1.svg'],
+ 708=>['title'=>'Diário de Bordo','aid'=>2,'thumb'=>'/h/capa-3.svg'],
+];
+function get_terms($a){ if(empty($GLOBALS['com_podcasts'])) return []; return [
+  (object)['term_id'=>51,'name'=>'Bastidores da Cena','description'=>'Entrevistas com artistas e curadores locais.','count'=>32],
+  (object)['term_id'=>52,'name'=>'Clássicos Explicados','description'=>'','count'=>1],
+]; }
+function get_term_link($t){ return '/category/podcasts/'.sanitize_title($t->name).'/'; }
+function comments_open($id=null){ return empty($GLOBALS['sem_comentarios']); }
+function human_time_diff($de,$ate=0){ $d=max(1,($ate?:time())-$de); if($d<3600) return max(1,(int)round($d/60)).' min'; if($d<86400){ $h=(int)round($d/3600); return $h.($h==1?' hora':' horas'); } $x=(int)round($d/86400); return $x.($x==1?' dia':' dias'); }
+function site_url($p=''){ return 'http://localhost:8099'.$p; }
+function wp_die($msg,$titulo='',$args=[]){ if(PHP_SAPI==='cli') throw new Exception($msg); http_response_code($args['response']??500); echo '<!doctype html><html><body><div id="error-page"><p>'.htmlspecialchars($msg).'</p></div></body></html>'; exit; }
+function get_comments($a){ return $GLOBALS['comentarios'] ?? []; }
+function _com($nome,$texto,$h){ return (object)['comment_author'=>$nome,'comment_content'=>$texto,'comment_date_gmt'=>gmdate('Y-m-d H:i:s',time()-$h*3600)]; }
+$GLOBALS['comentarios']=[
+ _com('Ana Paula','Ouço a Bossa & Violão todo dia no trabalho. Obrigada por esse carinho em forma de rádio!',2),
+ _com('Roberto S.','Que alegria ouvir Tonico & Tinoco na Viola Caipira, me lembrou meu pai. Pedido: Cascatinha & Inhana!',30),
+ _com('Juliana M.','Baixei o Contos da Cidade Baixa e li numa sentada só. Mais livros assim, por favor!',31),
+ _com('Carlos Eduardo','Descobri a estação de Jazz por acaso e agora não largo mais. Parabéns pela curadoria!',24*8),
+ _com('Dona Marta','Minha neta me ensinou a ouvir pelo celular. Ouço a Samba & Choro de manhã cedo.',24*10),
+ _com('élio Ramos','Que saudade de ouvir rádio assim, sem pressa nenhuma.',24*12),
+ _com('Beatriz','Lindo trabalho! Votuporanga merece.',24*20),
+];
