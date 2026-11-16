@@ -43,7 +43,7 @@
 | B-10 | Campos da Estação para a Home: "Ouvintes" (número) e escolha da descoberta | 3B-1 | ✅ | Criados por código em `inc/acf-campos.php` (campo "Ouvintes" na estação; aba "Estações em destaque" na Home) |
 | B-11 | API do Zeno.fm para contagem de ouvintes | 3B | ✅ investigado | Não há API pública documentada de ouvintes (só a Metadata API, de música; "ouvintes atuais" só no painel web; a API privada `api.zeno.fm` exige pedir acesso). **Caminho:** campo manual "Ouvintes", que no futuro um script (ou a API, se liberada) pode atualizar |
 | B-12 | Lógica "Descoberta do editor" (sorteio diário fora do top 2, ou estação fixada) | 3B-1 | ✅ | Em `inc/home.php`; coberta por `tests/harness/teste-home.php` (rotação ao longo de um ano) |
-| B-13 | Formato de post (Texto, Poesia, Vídeo, Música, Tirinha, Imagem, Citação) | 4 | ⏳ | Hoje nenhum existe. Os templates devem funcionar sem o campo (cai em "Texto") e aceitar formatos novos depois. ACF a criar em conjunto |
+| B-13 | Formato de post (Texto, Poesia, Vídeo, Música, Podcast, Tirinha, Imagem, Citação) | 4 | ⏳ | Hoje nenhum existe. Os templates devem funcionar sem o campo (cai em "Texto") e aceitar formatos novos depois. ACF a criar em conjunto |
 | B-14 | Campos de autor: papel, "escreve desde", citação favorita, origem da citação, foto, exibir no Sobre + ordem | 4–5 | ⏳ | Criar em conjunto |
 | B-15 | Podcasts na Home como subcategorias da categoria Podcasts | 3B-2 | 💡 | A seção de podcasts ainda não foi totalmente pensada: por ora Podcasts é só uma categoria do Blog. A seção da Home fica escondida até existirem subcategorias |
 | B-16 | Textos da Home editáveis direto na página Home (ACF na própria página) | 3B-1 | ✅ | Aba por seção; campo vazio mostra o texto provisório do mockup |
@@ -87,8 +87,8 @@
 
 ## Decisões tomadas
 
-- Fase 4: filtros do Blog são LINKS (`?categoria=&autor=&ordem=`), não formulários, para a navegação persistente não parar o áudio; 6 posts por página; categorias e tags usam a mesma listagem; autor em `/autor/nome/`; "Carregar mais posts" na página do autor.
-- Fase 4: formato do post = campo ACF "Formato" (Texto, Poesia, Vídeo, Música, Tirinha, Imagem, Citação); novos formatos = 1 linha em `rac_formatos_post()` + campos + um arquivo em `template-parts/formatos/`. Música = player do Spotify incorporado (campos país, nome, estilo, link) com título automático "Descoberta Musical: nome - país - estilo"; países com bandeira em imagem (funciona no Windows). Tirinha = imagem pelo editor + campos opcionais de direitos/referência. Compartilhar = WhatsApp, Facebook, X e Copiar link (botões grandes, com texto) + menu nativo do celular quando existir. Comentários = nativos do WordPress, enviados sem recarregar.
+- Fase 4: filtros do Blog são LINKS (`?categoria=&autor=&ordem=`), não formulários, para a navegação persistente não parar o áudio; 9 posts por página; categorias e tags usam a mesma listagem; autor em `/autor/nome/`; "Carregar mais posts" na página do autor.
+- Fase 4: formato do post = campo ACF "Formato" (Texto, Poesia, Vídeo, Música, Podcast, Tirinha, Imagem, Citação); novos formatos = 1 linha em `rac_formatos_post()` + campos + um arquivo em `template-parts/formatos/`. Música = player do Spotify incorporado (campos país, nome, estilo, link) com título automático "Descoberta Musical: nome - país - estilo"; países com bandeira em imagem (funciona no Windows). Tirinha = imagem pelo editor + campos opcionais de direitos/referência. Compartilhar = WhatsApp, Facebook, X e Copiar link (botões grandes, com texto) + menu nativo do celular quando existir. Comentários = nativos do WordPress, enviados sem recarregar.
 - Sem headless: tema filho do Kadence com templates PHP.
 - `#primary` é o seletor da navegação persistente; todo template terá exatamente um `<main id="primary">`. O plugin não é alterado para isso.
 - Textos do rodapé são globais; textos da Home são editados na própria página Home.

@@ -5,12 +5,12 @@
  * Os filtros são LINKS com parâmetros na própria URL (?categoria=&autor=&ordem=),
  * não formulários: assim a busca é compartilhável e, como são links, a navegação
  * persistente do player continua valendo (um formulário recarregaria a página e
- * cortaria o áudio). 6 posts por página, no desktop e no mobile.
+ * cortaria o áudio). 9 posts por página (3 linhas de 3 no desktop), no desktop e no mobile.
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'RAC_POSTS_POR_PAGINA', 6 );
+define( 'RAC_POSTS_POR_PAGINA', 9 );
 
 /** Opções de ordenação. */
 function rac_ordens() {

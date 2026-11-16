@@ -18,6 +18,7 @@ function rac_formatos_post() {
         'poesia'  => array( 'rotulo' => 'Poesia', 'badge' => 'Poesia' ),
         'video'   => array( 'rotulo' => 'Vídeo', 'badge' => 'Vídeo' ),
         'musica'  => array( 'rotulo' => 'Música / Artista', 'badge' => 'Música' ),
+        'podcast' => array( 'rotulo' => 'Podcast / Episódio', 'badge' => 'Podcast' ),
         'tirinha' => array( 'rotulo' => 'Tirinha do dia', 'badge' => 'Tirinha' ),
         'imagem'  => array( 'rotulo' => 'Imagem', 'badge' => 'Imagem' ),
         'citacao' => array( 'rotulo' => 'Citação', 'badge' => 'Citação' ),
@@ -75,6 +76,10 @@ function rac_campos_formatos() {
             array( 'key' => 'field_rac_artista_instagram', 'label' => 'Instagram do artista (opcional)', 'name' => 'artista_instagram', 'type' => 'url', 'conditional_logic' => $quando( 'musica' ) ),
             array( 'key' => 'field_rac_artista_estacao', 'label' => 'Toca na estação (opcional)', 'name' => 'artista_estacao', 'type' => 'post_object', 'post_type' => array( 'estacao' ), 'return_format' => 'id', 'allow_null' => 1, 'ui' => 1, 'conditional_logic' => $quando( 'musica' ) ),
             array( 'key' => 'field_rac_artista_titulo_auto', 'label' => 'Gerar o título automaticamente', 'name' => 'artista_titulo_auto', 'type' => 'true_false', 'default_value' => 1, 'ui' => 1, 'message' => '', 'instructions' => 'Título: "Descoberta Musical: Nome - País - Gênero". Desmarque para escrever o seu.', 'conditional_logic' => $quando( 'musica' ) ),
+
+            // Podcast (o texto do editor vira as notas do episódio)
+            array( 'key' => 'field_rac_podcast_link', 'label' => 'Link do episódio', 'name' => 'podcast_link', 'type' => 'url', 'instructions' => 'Link do episódio (ou do programa) no Spotify. Também aceita YouTube e SoundCloud.', 'conditional_logic' => $quando( 'podcast' ) ),
+            array( 'key' => 'field_rac_podcast_episodio', 'label' => 'Identificação do episódio (opcional)', 'name' => 'podcast_episodio', 'type' => 'text', 'instructions' => 'Ex.: Episódio 12 · 42 min. Aparece acima do player.', 'conditional_logic' => $quando( 'podcast' ) ),
 
             // Tirinha (as imagens e o texto vão no editor, na ordem que você quiser)
             array( 'key' => 'field_rac_tirinha_numero', 'label' => 'Número da tirinha (opcional)', 'name' => 'tirinha_numero', 'type' => 'number', 'min' => 1, 'step' => 1, 'instructions' => 'Vazio: o número é calculado pela ordem de publicação. As imagens e o texto vão no editor, na ordem que quiser.', 'conditional_logic' => $quando( 'tirinha' ) ),

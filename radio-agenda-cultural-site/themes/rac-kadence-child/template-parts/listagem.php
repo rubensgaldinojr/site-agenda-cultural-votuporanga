@@ -1,7 +1,7 @@
 <?php
 /**
  * Listagem de posts (Blog.dc.html): serve a página Blog, as categorias (inclusive
- * Podcasts) e as tags. 6 posts por página; filtros por links (Categoria, Autor(a),
+ * Podcasts) e as tags. 9 posts por página; filtros por links (Categoria, Autor(a),
  * Ordenar por), etiquetas removíveis e paginação numerada.
  */
 if ( ! defined( 'ABSPATH' ) ) exit;

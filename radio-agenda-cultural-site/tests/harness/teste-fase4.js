@@ -25,13 +25,13 @@ const visivel = (page, sel) => page.evaluate((s) => { const e = document.querySe
   await page.goto(B + '/f4/blog/');
   await page.evaluate(() => { window.__marcador = 'mesma-pagina'; window.__audio = document.getElementById('racr-audio'); });
   ok((await txt(page, '.rac-blog-topo h1')) === 'Crônicas, descobertas e boas conversas', 'Blog: título padrão do topo');
-  ok((await cnt(page, '.rac-blog-grade .rac-card-post')) === 6 && (await txt(page, '[data-rac="contagem-posts"]')) === '14 posts', 'Blog: 6 posts por página e contagem "14 posts" (o rascunho não conta)');
+  ok((await cnt(page, '.rac-blog-grade .rac-card-post')) === 9 && (await txt(page, '[data-rac="contagem-posts"]')) === '15 posts', 'Blog: 9 posts por página e contagem "15 posts" (o rascunho não conta)');
   ok(await page.evaluate(() => getComputedStyle(document.querySelector('.rac-blog-grade')).gridTemplateColumns.split(' ').length === 3), 'Blog: grade de 3 colunas no desktop');
   const f0 = await page.evaluate(() => [...document.querySelectorAll('.rac-filtro')].map(d => ({ r: d.querySelector('.rac-filtro__rotulo').textContent, v: d.querySelector('.rac-filtro__valor').textContent, larg: Math.round(d.querySelector('summary').getBoundingClientRect().width), alt: Math.round(d.querySelector('summary').getBoundingClientRect().height) })));
   ok(f0.length === 3 && f0[0].r === 'Categoria' && f0[0].v === 'Todas as categorias' && f0[1].r === 'Autor(a)' && f0[1].v === 'Todos' && f0[2].r === 'Ordenar por' && f0[2].v === 'Mais recentes primeiro' && f0[0].larg === 230 && f0[0].alt === 44, 'filtros: Categoria, Autor(a) e Ordenar por (230×44 px), com os valores padrão');
   ok(!(await visivel(page, '.rac-filtros__limpar')) && (await cnt(page, '.rac-etiqueta-filtro')) === 0, 'sem filtros ativos: sem "Limpar filtros" e sem etiquetas');
   const pag = await page.evaluate(() => ({ n: [...document.querySelectorAll('.rac-paginacao__n')].map(a => a.textContent), ativa: document.querySelector('.rac-paginacao__n.is-ativa').textContent, prox: document.querySelector('a.rac-paginacao__seta[aria-label="Próxima página"]')?.getAttribute('href'), antOff: document.querySelector('.rac-paginacao__seta.is-off')?.textContent, circ: Math.round(document.querySelector('.rac-paginacao__n').getBoundingClientRect().width) }));
-  ok(pag.n.join() === '1,2,3' && pag.ativa === '1' && pag.prox === '/f4/blog/page/2/' && pag.antOff === '‹' && pag.circ === 38, 'paginação: 1, 2, 3 (a 1 ativa), "‹" apagado, "›" para a página 2, círculos de 38px');
+  ok(pag.n.join() === '1,2' && pag.ativa === '1' && pag.prox === '/f4/blog/page/2/' && pag.antOff === '‹' && pag.circ === 38, 'paginação: 1, 2 (a 1 ativa), "‹" apagado, "›" para a página 2, círculos de 38px');
   await page.screenshot({ path: 'capturas/f4-blog-d.png', fullPage: true });
 
   // seletor de categoria (links) e áudio contínuo
@@ -59,7 +59,7 @@ const visivel = (page, sel) => page.evaluate((s) => { const e = document.querySe
   ok((await txt(page, '[data-rac="contagem-posts"]')) === '5 posts' && (await txts(page, '.rac-etiqueta-filtro')).join() === 'Igor Bastos ✕', 'remover a etiqueta "Poesia" mantém só o autor (5 posts)');
   await page.click('.rac-filtros__limpar');
   await esperar(page, () => location.search === '');
-  ok((await txt(page, '[data-rac="contagem-posts"]')) === '14 posts', '"Limpar filtros" volta aos 14 posts');
+  ok((await txt(page, '[data-rac="contagem-posts"]')) === '15 posts', '"Limpar filtros" volta aos 15 posts');
 
   // ordenação
   await page.click('.rac-filtro--direita summary');
@@ -81,9 +81,8 @@ const visivel = (page, sel) => page.evaluate((s) => { const e = document.querySe
 
   // paginação
   await page.goto(B + '/f4/blog/page/2/');
-  ok((await cnt(page, '.rac-blog-grade .rac-card-post')) === 6 && (await txt(page, '.rac-paginacao__n.is-ativa')) === '2', 'página 2: 6 posts, o 2 ativo');
-  await page.goto(B + '/f4/blog/page/3/');
-  ok((await cnt(page, '.rac-blog-grade .rac-card-post')) === 2 && await page.evaluate(() => document.querySelectorAll('.rac-paginacao__seta.is-off').length === 1 && document.querySelector('.rac-paginacao__seta.is-off').textContent === '›'), 'página 3: 2 posts e "›" apagado');
+  ok((await cnt(page, '.rac-blog-grade .rac-card-post')) === 6 && (await txt(page, '.rac-paginacao__n.is-ativa')) === '2', 'página 2: os 6 posts restantes, o 2 ativo');
+  ok(await page.evaluate(() => document.querySelectorAll('.rac-paginacao__seta.is-off').length === 1 && document.querySelector('.rac-paginacao__seta.is-off').textContent === '›' && document.querySelector('a.rac-paginacao__seta').getAttribute('href') === '/f4/blog/'), 'última página: "›" apagado e "‹" volta para a primeira');
   await page.goto(B + '/f4/blog/?ordem=titulo');
   ok(await page.evaluate(() => document.querySelector('.rac-paginacao__n:nth-of-type(2)').getAttribute('href') === '/f4/blog/page/2/?ordem=titulo'), 'a paginação mantém os filtros na URL');
   await page.click('.rac-paginacao__n:nth-of-type(2)');
@@ -92,7 +91,7 @@ const visivel = (page, sel) => page.evaluate((s) => { const e = document.querySe
 
   // Blog como página comum (page-blog.php)
   await page.goto(B + '/f4/blogp/');
-  ok((await cnt(page, '.rac-blog-grade .rac-card-post')) === 6 && (await txt(page, '[data-rac="contagem-posts"]')) === '14 posts', 'Blog como página comum (page-blog.php): mesma listagem, 14 posts');
+  ok((await cnt(page, '.rac-blog-grade .rac-card-post')) === 9 && (await txt(page, '[data-rac="contagem-posts"]')) === '15 posts', 'Blog como página comum (page-blog.php): mesma listagem, 15 posts');
   ok(await page.evaluate(() => [...document.querySelectorAll('.rac-filtro__lista a')].every(a => a.getAttribute('href').startsWith('/f4/blogp/')) && document.querySelector('.rac-paginacao__n:nth-of-type(2)').getAttribute('href') === '/f4/blogp/page/2/'), 'filtros e paginação continuam na própria página');
   await page.goto(B + '/f4/blogp/?autor=marina-alves&categoria=cronicas');
   ok((await txt(page, '[data-rac="contagem-posts"]')) === '2 posts', 'page-blog.php: autor + categoria combinados (Marina + Crônicas = 2 posts)');
@@ -106,7 +105,7 @@ const visivel = (page, sel) => page.evaluate((s) => { const e = document.querySe
   await page.goto(B + '/f4/categoria/cronicas/?autor=marina-alves');
   ok((await txt(page, '[data-rac="contagem-posts"]')) === '2 posts' && (await txts(page, '.rac-etiqueta-filtro')).join() === 'Marina Alves ✕', 'categoria + autor: 2 posts e uma única etiqueta (a categoria é a própria página)');
   await page.goto(B + '/f4/categoria/podcasts/');
-  ok((await txt(page, '.rac-blog-topo .rac-eyebrow')) === 'Podcasts' && /Conversas, entrevistas/.test(await txt(page, '.rac-blog-topo p')) && (await cnt(page, '.rac-card-post')) === 1, 'categoria Podcasts: eyebrow "Podcasts", texto de apoio padrão e o episódio');
+  ok((await txt(page, '.rac-blog-topo .rac-eyebrow')) === 'Podcasts' && /Conversas, entrevistas/.test(await txt(page, '.rac-blog-topo p')) && (await cnt(page, '.rac-card-post')) === 2, 'categoria Podcasts: eyebrow "Podcasts", texto de apoio padrão e os 2 episódios');
   await page.goto(B + '/f4/tag/memoria/');
   ok((await txt(page, '.rac-blog-topo .rac-eyebrow')) === 'Tag' && (await txt(page, '.rac-blog-topo h1')) === '#Memória' && (await txt(page, '[data-rac="contagem-posts"]')) === '3 posts', 'tag: eyebrow "Tag", título "#Memória" e 3 posts');
 
@@ -213,6 +212,14 @@ const visivel = (page, sel) => page.evaluate((s) => { const e = document.querySe
   ok(mu.btn === 'Toca na estação Blues & Jazz Clube|/estacao/100/' && mu.insta === 'https://instagram.com/fulano', 'música: botões "Toca na estação…" e "Instagram do artista"');
   ok(await page.evaluate(() => document.querySelector('.rac-bandeira').naturalWidth > 0), 'a bandeira carrega (arquivo SVG existe)');
   await page.screenshot({ path: 'capturas/f4-p604-d.png', fullPage: true });
+
+  /* ================= PODCAST ================= */
+  await page.goto(B + '/f4/post-616/');
+  const pc = await page.evaluate(() => ({ selo: document.querySelector('.rac-post__selo').textContent, ep: document.querySelector('.rac-artista--podcast .rac-artista__nome').textContent, sp: document.querySelector('.rac-spotify').getAttribute('src'), alt: document.querySelector('.rac-spotify').getAttribute('height'), aviso: !!document.querySelector('.rac-artista--podcast [data-rac-aviso-radio]'), bandeira: !!document.querySelector('.rac-bandeira'), acoes: !!document.querySelector('.rac-artista__acoes'), notas: document.querySelector('.rac-conteudo-post').textContent }));
+  ok(pc.selo === 'Podcast' && pc.ep === 'Episódio 12 · 42 min', 'podcast: selo "Podcast" e identificação do episódio');
+  ok(pc.sp === 'https://open.spotify.com/embed/episode/7makk4oTQel546B0PZlDM5?utm_source=generator' && pc.alt === '152', 'podcast: link do episódio no Spotify vira o player compacto (152px)');
+  ok(pc.aviso && !pc.bandeira && !pc.acoes && /Notas do episódio/.test(pc.notas), 'podcast: aviso da rádio, sem bandeira nem botões de artista; o texto do editor são as notas');
+  await page.screenshot({ path: 'capturas/f4-p616-d.png', fullPage: true });
 
   /* ================= TIRINHA ================= */
   await page.goto(B + '/f4/post-605/');
@@ -373,7 +380,7 @@ const visivel = (page, sel) => page.evaluate((s) => { const e = document.querySe
   await page.evaluate(() => document.documentElement.setAttribute('data-theme', 'light'));
 
   await page.setViewportSize({ width: 390, height: 800 });
-  for (const u of ['/f4/post-601/', '/f4/post-602/', '/f4/post-603/', '/f4/post-604/', '/f4/post-605/', '/f4/post-607/', '/f4/post-608/', '/f4/autor/marina-alves/', '/f4/categoria/cronicas/']) {
+  for (const u of ['/f4/post-601/', '/f4/post-602/', '/f4/post-603/', '/f4/post-604/', '/f4/post-605/', '/f4/post-607/', '/f4/post-608/', '/f4/post-616/', '/f4/autor/marina-alves/', '/f4/categoria/cronicas/']) {
     await page.goto(B + u);
     ok(await semRolagemLateral(page), 'mobile: sem rolagem horizontal em ' + u);
   }

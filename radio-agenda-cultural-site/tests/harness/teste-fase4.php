@@ -23,7 +23,7 @@ ok(!$semArquivo, 'todo país da lista tem o arquivo da bandeira' . ($semArquivo 
 ok(rac_bandeira_html('xx') === '' && strpos(rac_bandeira_html('BR'), '/assets/flags/br.svg') !== false, 'bandeira: código inexistente não gera imagem; maiúsculas aceitas');
 
 /* ---- formatos ---- */
-ok(array_keys(rac_formatos_post()) === ['texto', 'poesia', 'video', 'musica', 'tirinha', 'imagem', 'citacao'], 'os 7 formatos, na ordem do menu do editor');
+ok(array_keys(rac_formatos_post()) === ['texto', 'poesia', 'video', 'musica', 'podcast', 'tirinha', 'imagem', 'citacao'], 'os 8 formatos, na ordem do menu do editor');
 ok(rac_formato_do_post(601) === 'texto' && rac_formato_do_post(604) === 'musica' && rac_formato_do_post(9999) === 'texto', 'formato do post; sem formato = texto');
 $GLOBALS['fields'][601]['formato'] = 'inexistente';
 ok(rac_formato_do_post(601) === 'texto', 'formato desconhecido cai em "texto"');
@@ -39,7 +39,7 @@ $nomes = []; $keys = [];
 $colhe = function ($campos) use (&$colhe, &$nomes, &$keys) { foreach ($campos as $c) { $nomes[] = $c['name'] ?? ''; $keys[] = $c['key']; if (!empty($c['sub_fields'])) $colhe($c['sub_fields']); } };
 foreach ($grupos as $g) $colhe($g['fields']);
 ok(count($keys) === count(array_unique($keys)), 'nenhuma chave de campo repetida');
-foreach (['formato', 'video_url', 'video_capitulos', 'artista_nome', 'artista_pais', 'artista_genero', 'artista_link', 'artista_instagram', 'artista_estacao', 'artista_titulo_auto', 'tirinha_autor', 'tirinha_ano', 'tirinha_fonte', 'tirinha_numero', 'imagem_credito', 'citacao_texto', 'citacao_autor', 'citacao_obra', 'blog_titulo', 'blog_texto', 'autor_foto', 'autor_papel', 'autor_desde', 'autor_citacao', 'autor_citacao_de'] as $n) {
+foreach (['formato', 'video_url', 'video_capitulos', 'artista_nome', 'artista_pais', 'artista_genero', 'artista_link', 'artista_instagram', 'artista_estacao', 'artista_titulo_auto', 'podcast_link', 'podcast_episodio', 'tirinha_autor', 'tirinha_ano', 'tirinha_fonte', 'tirinha_numero', 'imagem_credito', 'citacao_texto', 'citacao_autor', 'citacao_obra', 'blog_titulo', 'blog_texto', 'autor_foto', 'autor_papel', 'autor_desde', 'autor_citacao', 'autor_citacao_de'] as $n) {
     ok(in_array($n, $nomes, true), "campo ACF registrado: $n");
 }
 $cond = [];
@@ -59,6 +59,10 @@ ok(rac_src_video(['plataforma' => 'vimeo', 'id' => '5'], 30, true) === 'https://
 ok(rac_segundos('02:15') === 135 && rac_segundos('1:05:30') === 3930 && rac_segundos('45') === 45 && rac_segundos('00:00') === 0, 'tempo "mm:ss", "h:mm:ss" e "ss" para segundos');
 $cap = rac_capitulos("00:00 | Abertura\n  02:15 - A oficina  \n1:05:30 – Despedida\nlinha sem tempo\n\n3:00|");
 ok(count($cap) === 3 && $cap[1] === ['seg' => 135, 'tempo' => '02:15', 'nome' => 'A oficina'] && $cap[2]['seg'] === 3930, 'capítulos: aceita "|", "-" e "–"; ignora linhas sem tempo ou sem título');
+
+/* ---- podcast ---- */
+ok(rac_formato_do_post(616) === 'podcast' && rac_formatos_post()['podcast']['badge'] === 'Podcast', 'formato Podcast registrado, com selo "Podcast"');
+ok(strpos(rac_embed_artista_html(rac_campo('podcast_link', 616)), 'embed/episode/7makk4oTQel546B0PZlDM5') !== false, 'link do episódio do Spotify vira player incorporado');
 
 /* ---- player do artista ---- */
 foreach (['artist' => 352, 'album' => 352, 'playlist' => 352, 'track' => 152, 'episode' => 152, 'show' => 352] as $tipo => $altura) {
@@ -152,14 +156,14 @@ ok($pag['total'] === 3 && $pag['atual'] === 2 && $pag['anterior'] === '/f4/blog/
 $q = new WP_Query(); $q->principal = true; $q->ctx = 'home';
 $_GET = ['autor' => 'marina-alves', 'categoria' => 'cronicas', 'ordem' => 'antigos'];
 rac_ajustar_consulta($q);
-ok($q->get('posts_per_page') === 6 && $q->get('author_name') === 'marina-alves' && $q->get('category_name') === 'cronicas' && $q->get('order') === 'ASC' && $q->get('ignore_sticky_posts') === true, 'pre_get_posts: 6 por página, autor, categoria e ordem aplicados');
+ok($q->get('posts_per_page') === 9 && $q->get('author_name') === 'marina-alves' && $q->get('category_name') === 'cronicas' && $q->get('order') === 'ASC' && $q->get('ignore_sticky_posts') === true, 'pre_get_posts: 9 por página, autor, categoria e ordem aplicados');
 $q = new WP_Query(); $q->principal = true; $q->ctx = 'category'; $q->q = ['category_name' => 'poesia'];
 rac_ajustar_consulta($q);
 ok($q->get('category_name') === 'poesia', 'na página de categoria, o filtro de categoria da URL não sobrescreve a própria categoria');
 $q = new WP_Query(); $q->principal = true; $q->ctx = 'author';
 $_GET = ['autor' => 'outro', 'ordem' => 'titulo'];
 rac_ajustar_consulta($q);
-ok($q->get('posts_per_page') === 6 && $q->get('author_name') === '' && $q->get('orderby') === '', 'página do autor: só 6 por página (filtros do blog não se aplicam)');
+ok($q->get('posts_per_page') === 9 && $q->get('author_name') === '' && $q->get('orderby') === '', 'página do autor: só 9 por página (filtros do blog não se aplicam)');
 $q = new WP_Query(); $q->principal = false; $q->ctx = 'home';
 rac_ajustar_consulta($q);
 ok($q->get('posts_per_page') === '', 'consultas secundárias não são alteradas');

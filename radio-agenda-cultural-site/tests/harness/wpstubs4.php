@@ -93,6 +93,7 @@ $GLOBALS['P'] = [
  608=>['t'=>'A frase que ficou','a'=>2,'c'=>[13],'g'=>[],'d'=>'2026-10-14 11:00:00','thumb'=>'','cap'=>'','ex'=>'','html'=>'<p>Algumas frases a gente carrega pela vida.</p>','f'=>['formato'=>'citacao','citacao_texto'=>'A música é o silêncio que fala.','citacao_autor'=>'Autor da Frase','citacao_obra'=>'Livro Qualquer, 1999']],
 ];
 for($k=609;$k<=614;$k++){ $GLOBALS['P'][$k]=['t'=>'Texto de apoio número '.($k-608),'a'=>1+($k%3),'c'=>[$k%2?11:13],'g'=>$k%3?[23]:[],'d'=>'2026-10-'.str_pad(12-($k-609)*2,2,'0',STR_PAD_LEFT).' 10:00:00','thumb'=>$k%2?'/h/foto1.svg':'','cap'=>'','ex'=>'Resumo do texto '.($k-608).'.','html'=>$lorem,'f'=>['formato'=>'texto']]; }
+$GLOBALS['P'][616]=['t'=>'Episódio 12: histórias do rádio de bairro','a'=>3,'c'=>[14],'g'=>[],'d'=>'2026-10-30 08:00:00','thumb'=>'','cap'=>'','ex'=>'Resumo do episódio.','html'=>'<p>Notas do episódio: tudo sobre o rádio de bairro.</p>','f'=>['formato'=>'podcast','podcast_link'=>'https://open.spotify.com/episode/7makk4oTQel546B0PZlDM5?si=x','podcast_episodio'=>'Episódio 12 · 42 min']];
 $GLOBALS['P'][615]=['t'=>'Rascunho que não aparece','a'=>1,'c'=>[11],'g'=>[],'d'=>'2026-10-29 10:00:00','thumb'=>'','cap'=>'','ex'=>'','html'=>'<p>x</p>','f'=>['formato'=>'texto'],'status'=>'draft'];
 foreach($GLOBALS['P'] as $id=>$p){ $GLOBALS['fields'][$id]=$p['f']; }
 foreach($GLOBALS['usuarios'] as $uid=>$u){ $GLOBALS['fields']['user_'.$uid]=$u['campos']; }

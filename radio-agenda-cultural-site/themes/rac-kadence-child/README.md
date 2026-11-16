@@ -1,6 +1,6 @@
 # Tema filho do Kadence — Rádio Agenda Cultural
 
-Versão 0.6.0 (Fases 1, 2, 3A, 3B-1, 3B-2 e 4). Requer o tema **Kadence** instalado (é o tema pai).
+Versão 0.6.1 (Fases 1, 2, 3A, 3B-1, 3B-2 e 4). Requer o tema **Kadence** instalado (é o tema pai).
 
 ## Instalação (site de desenvolvimento)
 
@@ -130,15 +130,16 @@ Podcasts (só se houver séries) e Recados dos ouvintes.
 
 - **Blog** (`home.php` quando o Blog é a "Página de posts"; `page-blog.php` quando é uma página comum),
   **categorias** (`category.php`, inclusive Podcasts) e **tags** (`tag.php`) usam a mesma listagem
-  (`template-parts/listagem.php`): 6 posts por página, filtros Categoria / Autor(a) / Ordenar por,
+  (`template-parts/listagem.php`): 9 posts por página, filtros Categoria / Autor(a) / Ordenar por,
   etiquetas removíveis, "Limpar filtros" e paginação numerada. Os filtros são **links** com
   parâmetros na URL (`?categoria=&autor=&ordem=`): compartilháveis e sem recarregar (o áudio não para).
   No celular os filtros ficam atrás do botão "Filtros".
 - **Página do autor** (`author.php`, endereço `/autor/nome/`): foto, papel, "escreve desde", bio,
   balão "Citação favorita" e "Posts de Nome" com "Carregar mais posts". Os dados vêm do perfil do
   usuário (grupo **"Página do autor"** do ACF); sem foto usa o Gravatar e, por fim, a inicial.
-- **Post** (`single.php`) com **7 formatos** (campo ACF "Formato do post", um arquivo por formato em
+- **Post** (`single.php`) com **8 formatos** (campo ACF "Formato do post", um arquivo por formato em
   `template-parts/formatos/`): Texto/Crônica, Poesia, Vídeo (YouTube/Vimeo + capítulos clicáveis),
+  Podcast (player do Spotify/YouTube/SoundCloud + número do episódio),
   Música/Artista (Spotify incorporado, país com bandeira, estilo, estação em que toca; título
   automático "Descoberta Musical: nome - país - estilo"), Tirinha (imagem pelo editor, direitos
   opcionais, anterior/próxima), Imagem e Citação. Todos têm trilha, resumo, autoria, tempo de leitura,
