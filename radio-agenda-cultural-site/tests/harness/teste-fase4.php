@@ -187,6 +187,33 @@ $_GET = []; ok(!rac_comentarios_novos_primeiro(), 'ordem padrão: mais antigos p
 $_GET = ['comentarios' => 'novos']; ok(rac_comentarios_novos_primeiro() && rac_args_comentarios(['order' => 'ASC'])['order'] === 'DESC', '?comentarios=novos inverte a ordem');
 $_GET = [];
 
+/* ---- endereço do autor (nicename) ---- */
+$GLOBALS['usuarios'][4] = ['login' => 'rubens.galdino.jr@gmail.com', 'slug' => 'rubens-galdino-jrgmail-com', 'nome' => 'Rubens', 'bio' => '', 'meta' => [], 'avatar' => '', 'campos' => []];
+ob_start(); rac_campo_nicename(get_userdata(4)); $html = ob_get_clean();
+ok(strpos($html, 'name="rac_nicename"') !== false && strpos($html, 'value="rubens-galdino-jrgmail-com"') !== false && strpos($html, 'parece vir de um e-mail') !== false, 'perfil: campo "Endereço da página do autor" com o valor atual e aviso quando o endereço parece vir de e-mail');
+ob_start(); rac_campo_nicename(get_userdata(1)); $html = ob_get_clean();
+ok(strpos($html, 'parece vir de um e-mail') === false, 'sem aviso quando o endereço já é um nome');
+$_POST = ['rac_nicename' => 'Rubens Galdino!', 'rac_nicename_nonce' => 'n-rac_nicename_4'];
+rac_salvar_nicename(4);
+ok($GLOBALS['usuarios'][4]['slug'] === 'rubens-galdino' && count($GLOBALS['usuario_atualizado']) === 1, 'salvar: o texto vira um endereço válido (minúsculas, hífens, sem símbolos)');
+ok(get_user_by('slug', 'rubens-galdino')->ID === 4 && get_author_posts_url(4) === '/f4/autor/rubens-galdino/', 'o endereço público da página do autor passa a usar o novo texto');
+$GLOBALS['usuario_atualizado'] = [];
+$_POST = ['rac_nicename' => 'marina-alves', 'rac_nicename_nonce' => 'n-rac_nicename_4']; rac_salvar_nicename(4);
+ok(!$GLOBALS['usuario_atualizado'] && $GLOBALS['usuarios'][4]['slug'] === 'rubens-galdino', 'não troca para o endereço de OUTRA pessoa');
+$_POST = ['rac_nicename' => 'x-hack', 'rac_nicename_nonce' => 'errado']; rac_salvar_nicename(4);
+ok(!$GLOBALS['usuario_atualizado'], 'sem o código de segurança (nonce) correto, nada é salvo');
+$GLOBALS['pode'] = false; $_POST = ['rac_nicename' => 'x-hack', 'rac_nicename_nonce' => 'n-rac_nicename_4']; rac_salvar_nicename(4); $GLOBALS['pode'] = true;
+ok(!$GLOBALS['usuario_atualizado'], 'sem permissão para editar aquele usuário, nada é salvo');
+$_POST = ['rac_nicename' => '   ', 'rac_nicename_nonce' => 'n-rac_nicename_4']; rac_salvar_nicename(4);
+ok(!$GLOBALS['usuario_atualizado'], 'campo vazio não apaga o endereço');
+$_POST = [];
+
+/* ---- regra de paginação do Blog sob /blog/ ---- */
+$GLOBALS['regras'] = []; rac_regra_paginacao_blog();
+ok(count($GLOBALS['regras']) === 1 && $GLOBALS['regras'][0][0] === '^blog/page/([0-9]{1,})/?$' && $GLOBALS['regras'][0][1] === 'index.php?page_id=2000&paged=$matches[1]' && $GLOBALS['regras'][0][2] === 'top', 'regra "blog/page/N" com prioridade (evita que vire um post chamado "page")');
+$GLOBALS['sem_pagina_posts'] = true; $GLOBALS['regras'] = []; rac_regra_paginacao_blog(); unset($GLOBALS['sem_pagina_posts']);
+ok($GLOBALS['regras'] === [], 'sem "Página de posts" configurada, nenhuma regra é criada');
+
 /* ---- anti-spam: comentários dos posts ---- */
 $dados = ['comment_post_ID' => 601, 'comment_content' => 'oi'];
 $_POST = [];

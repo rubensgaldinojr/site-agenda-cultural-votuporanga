@@ -1,6 +1,6 @@
 # Tema filho do Kadence — Rádio Agenda Cultural
 
-Versão 0.6.1 (Fases 1, 2, 3A, 3B-1, 3B-2 e 4). Requer o tema **Kadence** instalado (é o tema pai).
+Versão 0.6.2 (Fases 1, 2, 3A, 3B-1, 3B-2 e 4). Requer o tema **Kadence** instalado (é o tema pai).
 
 ## Instalação (site de desenvolvimento)
 
@@ -154,6 +154,22 @@ Podcasts (só se houver séries) e Recados dos ouvintes.
   rádio", porque o YouTube/Spotify tocam por conta própria e os sons se misturariam.
 - **Bandeiras:** `assets/flags/*.svg` (flag-icons, licença MIT, ver `LICENSE`); lista de países em
   português em `inc/paises.php`.
+
+### Ajustes depois do teste da Fase 4 (0.6.2)
+
+- **Barra do player:** linha laranja de 2px no topo e sombra mais forte (contraste nos dois temas); no mobile a barra tem 74px
+  (play de 48px, "Estações" de 44px).
+- **Card de estação com imagem** (página de Estações e destaques da Home): o card inteiro é um link para a página da
+  estação (o "Ver estação" é esticado por CSS); **só o botão de play toca**. Card tocando: contorno laranja de 4px com brilho e
+  selo "Tocando" laranja. No mobile o play tem 44px. Os cards compactos da lista "Todas as estações" continuam tocando ao clicar.
+- **Botões x Kadence:** o tema pai pinta todo `<button>` em hover/foco (fundo azul e sombra). `base.css` (bloco "BOTÕES x KADENCE")
+  neutraliza isso; a chave claro/escuro não fica mais "selecionada" depois do clique.
+- **Home no mobile:** o card do fundador e os 3 destaques (Estações, Literatura, Blog) viram **4 cards em carrossel** (rolagem
+  lateral com encaixe, sem JS). No desktop nada mudou.
+- **Endereço da página do autor:** no perfil do usuário há o campo "Endereço da página do autor" (troca o `user_nicename`, que o
+  WordPress monta a partir do login e, se o login é um e-mail, expõe o e-mail na URL).
+- **/blog/ nos posts:** em Configurações → Links permanentes, estrutura personalizada `/blog/%postname%/`. O tema registra a regra
+  `blog/page/N` para a paginação do Blog continuar funcionando.
 
 ## Regras que não podem ser quebradas
 

@@ -89,6 +89,9 @@ const ok = (c, msg) => { out((c ? 'OK   ' : 'FALHA') + ' ' + msg); if (!c) falha
   ok(await p2.evaluate(() => document.documentElement.dataset.theme === 'light' && localStorage.getItem('rac-tema') === 'light'), 'clique alterna para claro e salva em localStorage');
   const aria = await p2.evaluate(() => [...document.querySelectorAll('.rac-toggle')].map(b => b.getAttribute('aria-checked')));
   ok(aria.every(v => v === 'false'), `todas as chaves sincronizadas (aria-checked=${JSON.stringify(aria)})`);
+  // depois do clique (mouse em cima + foco), a chave NÃO pode ficar "selecionada" (fundo/sombra do botão do Kadence)
+  const sel = await p2.evaluate(() => { const b = document.querySelector('.rac-header__desktop .rac-toggle'); const cs = getComputedStyle(b); return { focado: document.activeElement === b, fundo: cs.backgroundColor, sombra: cs.boxShadow, contorno: cs.outlineStyle }; });
+  ok(sel.focado && sel.fundo === 'rgba(0, 0, 0, 0)' && sel.sombra === 'none' && sel.contorno === 'none', `chave de tema depois do clique: sem fundo, sombra nem contorno (fundo ${sel.fundo}, sombra ${sel.sombra})`);
   await p2.reload();
   ok(await p2.evaluate(() => window.__temaNoDCL === 'light'), 'recarregar mantém a escolha (claro), mesmo com sistema escuro');
   await p2.click('.rac-header__desktop .rac-toggle');

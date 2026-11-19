@@ -34,6 +34,7 @@
 .rac-body .rac-botao-claro:hover { background: var(--surface2); color: var(--text); }
 
 .rac-home-hero__lado { display: flex; justify-content: flex-end; align-self: end; }
+.rac-hero-cards { display: none; }
 .rac-fundador {
   width: 380px; max-width: 100%; display: flex; align-items: center; gap: 12px; padding: 10px 16px 10px 10px; border-radius: 14px;
   background: color-mix(in srgb, var(--surface) 82%, transparent); backdrop-filter: blur(8px);
@@ -101,17 +102,27 @@
   .rac-home-hero__botoes { flex-direction: column; align-items: stretch; width: 100%; margin-top: 0; }
   .rac-home-hero__botoes .rac-cta-estacao { height: 48px; padding: 0; justify-content: center; font-size: 15px; }
   .rac-body .rac-botao-claro { display: none; }
-  .rac-home-hero__lado { justify-content: stretch; width: 100%; margin-top: 4px; }
-  .rac-fundador { width: 100%; align-items: flex-start; padding: 14px; background: var(--surface); backdrop-filter: none; border-color: var(--line); box-shadow: none; }
-  .rac-fundador__bio { line-height: 1.5; }
+  .rac-home-hero__lado { display: none; }
 
-  .rac-destaques { padding: 0 18px 18px; }
-  .rac-destaques__grade { display: flex; flex-direction: column; }
-  .rac-destaque { padding: 12px 0; gap: 2px; border-left: 0; border-bottom: 1px solid var(--line); }
-  .rac-destaque:last-child { border-bottom: 0; }
-  .rac-destaque__kicker { font-size: 10px; }
-  .rac-destaque__titulo { font-family: 'DM Sans', sans-serif; font-size: 14px; }
-  .rac-destaque__texto { display: none; }
+  /* 4 cards em carrossel (rolagem lateral com encaixe): 1º o fundador, depois Estações, Literatura e Blog.
+     O card seguinte aparece um pedaço, para mostrar que há mais. Sem JavaScript. */
+  .rac-hero-cards {
+    display: flex; gap: 12px; width: calc(100% + 36px); margin: 4px -18px 0; padding: 2px 18px 6px;
+    overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 18px; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  }
+  .rac-hero-cards::-webkit-scrollbar { display: none; }
+  .rac-hero-cards__item { flex: none; width: 82%; max-width: 340px; scroll-snap-align: start; display: flex; }
+  .rac-hero-cards__item > * { width: 100%; }
+  .rac-hero-cards .rac-fundador { width: 100%; height: 100%; align-items: flex-start; padding: 14px; background: var(--surface); backdrop-filter: none; border-color: var(--line); box-shadow: none; }
+  .rac-fundador__bio { line-height: 1.5; }
+  .rac-destaque-card { height: 100%; display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); }
+  .rac-destaque-card .rac-destaque__titulo { font-size: 17px; }
+  .rac-destaque-card .rac-destaque__texto {
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+    font-size: 12px; line-height: 1.5; color: var(--text-body);
+  }
+
+  .rac-destaques { display: none; } /* no mobile os 3 destaques são cards do carrossel do topo */
 
   .rac-home-estacoes { padding: 22px 0 0; gap: 14px; border-top: 1px solid var(--line); }
   .rac-home-estacoes__topo { padding: 0 18px; }

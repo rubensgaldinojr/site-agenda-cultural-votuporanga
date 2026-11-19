@@ -4,3 +4,9 @@ input:not([type]), input[type="text"], input[type="email"], input[type="range"],
   -webkit-appearance: none; color: #444; border: 1px solid #cbd2d9; border-radius: 3px;
   padding: .4em .5em; max-width: 100%; background: #fff; box-shadow: 0 0 0 -7px transparent;
 }
+
+/* Simula o estilo do Kadence para <button> em :hover/:focus/:active (fundo azul e sombra) — foi isso que deixou a chave de tema
+   "selecionada" depois do clique no site real. */
+button:hover, button:focus, button:active, [type="button"]:hover, [type="button"]:focus, [type="button"]:active {
+  background: #1d4a8a; color: #fff; box-shadow: 0 0 0 2px #1d4a8a;
+}

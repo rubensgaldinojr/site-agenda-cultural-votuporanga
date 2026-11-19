@@ -122,6 +122,13 @@ function get_avatar_url($id,$a=[]){ return $GLOBALS['usuarios'][$id]['avatar'] ?
 function is_user_logged_in(){ return !empty($_GET['logado']); }
 function wp_get_current_user(){ return (object)['ID'=>3,'display_name'=>'Equipe Agenda Cultural']; }
 function wp_get_current_commenter(){ return !empty($_GET['lembrado']) ? ['comment_author'=>'Lembrado','comment_author_email'=>'lembrado@ex.com','comment_author_url'=>''] : ['comment_author'=>'','comment_author_email'=>'','comment_author_url'=>'']; }
+function wp_nonce_field($a,$n){ echo '<input type="hidden" name="'.$n.'" value="n-'.$a.'">'; }
+function wp_verify_nonce($v,$a){ return $v==='n-'.$a ? 1 : false; }
+function current_user_can($c,$id=0){ return $GLOBALS['pode'] ?? true; }
+function get_userdata($id){ $u=$GLOBALS['usuarios'][$id] ?? null; return $u ? (object)['ID'=>$id,'user_login'=>$u['login'],'user_nicename'=>$u['slug'],'display_name'=>$u['nome']] : false; }
+function wp_update_user($d){ if(isset($d['user_nicename'])) $GLOBALS['usuarios'][$d['ID']]['slug']=$d['user_nicename']; $GLOBALS['usuario_atualizado'][]=$d; return $d['ID']; }
+function get_page_uri($id){ return isset($GLOBALS['paginas'][$id]) ? 'blog' : ''; }
+function add_rewrite_rule($r,$q,$pos='bottom'){ $GLOBALS['regras'][]=[$r,$q,$pos]; }
 function is_wp_error($x){ return false; }
 function checked($a,$b=true,$echo=true){ $r = ((string)$a===(string)$b) ? ' checked="checked"' : ''; if($echo) echo $r; return $r; }
 function post_password_required(){ return false; }

@@ -84,15 +84,27 @@ const ALFA = [...NOMES].sort((a, b) => (norm(a) < norm(b) ? -1 : norm(a) > norm(
   await page.screenshot({ path: 'capturas/f3a-estacoes-d.png', fullPage: true });
 
   // tocar pelo card; "Ver estação" navega pela navegação persistente
-  await page.click('.rac-grade-img .rac-card-img:nth-child(3) .rac-card-img__nome');
-  ok(await esperar(page, () => !window.__audio.paused && window.__audio.currentTime > 0.2), 'clicar num card da página toca a estação');
+  await page.click('.rac-grade-img .rac-card-img:nth-child(3) .rac-card-img__play');
+  ok(await esperar(page, () => !window.__audio.paused && window.__audio.currentTime > 0.2), 'clicar no botão de play de um card toca a estação');
   const tocando = await page.evaluate(() => [...document.querySelectorAll('.rac-grade-img .rac-card-img.is-tocando .rac-card-img__nome')].map(n => n.textContent.trim()));
   ok(tocando.length === 1 && tocando[0] === ALFA[2], `só o card tocando fica destacado (${tocando[0]})`);
   ok(await page.evaluate(() => document.querySelector('.rac-grade-img .rac-card-img.is-tocando .rac-card-img__rotulo').textContent === 'Tocando' && document.querySelector('.rac-grade-img .rac-card-img.is-tocando .rac-card-img__play').getAttribute('aria-pressed') === 'true'), 'card tocando: selo vira "Tocando" e o botão fica aria-pressed');
   await page.click('.rac-grade-img .rac-card-img:nth-child(3) .rac-card-img__play');
   ok(await esperar(page, () => window.__audio.paused && document.querySelectorAll('.rac-grade-img .is-tocando').length === 0), 'o botão de play do card pausa a estação');
-  await page.click('.rac-grade-img .rac-card-img:nth-child(3)', { position: { x: 30, y: 60 } });
-  ok(await esperar(page, () => !window.__audio.paused), 'clicar na imagem do card volta a tocar');
+  await page.click('.rac-grade-img .rac-card-img:nth-child(3) .rac-card-img__play');
+  ok(await esperar(page, () => !window.__audio.paused), 'o botão de play do card volta a tocar');
+  await page.waitForTimeout(500);
+  const ativoCss = await page.evaluate(() => { const c = document.querySelector('.rac-grade-img .rac-card-img.is-tocando'); const cs = getComputedStyle(c); return { sombra: cs.boxShadow, selo: getComputedStyle(c.querySelector('.rac-card-img__live')).backgroundColor, laranja: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() }; });
+  ok(/\b4px\b/.test(ativoCss.sombra) && ativoCss.selo === 'rgb(238, 129, 51)', `card ativo: contorno laranja de 4px com brilho e selo "Tocando" em laranja (${ativoCss.selo})`);
+  ok(await page.evaluate(() => { const b = document.querySelector('.rac-grade-img .rac-card-img:nth-child(3) .rac-card-img__play'); b.focus(); const cs = getComputedStyle(b); return cs.boxShadow === 'none' && cs.backgroundColor !== 'rgb(29, 74, 138)'; }), 'botão de play do card depois do clique/foco: sem sombra nem fundo azul do Kadence');
+  const tocandoNome = await page.evaluate(() => document.getElementById('racr-nome-estacao').textContent.trim());
+  await page.click('.rac-grade-img .rac-card-img:nth-child(2)', { position: { x: 30, y: 60 } });
+  ok(await esperar(page, () => /^\/estacao\/\d+\/$/.test(location.pathname)), 'clicar em qualquer ponto do card (aqui, na imagem) abre a página da estação');
+  ok(await page.evaluate(n => !window.__audio.paused && document.getElementById('racr-nome-estacao').textContent.trim() === n && window.__marcador === 'mesma-pagina', tocandoNome), 'e NÃO troca nem para a estação que está tocando (sem recarregar a página)');
+  await page.goBack(); await esperar(page, () => location.pathname === '/estacoes/'); await page.waitForTimeout(500);
+  await page.click('.rac-grade-img .rac-card-img:nth-child(2)', { position: { x: 60, y: 150 } });
+  ok(await esperar(page, () => /^\/estacao\/\d+\/$/.test(location.pathname)), 'clicar na parte de baixo do card (onde ficam nome e trecho) também abre a página da estação');
+  await page.goBack(); await esperar(page, () => location.pathname === '/estacoes/'); await page.waitForTimeout(500);
   const antes = await page.evaluate(() => window.__audio.currentTime);
   await page.click('.rac-grade-img .rac-card-img:nth-child(1) a.rac-card-img__ver');
   ok(await esperar(page, () => /^\/estacao\/\d+\/$/.test(location.pathname)), '"Ver estação" abre a página da estação');
@@ -189,8 +201,9 @@ const ALFA = [...NOMES].sort((a, b) => (norm(a) < norm(b) ? -1 : norm(a) > norm(
   ok(mm.play !== 'none' && mm.ver !== 'none', 'mobile: card mantém o play e o link "Ver estação"');
   ok(mm.h1 === '31px', `mobile: título do topo com 31px (${mm.h1})`);
   ok(await m.evaluate(() => [...document.querySelectorAll('.rac-grade-img .rac-card-img__trecho')].every(t => getComputedStyle(t).display === 'none')), 'mobile: o trecho de texto fica escondido');
-  await m.click('.rac-grade-img .rac-card-img:nth-child(2) .rac-card-img__nome');
-  ok(await esperar(m, () => !document.getElementById('racr-audio').paused && document.querySelectorAll('.rac-grade-img .rac-card-img.is-tocando').length === 1), 'mobile: tocar pelo card');
+  ok(await m.evaluate(() => { const b = document.querySelector('.rac-grade-img .rac-card-img__play').getBoundingClientRect(); return Math.round(b.width) === 44 && Math.round(b.height) === 44; }), 'mobile: botão de play do card com 44px (alvo de toque confortável)');
+  await m.click('.rac-grade-img .rac-card-img:nth-child(2) .rac-card-img__play');
+  ok(await esperar(m, () => !document.getElementById('racr-audio').paused && document.querySelectorAll('.rac-grade-img .rac-card-img.is-tocando').length === 1), 'mobile: tocar pelo botão do card');
   await m.screenshot({ path: 'capturas/f3a-estacoes-m.png', fullPage: true });
 
   await m.goto(B + '/estacao/100/');

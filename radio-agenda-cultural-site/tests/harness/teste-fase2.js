@@ -256,7 +256,9 @@ const esperar = (page, fn, arg, ms = 6000) => page.waitForFunction(fn, arg, { ti
   m.on('pageerror', e => errosJs.push(e.message));
   await m.goto(B + '/componentes/');
   const mb = await m.evaluate(() => ({ alt: Math.round(document.querySelector('.rac-player__barra').getBoundingClientRect().height), vol: getComputedStyle(document.querySelector('.rac-player__volume')).display, desk: getComputedStyle(document.querySelector('.rac-player__agora')).display, minfo: getComputedStyle(document.querySelector('.rac-player__m-info')).display, scrollX: document.documentElement.scrollWidth > window.innerWidth }));
-  ok(mb.alt === 56, `mobile: barra de 56px (obtido ${mb.alt})`);
+  ok(mb.alt === 74, `mobile: barra mais alta, de 74px (obtido ${mb.alt})`);
+  const mc = await m.evaluate(() => ({ play: Math.round(document.querySelector('.racr-botao-play').getBoundingClientRect().width), trocar: Math.round(document.querySelector('.rac-player__trocar').getBoundingClientRect().height), borda: getComputedStyle(document.querySelector('.rac-player__barra')).borderTopColor, laranja: 'rgb(238, 129, 51)', largBorda: getComputedStyle(document.querySelector('.rac-player__barra')).borderTopWidth, pad: getComputedStyle(document.body).paddingBottom }));
+  ok(mc.play === 48 && mc.trocar === 44 && mc.borda === mc.laranja && mc.largBorda === '2px' && mc.pad === '76px', `mobile: play de 48px, "Trocar estação" de 44px, linha laranja de 2px no topo da barra e espaço de 76px no fim da página (${mc.play}/${mc.trocar}/${mc.largBorda}/${mc.pad})`);
   ok(mb.vol === 'none' && mb.desk === 'none' && mb.minfo === 'flex', 'mobile: volume e "Tocando agora" do desktop escondidos; info compacta visível');
   ok(!mb.scrollX, 'mobile: sem rolagem horizontal');
   await m.click('#racr-botao-expandir');

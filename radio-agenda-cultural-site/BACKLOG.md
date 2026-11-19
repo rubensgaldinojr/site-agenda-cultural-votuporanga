@@ -83,12 +83,15 @@
 | B-51 | Tirinhas: confirmar os direitos de uso de cada tirinha publicada (o campo "Direitos/referência" é opcional) | 4 | 💡 | Tirinhas de terceiros normalmente têm direitos autorais; o tema só exibe a referência |
 | B-52 | Spotify no formato Música: o player do Spotify toca só prévias de 30 s para quem não está logado no Spotify, e carrega conteúdo de terceiros (privacidade) | 4 | 💡 | Alternativa futura: link para abrir no Spotify |
 | B-53 | "Ordenar por autor(a)" usa SQL próprio (junta a tabela de usuários); testar no site real | 4 | ⏳ | O simulador não executa SQL |
+| B-54 | Ajustes pós-teste da Fase 4 (0.6.2): contraste da barra do player, cards de estação (abrem a página; só o play toca; ativo mais visível; play maior no mobile), chave claro/escuro "selecionada", Home mobile com 4 cards em carrossel, campo de endereço do autor | 4 | ✅ | Aguardando teste no site real |
+| B-55 | Endereço dos posts com `/blog/` (`/blog/%postname%/`) e e-mail aparecendo no endereço do autor | 4 | ⏳ | Passos na mensagem de entrega: Links permanentes + campo "Endereço da página do autor" no perfil. Testar `/blog/page/2/` depois |
 | B-40 | `catalogo-livros-rac.php` está duplicado na raiz do repositório (idêntico ao de `plugins/`) | 💡 | Remover a cópia da raiz? |
 
 ## Decisões tomadas
 
 - Fase 4: filtros do Blog são LINKS (`?categoria=&autor=&ordem=`), não formulários, para a navegação persistente não parar o áudio; 9 posts por página; categorias e tags usam a mesma listagem; autor em `/autor/nome/`; "Carregar mais posts" na página do autor.
 - Fase 4: formato do post = campo ACF "Formato" (Texto, Poesia, Vídeo, Música, Podcast, Tirinha, Imagem, Citação); novos formatos = 1 linha em `rac_formatos_post()` + campos + um arquivo em `template-parts/formatos/`. Música = player do Spotify incorporado (campos país, nome, estilo, link) com título automático "Descoberta Musical: nome - país - estilo"; países com bandeira em imagem (funciona no Windows). Tirinha = imagem pelo editor + campos opcionais de direitos/referência. Compartilhar = WhatsApp, Facebook, X e Copiar link (botões grandes, com texto) + menu nativo do celular quando existir. Comentários = nativos do WordPress, enviados sem recarregar.
+- Cards de estação com imagem: o card inteiro abre a página da estação e só o botão de play toca (lista compacta "Todas as estações" mantém o clique que toca). Barra do player: linha laranja no topo (em vez de inverter as cores) e mais alta no mobile.
 - Sem headless: tema filho do Kadence com templates PHP.
 - `#primary` é o seletor da navegação persistente; todo template terá exatamente um `<main id="primary">`. O plugin não é alterado para isso.
 - Textos do rodapé são globais; textos da Home são editados na própria página Home.

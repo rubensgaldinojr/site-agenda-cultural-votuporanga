@@ -90,3 +90,52 @@ function rac_avatar_html( $dados, $classe = '' ) {
     }
     return '<span class="' . esc_attr( $cls . ' rac-avatar--inicial' ) . '" aria-hidden="true"><b>' . esc_html( rac_inicial( $dados['nome'] ) ) . '</b></span>';
 }
+
+/* ============================================================
+   ENDEREÇO DA PÁGINA DO AUTOR (user_nicename)
+   O WordPress monta o endereço /autor/<nicename>/ a partir do LOGIN na hora em
+   que o usuário é criado. Se o login é um e-mail, o e-mail (sem símbolos)
+   vira parte do endereço público (ex.: /autor/maria-silvagmail-com/). O painel
+   não deixa editar esse campo; este bloco acrescenta, no perfil do usuário,
+   o campo "Endereço da página do autor" (é só trocar e salvar).
+   ============================================================ */
+function rac_campo_nicename( $usuario ) {
+    $nicename = $usuario->user_nicename;
+    $de_email = strpos( $usuario->user_login, '@' ) !== false || (bool) preg_match( '/-com(-br)?$/', $usuario->user_nicename );
+    wp_nonce_field( 'rac_nicename_' . $usuario->ID, 'rac_nicename_nonce' );
+    ?>
+    <h2>Endereço da página do autor</h2>
+    <table class="form-table" role="presentation">
+        <tr>
+            <th><label for="rac_nicename">Endereço (slug)</label></th>
+            <td>
+                <code><?php echo esc_html( home_url( '/autor/' ) ); ?></code><input type="text" name="rac_nicename" id="rac_nicename" value="<?php echo esc_attr( $nicename ); ?>" class="regular-text" style="width:16em" autocomplete="off">
+                <p class="description">
+                    Só letras minúsculas, números e hífens (ex.: <code>maria-silva</code>). É a parte final do endereço público da sua página de autor(a).
+                    <?php if ( $de_email ) : ?><strong>Atenção: o endereço atual parece vir de um e-mail. Troque para o seu nome, para o e-mail não aparecer no site.</strong><?php endif; ?>
+                </p>
+            </td>
+        </tr>
+    </table>
+    <?php
+}
+add_action( 'show_user_profile', 'rac_campo_nicename' );
+add_action( 'edit_user_profile', 'rac_campo_nicename' );
+
+function rac_salvar_nicename( $user_id ) {
+    if ( ! isset( $_POST['rac_nicename'], $_POST['rac_nicename_nonce'] ) ) return;
+    if ( ! wp_verify_nonce( $_POST['rac_nicename_nonce'], 'rac_nicename_' . $user_id ) ) return;
+    if ( ! current_user_can( 'edit_user', $user_id ) ) return;
+
+    $novo = sanitize_title( wp_unslash( $_POST['rac_nicename'] ) );
+    $usuario = get_userdata( $user_id );
+    if ( $novo === '' || ! $usuario || $novo === $usuario->user_nicename ) return;
+
+    // já em uso por outra pessoa? o WordPress acrescenta "-2"; aqui só evitamos trocar para o endereço de outro usuário
+    $dono = get_user_by( 'slug', $novo );
+    if ( $dono && (int) $dono->ID !== (int) $user_id ) return;
+
+    wp_update_user( array( 'ID' => $user_id, 'user_nicename' => $novo ) );
+}
+add_action( 'personal_options_update', 'rac_salvar_nicename' );
+add_action( 'edit_user_profile_update', 'rac_salvar_nicename' );

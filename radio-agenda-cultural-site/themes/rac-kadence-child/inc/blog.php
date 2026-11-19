@@ -28,6 +28,20 @@ function rac_url_blog() {
     return $id ? get_permalink( $id ) : rac_url_pagina( 'blog' );
 }
 
+/**
+ * Paginação da página do Blog (/blog/page/2/) quando os posts ficam sob /blog/ (Links permanentes
+ * "/blog/%postname%/"): sem esta regra, "/blog/page/2/" seria lida como um post chamado "page" (página 2)
+ * e daria 404. A regra tem prioridade e leva ao Blog paginado. Regrave os Links permanentes para valer.
+ */
+function rac_regra_paginacao_blog() {
+    $id = (int) get_option( 'page_for_posts' );
+    if ( ! $id ) return;
+    $caminho = get_page_uri( $id );
+    if ( ! $caminho ) return;
+    add_rewrite_rule( '^' . preg_quote( $caminho, '#' ) . '/page/([0-9]{1,})/?$', 'index.php?page_id=' . $id . '&paged=$matches[1]', 'top' );
+}
+add_action( 'init', 'rac_regra_paginacao_blog' );
+
 /** 'blog' | 'categoria' | 'tag' */
 function rac_contexto_listagem() {
     if ( is_category() ) return 'categoria';
