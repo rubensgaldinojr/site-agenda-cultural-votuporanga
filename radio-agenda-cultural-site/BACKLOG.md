@@ -84,6 +84,7 @@
 | B-52 | Spotify no formato Música: o player do Spotify toca só prévias de 30 s para quem não está logado no Spotify, e carrega conteúdo de terceiros (privacidade) | 4 | 💡 | Alternativa futura: link para abrir no Spotify |
 | B-53 | "Ordenar por autor(a)" usa SQL próprio (junta a tabela de usuários); testar no site real | 4 | ⏳ | O simulador não executa SQL |
 | B-54 | Ajustes pós-teste da Fase 4 (0.6.2): contraste da barra do player, cards de estação (abrem a página; só o play toca; ativo mais visível; play maior no mobile), chave claro/escuro "selecionada", Home mobile com 4 cards em carrossel, campo de endereço do autor | 4 | ✅ | Aguardando teste no site real |
+| B-56 | Mobile: slider de largura total com 4 bolinhas no topo da Home e bolinhas em todos os carrosséis (Estações em destaque, Blog, Literatura, "Da biblioteca") | 4 | ✅ | Tema 0.6.3; aguardando teste no site real. Alternativa se preferir: setas no topo de cada seção |
 | B-55 | Endereço dos posts com `/blog/` (`/blog/%postname%/`) e e-mail aparecendo no endereço do autor | 4 | ⏳ | Passos na mensagem de entrega: Links permanentes + campo "Endereço da página do autor" no perfil. Testar `/blog/page/2/` depois |
 | B-40 | `catalogo-livros-rac.php` está duplicado na raiz do repositório (idêntico ao de `plugins/`) | 💡 | Remover a cópia da raiz? |
 

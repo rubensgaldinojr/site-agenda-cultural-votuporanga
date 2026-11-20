@@ -235,3 +235,28 @@
 .rac-body .rac-compartilhar__fechar, .rac-body .rac-player__fechar { color: var(--muted); }
 .rac-body .rac-coment__responder { color: var(--accent-text); }
 .rac-body .rac-filtros__abrir:hover, .rac-body .rac-filtros__abrir:focus, .rac-body .rac-filtros__abrir:active { background: var(--surface); color: var(--text); }
+
+/* =========================================================
+   BOLINHAS DOS CARROSSÉIS (mobile) — assets/js/pontos.js
+   ========================================================= */
+.rac-pontos { display: none; }
+@media (max-width: 899px) {
+  .rac-pontos { display: flex; justify-content: center; align-items: center; gap: 0; }
+  .rac-pontos[hidden] { display: none; }
+  /* área de toque de 28px; a bolinha visível é o ::before. Estados do Kadence neutralizados. */
+  .rac-body .rac-pontos__ponto, .rac-body .rac-pontos__ponto:hover, .rac-body .rac-pontos__ponto:focus, .rac-body .rac-pontos__ponto:active {
+    width: 28px; height: 28px; padding: 0; margin: 0; border: 0; border-radius: 0; background: none; box-shadow: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent;
+  }
+  .rac-body .rac-pontos__ponto:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; border-radius: 8px; }
+  .rac-pontos__ponto::before {
+    content: ''; display: block; width: 8px; height: 8px; border-radius: 999px;
+    background: color-mix(in srgb, var(--muted) 45%, transparent); transition: width .2s ease, background-color .2s ease;
+  }
+  .rac-pontos__ponto[aria-current="true"]::before { width: 22px; background: var(--accent); }
+  @media (prefers-reduced-motion: reduce) { .rac-pontos__ponto::before { transition: none; } }
+  .rac-faixa__inner > .rac-pontos { margin-top: -14px; }
+  .rac-home-estacoes > .rac-pontos { margin-top: -6px; }
+  .rac-home-hero__grade > .rac-pontos { margin-top: -6px; }
+  .rac-biblioteca .rac-secao__inner > .rac-pontos { margin-top: 4px; }
+}

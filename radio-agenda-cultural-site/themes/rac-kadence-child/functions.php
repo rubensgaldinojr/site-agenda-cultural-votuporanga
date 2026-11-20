@@ -19,7 +19,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'RAC_TEMA_VERSAO', '0.6.2' );
+define( 'RAC_TEMA_VERSAO', '0.6.3' );
 
 require_once get_stylesheet_directory() . '/inc/helpers.php';
 require_once get_stylesheet_directory() . '/inc/customizer.php';
@@ -114,6 +114,8 @@ function rac_enqueue_assets() {
     // Carrosséis e recados da Home (Fase 3B-2): carregados em todas as páginas.
     wp_enqueue_script( 'rac-carrossel-js', $uri . '/assets/js/carrossel.js', array( 'rac-tema-js' ), filemtime( $dir . '/assets/js/carrossel.js' ), true );
     wp_enqueue_script( 'rac-recados-js', $uri . '/assets/js/recados.js', array( 'rac-tema-js' ), filemtime( $dir . '/assets/js/recados.js' ), true );
+    // Bolinhas dos carrosséis no mobile.
+    wp_enqueue_script( 'rac-pontos-js', $uri . '/assets/js/pontos.js', array( 'rac-tema-js' ), filemtime( $dir . '/assets/js/pontos.js' ), true );
     // Blog, filtros, vídeo, compartilhar e comentários (Fase 4): carregados em todas as páginas.
     wp_enqueue_script( 'rac-blog-js', $uri . '/assets/js/blog.js', array( 'rac-tema-js' ), filemtime( $dir . '/assets/js/blog.js' ), true );
     wp_enqueue_script( 'rac-compartilhar-js', $uri . '/assets/js/compartilhar.js', array(), filemtime( $dir . '/assets/js/compartilhar.js' ), true );

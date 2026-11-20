@@ -1,6 +1,6 @@
 # Tema filho do Kadence — Rádio Agenda Cultural
 
-Versão 0.6.2 (Fases 1, 2, 3A, 3B-1, 3B-2 e 4). Requer o tema **Kadence** instalado (é o tema pai).
+Versão 0.6.3 (Fases 1, 2, 3A, 3B-1, 3B-2 e 4). Requer o tema **Kadence** instalado (é o tema pai).
 
 ## Instalação (site de desenvolvimento)
 
@@ -164,8 +164,10 @@ Podcasts (só se houver séries) e Recados dos ouvintes.
   selo "Tocando" laranja. No mobile o play tem 44px. Os cards compactos da lista "Todas as estações" continuam tocando ao clicar.
 - **Botões x Kadence:** o tema pai pinta todo `<button>` em hover/foco (fundo azul e sombra). `base.css` (bloco "BOTÕES x KADENCE")
   neutraliza isso; a chave claro/escuro não fica mais "selecionada" depois do clique.
-- **Home no mobile:** o card do fundador e os 3 destaques (Estações, Literatura, Blog) viram **4 cards em carrossel** (rolagem
-  lateral com encaixe, sem JS). No desktop nada mudou.
+- **Home no mobile:** o card do fundador e os 3 destaques (Estações, Literatura, Blog) viram um **slider de largura total, com 4
+  bolinhas** (um card por vez, rolagem lateral com encaixe). No desktop nada mudou.
+- **Bolinhas nos carrosséis do mobile** (`assets/js/pontos.js`): topo da Home, Estações em destaque, Blog, Literatura e "Da biblioteca".
+  Uma bolinha por posição de encaixe; a atual fica alongada e laranja; tocar leva até o card. Escondidas no desktop.
 - **Endereço da página do autor:** no perfil do usuário há o campo "Endereço da página do autor" (troca o `user_nicename`, que o
   WordPress monta a partir do login e, se o login é um e-mail, expõe o e-mail na URL).
 - **/blog/ nos posts:** em Configurações → Links permanentes, estrutura personalizada `/blog/%postname%/`. O tema registra a regra
