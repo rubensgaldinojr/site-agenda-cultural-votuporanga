@@ -1,0 +1,134 @@
+/* =========================================================
+   Rádio Agenda Cultural — página Sobre (Fase 5A)
+   Topo com foto, história, "Quem faz" (N pessoas, alternando o lado da foto),
+   3 destaques e convite para o Contato (Sobre.dc.html).
+   Carregado em todas as páginas (navegação persistente). Só var(--token). Ponto de quebra: 900px.
+   ========================================================= */
+
+/* ---------- Topo ---------- */
+.rac-sobre-hero { position: relative; overflow: hidden; background: var(--bg); }
+.rac-sobre-hero__foto { position: absolute; top: 0; right: 0; bottom: 0; width: 62%; }
+.rac-body .rac-sobre-hero__foto img { display: block; width: 100%; height: 100%; max-width: none; object-fit: cover; }
+.rac-sobre-hero__fade {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(90deg, var(--bg) 0%, var(--bg) 38%, color-mix(in srgb, var(--bg) 75%, transparent) 52%, color-mix(in srgb, var(--bg) 10%, transparent) 78%, color-mix(in srgb, var(--bg) 0%, transparent) 100%);
+}
+.rac-sobre-hero__texto {
+  position: relative; max-width: 772px; padding: 96px 56px; display: flex; flex-direction: column; align-items: flex-start; gap: 20px;
+  margin-left: max(0px, calc((100% - 1280px) / 2));
+}
+.rac-body .rac-sobre-hero__texto h1 { margin: 0; font-size: 50px; letter-spacing: -.025em; line-height: 1.06; text-wrap: balance; }
+.rac-sobre-hero__texto p { margin: 0; font-size: 16px; line-height: 1.75; color: var(--text-body); text-wrap: pretty; }
+
+/* ---------- Nossa história ---------- */
+.rac-sobre-historia { border-top: 1px solid var(--line); }
+.rac-sobre-historia__inner { max-width: 1280px; margin: 0 auto; padding: 80px 56px; display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 64px; }
+.rac-sobre-historia__titulo { display: flex; flex-direction: column; gap: 10px; }
+.rac-body .rac-sobre-historia__titulo h2 { margin: 0; font-size: 30px; letter-spacing: -.015em; line-height: 1.15; }
+.rac-sobre-historia__texto { max-width: 680px; display: flex; flex-direction: column; gap: 20px; }
+.rac-sobre-historia__abertura { margin: 0; font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 300; line-height: 1.5; color: var(--text); }
+.rac-sobre-historia__corpo { display: flex; flex-direction: column; gap: 20px; }
+.rac-sobre-historia__corpo p { margin: 0; font-size: 17px; line-height: 1.85; color: var(--text-body); }
+.rac-sobre-historia__corpo a { color: var(--accent-text); text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- Quem faz ---------- */
+.rac-sobre-equipe { max-width: 1280px; margin: 0 auto; padding: 0 56px; border-top: 0; }
+.rac-sobre-equipe__topo { border-top: 1px solid var(--line); margin: 0 -56px; padding: 48px 56px 20px; display: flex; align-items: baseline; justify-content: space-between; gap: 20px; }
+.rac-sobre-equipe__topo > div { display: flex; flex-direction: column; gap: 6px; }
+.rac-body .rac-sobre-equipe__topo h2 { margin: 0; font-size: 30px; letter-spacing: -.015em; }
+.rac-body .rac-sobre-equipe__topo > a { font-size: 14px; font-weight: 500; white-space: nowrap; }
+
+.rac-sobre-autor { padding: 28px 0; border-top: 1px solid var(--line); display: flex; flex-direction: row; gap: 48px; align-items: center; }
+.rac-sobre-autor--inverso { flex-direction: row-reverse; }
+.rac-sobre-autor__foto {
+  position: relative; display: flex; align-items: center; justify-content: center; flex: none; width: 280px; height: 240px; overflow: hidden; border-radius: 16px;
+}
+.rac-body .rac-sobre-autor__foto img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; max-width: none; object-fit: cover; }
+.rac-sobre-autor__foto b { font-family: 'Outfit', sans-serif; font-size: 72px; font-weight: 400; color: var(--accent-text); }
+.rac-sobre-autor__corpo { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+.rac-sobre-autor__cab { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; }
+.rac-sobre-autor__nome { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.rac-body .rac-sobre-autor__nome h3 { margin: 0; font-size: 26px; font-weight: 400; letter-spacing: -.015em; }
+.rac-sobre-autor__nome span { font-size: 13px; color: var(--muted); }
+.rac-body .rac-sobre-autor__ver--d {
+  white-space: nowrap; padding: 9px 18px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface);
+  font-size: 13px; font-weight: 500; color: var(--text);
+}
+.rac-body .rac-sobre-autor__ver--d:hover { border-color: var(--text); color: var(--text); }
+.rac-sobre-autor__ver--m { display: none; }
+.rac-sobre-autor__bio { margin: 0; max-width: 620px; font-size: 15px; line-height: 1.7; color: var(--text-body); }
+.rac-sobre-autor__itens { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 4px; }
+
+.rac-body .rac-sobre-item {
+  display: flex; align-items: center; gap: 12px; padding: 8px 12px 8px 8px; min-width: 0;
+  border-radius: 12px; background: var(--surface); border: 1px solid var(--line);
+}
+.rac-body .rac-sobre-item:hover { border-color: var(--accent); }
+.rac-sobre-item__capa { flex: none; width: 52px; height: 52px; border-radius: 6px; overflow: hidden; }
+.rac-sobre-item--livro .rac-sobre-item__capa { width: 38px; }
+.rac-body .rac-sobre-item__capa img { display: block; width: 100%; height: 100%; max-width: none; object-fit: cover; }
+.rac-sobre-item__texto { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.rac-sobre-item__tipo { font-size: 9px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-text); }
+.rac-sobre-item__titulo { font-size: 13px; line-height: 1.3; color: var(--text); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* ---------- 3 destaques ---------- */
+.rac-sobre-destaques { margin-top: 28px; padding: 48px 56px; border-top: 1px solid var(--line); background: var(--surface2); }
+.rac-sobre-destaques__grade { max-width: 1168px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.rac-sobre-destaques .rac-destaque__texto { display: block; font-size: 13px; line-height: 1.6; color: var(--muted); }
+
+/* ---------- Convite para o Contato ---------- */
+.rac-sobre-cta { padding: 72px 40px 80px; border-top: 1px solid var(--line); display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; }
+.rac-body .rac-sobre-cta h2 { margin: 0; font-size: 34px; letter-spacing: -.015em; }
+.rac-sobre-cta p { margin: 0; max-width: 520px; font-size: 15px; line-height: 1.7; color: var(--text-body); }
+.rac-sobre-cta__botoes { display: flex; gap: 10px; margin-top: 8px; }
+
+/* =========================================================
+   MOBILE (< 900px)
+   ========================================================= */
+@media (max-width: 899px) {
+  .rac-sobre-hero { min-height: 440px; display: flex; align-items: flex-end; }
+  .rac-sobre-hero__foto { inset: 0; width: auto; }
+  .rac-sobre-hero__fade { background: linear-gradient(to top, var(--bg) 0%, var(--bg) 40%, color-mix(in srgb, var(--bg) 75%, transparent) 62%, color-mix(in srgb, var(--bg) 0%, transparent) 92%); }
+  .rac-sobre-hero__texto { max-width: none; margin: 0; padding: 20px 18px 24px; gap: 12px; }
+  .rac-body .rac-sobre-hero__texto h1 { font-size: 31px; letter-spacing: -.02em; line-height: 1.08; }
+  .rac-sobre-hero__texto p { font-size: 14px; line-height: 1.65; }
+
+  .rac-sobre-historia__inner { display: flex; flex-direction: column; gap: 14px; padding: 32px 18px; }
+  .rac-sobre-historia__titulo { gap: 0; }
+  .rac-sobre-historia__titulo .rac-eyebrow { font-size: 10px; }
+  .rac-body .rac-sobre-historia__titulo h2 { display: none; }
+  .rac-sobre-historia__texto { gap: 14px; }
+  .rac-sobre-historia__abertura { font-size: 19px; }
+  .rac-sobre-historia__corpo { gap: 14px; }
+  .rac-sobre-historia__corpo p { font-size: 15px; line-height: 1.8; }
+
+  .rac-sobre-equipe { padding: 0 18px; }
+  .rac-sobre-equipe__topo { margin: 0 -18px; padding: 28px 18px 8px; }
+  .rac-body .rac-sobre-equipe__topo h2 { font-size: 22px; }
+  .rac-body .rac-sobre-equipe__topo > a { display: none; }
+
+  /* foto pequena ao lado do nome; bio, itens e link ocupam a largura toda */
+  .rac-sobre-autor, .rac-sobre-autor--inverso { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 12px 14px; align-items: center; padding: 20px 0; border-top: 0; border-bottom: 1px solid var(--line); }
+  .rac-sobre-autor__corpo { display: contents; }
+  .rac-sobre-autor__foto { width: 72px; height: 72px; border-radius: 12px; }
+  .rac-sobre-autor__foto b { font-size: 30px; }
+  .rac-sobre-autor__cab { grid-column: 2; grid-row: 1; }
+  .rac-body .rac-sobre-autor__nome h3 { font-size: 20px; }
+  .rac-sobre-autor__nome span { font-size: 12px; }
+  .rac-body .rac-sobre-autor__ver--d { display: none; }
+  .rac-sobre-autor__bio { grid-column: 1 / -1; font-size: 14px; line-height: 1.65; max-width: none; }
+  .rac-sobre-autor__itens { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 6px; margin-top: 0; }
+  .rac-body .rac-sobre-item { gap: 10px; padding: 6px 10px 6px 6px; border-radius: 10px; min-height: 52px; }
+  .rac-sobre-item__capa { width: 40px; height: 40px; border-radius: 5px; }
+  .rac-sobre-item--livro .rac-sobre-item__capa { width: 30px; }
+  .rac-sobre-item__titulo { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rac-body .rac-sobre-autor__ver--m { display: inline; grid-column: 1 / -1; font-size: 13px; font-weight: 500; }
+
+  .rac-sobre-destaques { display: none; }
+
+  .rac-sobre-cta { padding: 32px 18px 40px; align-items: stretch; text-align: left; gap: 12px; border-top: 0; }
+  .rac-body .rac-sobre-cta h2 { font-size: 22px; }
+  .rac-sobre-cta p { font-size: 14px; line-height: 1.65; max-width: none; }
+  .rac-sobre-cta__botoes { margin-top: 0; }
+  .rac-sobre-cta__botoes .rac-botao-cheio { width: 100%; height: 48px; padding: 0; }
+}

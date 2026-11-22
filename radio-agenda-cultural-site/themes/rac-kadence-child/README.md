@@ -1,6 +1,6 @@
 # Tema filho do Kadence — Rádio Agenda Cultural
 
-Versão 0.6.3 (Fases 1, 2, 3A, 3B-1, 3B-2 e 4). Requer o tema **Kadence** instalado (é o tema pai).
+Versão 0.7.0 (Fases 1, 2, 3A, 3B-1, 3B-2, 4 e 5A). Requer o tema **Kadence** instalado (é o tema pai).
 
 ## Instalação (site de desenvolvimento)
 
@@ -164,14 +164,26 @@ Podcasts (só se houver séries) e Recados dos ouvintes.
   selo "Tocando" laranja. No mobile o play tem 44px. Os cards compactos da lista "Todas as estações" continuam tocando ao clicar.
 - **Botões x Kadence:** o tema pai pinta todo `<button>` em hover/foco (fundo azul e sombra). `base.css` (bloco "BOTÕES x KADENCE")
   neutraliza isso; a chave claro/escuro não fica mais "selecionada" depois do clique.
-- **Home no mobile:** o card do fundador e os 3 destaques (Estações, Literatura, Blog) viram um **slider de largura total, com 4
-  bolinhas** (um card por vez, rolagem lateral com encaixe). No desktop nada mudou.
+- **Home no mobile:** o card do fundador e os 3 destaques (Estações, Literatura, Blog) viram um **slider com 4 bolinhas**, cards de
+  86% da largura (a ponta do próximo aparece) e rolagem lateral com encaixe. **Passa sozinho a cada 5 s** (`data-rac-auto`), pausa
+  com mouse/foco e para de vez depois de qualquer interação; não anda com "reduzir movimento". No desktop nada mudou.
 - **Bolinhas nos carrosséis do mobile** (`assets/js/pontos.js`): topo da Home, Estações em destaque, Blog, Literatura e "Da biblioteca".
   Uma bolinha por posição de encaixe; a atual fica alongada e laranja; tocar leva até o card. Escondidas no desktop.
 - **Endereço da página do autor:** no perfil do usuário há o campo "Endereço da página do autor" (troca o `user_nicename`, que o
   WordPress monta a partir do login e, se o login é um e-mail, expõe o e-mail na URL).
 - **/blog/ nos posts:** em Configurações → Links permanentes, estrutura personalizada `/blog/%postname%/`. O tema registra a regra
   `blog/page/N` para a paginação do Blog continuar funcionando.
+
+### Página Sobre (Fase 5A, tema 0.7.0)
+
+- **Modelo** `page-sobre.php` (vale para o slug `sobre`; escolhendo o modelo **"Sobre"** em Atributos da página aparecem os campos
+  de texto do grupo "Textos da página Sobre"; campo vazio = texto provisório do mockup). A foto do topo é a **Imagem destacada** da página.
+- **Nossa história:** campo "História — texto" (editor simples); o **1º parágrafo vira a abertura** (maior, Outfit leve).
+- **Quem faz — N pessoas:** vêm dos **perfis dos usuários**: marque **"Aparecer na página Sobre"** e, se quiser, a **"Posição na página
+  Sobre"** (menor primeiro; sem posição ou em empate, ordem alfabética). O lado da foto alterna a cada pessoa. Cada uma mostra papel,
+  bio, o **livro mais recente** e os **textos mais recentes** (até 3 itens) e o botão "Página do autor". Ninguém marcado = a seção some.
+- **3 destaques:** os mesmos textos da Home (editados na página inicial). **Convite final** leva ao Contato (`/contato/`).
+- No mobile: foto de 72px ao lado do nome, bio e itens em largura total, sem a faixa de destaques.
 
 ## Regras que não podem ser quebradas
 
@@ -201,13 +213,14 @@ Veja `../../tests/harness/README.md`. Ele não substitui o teste no site real.
 style.css  functions.php  header.php  footer.php
 index.php  page.php  single.php  404.php          (genéricos; os definitivos vêm nas Fases 3–5)
 page-componentes.php                              (prévia de teste dos componentes)
+page-sobre.php  inc/sobre.php                     (Fase 5A)
 page-estacoes.php  single-estacao.php             (Fase 3A)
 front-page.php                                    (Fases 3B-1 e 3B-2)
 home.php  category.php  tag.php  page-blog.php  author.php   (Fase 4A)
 single.php  comments.php                          (Fase 4B; os formatos ficam em template-parts/formatos/)
 inc/helpers.php  inc/customizer.php  inc/player.php  inc/acf-campos.php  inc/home.php  inc/conteudo.php  inc/recados.php  inc/blog.php  inc/autor.php  inc/formatos.php  inc/comentarios.php  inc/paises.php
 template-parts/theme-toggle.php  player-fixo.php  card-estacao.php  card-estacao-imagem.php  card-post.php  card-livro.php  tile-estacao.php  filtro.php  listagem.php  caixa-autor.php  compartilhar.php  aviso-radio.php  formatos/
-assets/css/tema.css  base.css  componentes.css  paginas.css  home.css  blog.css
-assets/js/rac.js  player.js  estacao.js  carrossel.js  recados.js  blog.js  compartilhar.js  comentarios.js
+assets/css/tema.css  base.css  componentes.css  paginas.css  home.css  blog.css  sobre.css
+assets/js/rac.js  player.js  estacao.js  carrossel.js  recados.js  blog.js  compartilhar.js  comentarios.js  pontos.js
 assets/img/placeholder-topo.jpg  assets/flags/*.svg
 ```

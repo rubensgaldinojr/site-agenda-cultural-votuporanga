@@ -76,6 +76,19 @@ $GLOBALS['usuarios'] = [
  2=>['login'=>'igor','slug'=>'igor-bastos','nome'=>'Igor Bastos','bio'=>'Pesquisador de música e curador das descobertas.','meta'=>['rac_autor_genero'=>'autor'],'avatar'=>'/h/foto2.svg','campos'=>[]],
  3=>['login'=>'equipe','slug'=>'equipe-agenda-cultural','nome'=>'Equipe Agenda Cultural','bio'=>'','meta'=>[],'avatar'=>'/h/nao-existe-gravatar.png','campos'=>[]],
 ];
+$GLOBALS['usuarios'][5] = ['login'=>'fundador','slug'=>'nome-do-fundador','nome'=>'Nome do Fundador','bio'=>'Radialista há mais de 20 anos, criou a Agenda Cultural para dividir os discos, livros e histórias que marcaram sua vida.','meta'=>['rac_autor_genero'=>'autor'],'avatar'=>'','campos'=>['autor_papel'=>'Fundador e curador']];
+$GLOBALS['usuarios'][6] = ['login'=>'joana','slug'=>'joana-lima','nome'=>'Joana Lima','bio'=>'','meta'=>['rac_autor_genero'=>'autora'],'avatar'=>'','campos'=>[]];
+// quem aparece na página Sobre (usuário 3 não aparece; 6 sem posição vai por último)
+$GLOBALS['usuarios'][5]['meta'] += ['autor_no_sobre'=>'1','autor_ordem_sobre'=>'1'];
+$GLOBALS['usuarios'][1]['meta'] += ['autor_no_sobre'=>'1','autor_ordem_sobre'=>'2'];
+$GLOBALS['usuarios'][2]['meta'] += ['autor_no_sobre'=>'1','autor_ordem_sobre'=>'3'];
+$GLOBALS['usuarios'][6]['meta'] += ['autor_no_sobre'=>'1'];
+// livros (CPT) por autor
+$GLOBALS['LV'] = [
+ 801=>['t'=>'Cidade em voz baixa','a'=>1,'d'=>'2026-09-01 10:00:00','thumb'=>'/h/capa-1.svg'],
+ 802=>['t'=>'Crônicas de uma vitrola','a'=>5,'d'=>'2026-08-01 10:00:00','thumb'=>''],
+ 803=>['t'=>'Livro antigo da Marina','a'=>1,'d'=>'2026-01-01 10:00:00','thumb'=>'/h/capa-2.svg'],
+];
 $GLOBALS['cats'] = [
  11=>['Crônicas','cronicas','Textos curtos sobre a cidade.'], 12=>['Descobertas Musicais','descobertas-musicais',''], 13=>['Reflexões','reflexoes',''],
  14=>['Podcasts','podcasts',''], 15=>['Poesia','poesia',''], 16=>['Vídeos','videos',''], 17=>['Tirinhas','tirinhas',''],
@@ -116,7 +129,7 @@ $GLOBALS['C']=[
 ];
 
 function get_user_by($campo,$v){ foreach($GLOBALS['usuarios'] as $id=>$u){ if(($campo==='slug'&&$u['slug']===$v)||($campo==='id'&&$id==$v)||($campo==='login'&&$u['login']===$v)) return (object)['ID'=>$id,'display_name'=>$u['nome'],'user_nicename'=>$u['slug']]; } return false; }
-function get_users($a=[]){ $o=[]; foreach($GLOBALS['usuarios'] as $id=>$u){ foreach($GLOBALS['P'] as $p){ if($p['a']===$id && ($p['status']??'publish')==='publish'){ $o[$id]=(object)['ID'=>$id,'display_name'=>$u['nome'],'user_nicename'=>$u['slug']]; break; } } } usort($o,fn($x,$y)=>strcmp($x->display_name,$y->display_name)); return array_values($o); }
+function get_users($a=[]){ $o=[]; if(!empty($a['meta_key'])){ foreach($GLOBALS['usuarios'] as $id=>$u){ if(($u['meta'][$a['meta_key']] ?? null)===$a['meta_value']) $o[]=(object)['ID'=>$id,'display_name'=>$u['nome'],'user_nicename'=>$u['slug']]; } usort($o,fn($x,$y)=>strcmp($x->display_name,$y->display_name)); return $o; } foreach($GLOBALS['usuarios'] as $id=>$u){ foreach($GLOBALS['P'] as $p){ if($p['a']===$id && ($p['status']??'publish')==='publish'){ $o[$id]=(object)['ID'=>$id,'display_name'=>$u['nome'],'user_nicename'=>$u['slug']]; break; } } } usort($o,fn($x,$y)=>strcmp($x->display_name,$y->display_name)); return array_values($o); }
 function get_user_meta($id,$k,$single=false){ return $GLOBALS['usuarios'][$id]['meta'][$k] ?? ''; }
 function get_avatar_url($id,$a=[]){ return $GLOBALS['usuarios'][$id]['avatar'] ?? ''; }
 function is_user_logged_in(){ return !empty($_GET['logado']); }
@@ -148,7 +161,7 @@ function remove_query_arg($k,$url=false){ $url=$url?:($_SERVER['REQUEST_URI']??'
 
 /* ---- posts ---- */
 function _id($p){ if(is_object($p)) return (int)$p->ID; if($p===null||$p===false||$p===0) return (int)($GLOBALS['post']->ID ?? 0); return (int)$p; }
-function _post_obj($id){ if(isset($GLOBALS['P'][$id])){ $p=$GLOBALS['P'][$id]; return (object)['ID'=>$id,'post_title'=>$p['t'],'post_author'=>$p['a'],'post_content'=>$p['html'],'post_date'=>$p['d'],'post_status'=>$p['status']??'publish','post_name'=>$p['slug']??'','post_type'=>'post']; } foreach($GLOBALS['estacoes_posts'] as $e) if($e->ID==$id) return $e; return null; }
+function _post_obj($id){ if(isset($GLOBALS['LV'][$id])){ $l=$GLOBALS['LV'][$id]; return (object)['ID'=>$id,'post_title'=>$l['t'],'post_author'=>$l['a'],'post_content'=>'','post_date'=>$l['d'],'post_status'=>'publish','post_name'=>'','post_type'=>'livro']; } if(isset($GLOBALS['P'][$id])){ $p=$GLOBALS['P'][$id]; return (object)['ID'=>$id,'post_title'=>$p['t'],'post_author'=>$p['a'],'post_content'=>$p['html'],'post_date'=>$p['d'],'post_status'=>$p['status']??'publish','post_name'=>$p['slug']??'','post_type'=>'post']; } foreach($GLOBALS['estacoes_posts'] as $e) if($e->ID==$id) return $e; return null; }
 function get_post($p=null){ if(is_object($p)) return $p; return _post_obj(_id($p)); }
 function get_post_field($f,$id=null){ $o=get_post($id); return $o ? ($o->$f ?? '') : ''; }
 function get_the_ID(){ return (int)($GLOBALS['post']->ID ?? 0); }
@@ -165,7 +178,7 @@ function get_field($n,$id=null){ $k = is_string($id) ? $id : _id($id); return $G
 function get_post_thumbnail_id($id=null){ return !empty($GLOBALS['P'][_id($id)]['thumb']) ? 5000+_id($id) : 0; }
 function has_post_thumbnail($id=null){ return get_post_thumbnail_id($id)>0; }
 function wp_get_attachment_caption($aid){ $id=$aid-5000; return $GLOBALS['P'][$id]['cap'] ?? ''; }
-function get_the_post_thumbnail($id=null,$size='',$attr=[]){ $id=_id($id); $t=$GLOBALS['P'][$id]['thumb'] ?? ''; if(!$t) return ''; $c=isset($attr['class'])?' class="'.$attr['class'].'"':''; $alt=$attr['alt']??''; return '<img'.$c.' src="'.$t.'" alt="'.esc_attr($alt).'" loading="'.($attr['loading']??'lazy').'">'; }
+function get_the_post_thumbnail($id=null,$size='',$attr=[]){ $id=_id($id); $t=$GLOBALS['P'][$id]['thumb'] ?? ($GLOBALS['LV'][$id]['thumb'] ?? ''); if(!$t) return ''; $c=isset($attr['class'])?' class="'.$attr['class'].'"':''; $alt=$attr['alt']??''; return '<img'.$c.' src="'.$t.'" alt="'.esc_attr($alt).'" loading="'.($attr['loading']??'lazy').'">'; }
 function get_the_post_thumbnail_url($id,$s=''){ return $GLOBALS['P'][_id($id)]['thumb'] ?? ''; }
 function wp_get_attachment_image($id,$size,$icon,$attr){ $src = ($id==7)?'/h/logo-claro.svg':(($id==55)?'/h/capa-1.svg':(($id==56)?'/h/foto2.svg':'/h/logo-escuro.svg')); return '<img src="'.$src.'" class="'.esc_attr($attr['class']??'').'" alt="'.esc_attr($attr['alt']??'').'" height="34">'; }
 function get_option($k,$d=false){ if($k==='page_on_front') return 1000; if($k==='page_for_posts') return empty($GLOBALS['sem_pagina_posts']) ? 2000 : 0; return 0; }
@@ -197,6 +210,7 @@ class WP_Query {
   function consultar(){
     $a=$this->q; $ids=[];
     if(($a['post_type']??'post')==='estacao'){ $this->posts=$GLOBALS['estacoes_posts']; $this->found_posts=$this->post_count=count($this->posts); return; }
+    if(($a['post_type']??'post')==='livro'){ $ids=array_keys($GLOBALS['LV']); if(!empty($a['author'])) $ids=array_values(array_filter($ids,fn($i)=>$GLOBALS['LV'][$i]['a']==$a['author'])); usort($ids,fn($x,$y)=>strcmp($GLOBALS['LV'][$y]['d'],$GLOBALS['LV'][$x]['d'])); $por=(int)($a['posts_per_page'] ?? 10); $this->found_posts=count($ids); $ids=array_slice($ids,0,$por>0?$por:null); $this->posts=array_map('_post_obj',$ids); $this->post_count=count($ids); return; }
     foreach($GLOBALS['P'] as $id=>$p){ if(!_publicado($id)) continue; $ids[]=$id; }
     $f=function($fn) use(&$ids){ $ids=array_values(array_filter($ids,$fn)); };
     if(!empty($a['post__not_in'])) $f(fn($i)=>!in_array($i,$a['post__not_in']));
@@ -222,7 +236,7 @@ class WP_Query {
   function have_posts(){ return $this->current+1 < $this->post_count; }
   function the_post(){ $this->current++; $GLOBALS['post']=$this->posts[$this->current]; }
 }
-function get_posts($a){ if(($a['post_type']??'post')==='livro') return []; $q=new WP_Query($a); return $q->posts; }
+function get_posts($a){ $q=new WP_Query($a); return (($a['fields'] ?? '')==='ids' && ($a['post_type'] ?? 'post')==='livro') ? array_map(fn($p)=>$p->ID,$q->posts) : $q->posts; }
 function have_posts(){ return $GLOBALS['wp_query']->have_posts(); }
 function the_post(){ $GLOBALS['wp_query']->the_post(); }
 function wp_reset_postdata(){ $GLOBALS['post']=$GLOBALS['wp_query']->posts[$GLOBALS['wp_query']->current] ?? null; }

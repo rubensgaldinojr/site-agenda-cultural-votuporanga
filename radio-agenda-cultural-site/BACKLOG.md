@@ -20,7 +20,9 @@
 | 3B-1 | Home: topo, destaques, estações em destaque (mais ouvidas e descoberta), todas as estações e Sobre nós | ✅ testada no site real e mergeada (PR #4) |
 | 3B-2 | Home: carrosséis de Blog e Literatura, Podcasts e Recados dos ouvintes; "Da biblioteca" na página da estação | ✅ testada no site real e mergeada (PR #5) |
 | 4 (4A+4B) | Blog (listagem, categorias, tags), página do Autor e Post com 8 formatos, compartilhar, caixa do autor, comentários e relacionados + ajustes pós-teste (player, cards, toggle, bolinhas) | 🔨 código pronto e testado pelo Rubens (tema 0.6.3, na branch). **PR ainda não aberto**: vai junto com a próxima entrega (B-57/B-58) |
-| 5 | Sobre, Contato, revisão geral | ⏳ |
+| 5A | Sobre | 🔨 código pronto (tema 0.7.0); aguardando teste manual no site |
+| 5B | Contato | ⏳ |
+| 5C | Revisão geral | ⏳ |
 
 ## Itens
 
@@ -86,9 +88,9 @@
 | B-54 | Ajustes pós-teste da Fase 4 (0.6.2): contraste da barra do player, cards de estação (abrem a página; só o play toca; ativo mais visível; play maior no mobile), chave claro/escuro "selecionada", Home mobile com 4 cards em carrossel, campo de endereço do autor | 4 | ✅ | Aguardando teste no site real |
 | B-55 | Endereço dos posts com `/blog/` (`/blog/%postname%/`) e e-mail aparecendo no endereço do autor | 4 | ⏳ | Passos na mensagem de entrega: Links permanentes + campo "Endereço da página do autor" no perfil. Testar `/blog/page/2/` depois |
 | B-56 | Mobile: slider de largura total com 4 bolinhas no topo da Home e bolinhas em todos os carrosséis (Estações em destaque, Blog, Literatura, "Da biblioteca") | 4 | ✅ | Tema 0.6.3; aguardando teste no site real. Alternativa se preferir: setas no topo de cada seção |
-| B-57 | Home mobile — slider do topo (4 cards): **passar sozinho** como um banner (pausa ao tocar/arrastar, respeita "reduzir movimento") e/ou **mostrar a ponta do próximo card**, como nos cards do Blog | 4 | ⏳ | Pedido do Rubens: implementar **junto com a próxima entrega**, não antes. Hoje: largura total + 4 bolinhas (0.6.3) |
+| B-57 | Home mobile — slider do topo (4 cards): passa sozinho (5 s) e mostra a ponta do próximo card | 4 | ✅ | Feito no 0.7.0 (junto com o Sobre): cards de 86%, bolinhas, auto-avanço que para na interação, pausa com mouse/foco e respeita "reduzir movimento". Aguardando teste no site real |
 | B-58 | Abrir o PR da Fase 4 (com os ajustes 0.6.x) e fazer o merge | 4 | ⏳ | Combinado: um PR só, junto com a próxima entrega |
-| B-59 | **Fase 5 — Sobre**: topo com foto e a história; "Quem faz" (3 autores alternando o lado da foto, com cards pequenos de livros e artigos e o botão "Página do autor"); 3 destaques; convite para o Contato. Inclui os campos de autor "exibir no Sobre" e "ordem" | 5 | ⏳ | Mockup `Sobre.dc.html` pronto; textos e fotos virão do Rubens |
+| B-59 | **Fase 5A — Sobre** (código pronto no 0.7.0, aguardando teste no site real): topo com foto e a história; "Quem faz" (3 autores alternando o lado da foto, com cards pequenos de livros e artigos e o botão "Página do autor"); 3 destaques; convite para o Contato. Inclui os campos de autor "exibir no Sobre" e "ordem" | 5 | ⏳ | Textos provisórios do mockup (Rubens decidiu seguir com eles por enquanto). "Quem faz" lista N pessoas: marcar "Aparecer na página Sobre" no perfil + posição. Foto de cada pessoa = foto do perfil |
 | B-60 | **Fase 5 — Contato**: assunto em botões (Sugestão de música, Pedido musical, Parcerias, Outro); campos Música e Artista só nos dois primeiros; tela de confirmação; envio por e-mail | 5 | ⏳ | Mockup `Contato.dc.html` pronto. Depende de B-07 (nativo ou plugin) e do e-mail de destino. Anti-spam como nos recados (campo-armadilha + 3 s) |
 | B-61 | **Fase 5 — Revisão geral**: acessibilidade (teclado, contraste, leitor de tela), desempenho (imagens, fontes, cache LiteSpeed), 404, SEO (Rank Math), conferência em celular e desktop, revalidação no domínio final (B-32) | 5 | ⏳ | Último passo antes de considerar o site pronto |
 | B-62 | Itens que **não estão nos mockups** e valem uma conversa: página de busca, política de privacidade/cookies (LGPD; o Spotify/YouTube carregam conteúdo de terceiros), imagem de compartilhamento (Open Graph) e favicon | — | 💡 | Sugestão do Claude; decidir se entram na Fase 5 |
@@ -99,6 +101,8 @@
 - Fase 4: filtros do Blog são LINKS (`?categoria=&autor=&ordem=`), não formulários, para a navegação persistente não parar o áudio; 9 posts por página; categorias e tags usam a mesma listagem; autor em `/autor/nome/`; "Carregar mais posts" na página do autor.
 - Fase 4: formato do post = campo ACF "Formato" (Texto, Poesia, Vídeo, Música, Podcast, Tirinha, Imagem, Citação); novos formatos = 1 linha em `rac_formatos_post()` + campos + um arquivo em `template-parts/formatos/`. Música = player do Spotify incorporado (campos país, nome, estilo, link) com título automático "Descoberta Musical: nome - país - estilo"; países com bandeira em imagem (funciona no Windows). Tirinha = imagem pelo editor + campos opcionais de direitos/referência. Compartilhar = WhatsApp, Facebook, X e Copiar link (botões grandes, com texto) + menu nativo do celular quando existir. Comentários = nativos do WordPress, enviados sem recarregar.
 - Cards de estação com imagem: o card inteiro abre a página da estação e só o botão de play toca (lista compacta "Todas as estações" mantém o clique que toca). Barra do player: linha laranja no topo (em vez de inverter as cores) e mais alta no mobile.
+- Sobre: textos provisórios do mockup até o Rubens enviar os reais; "Quem faz" = usuários marcados no perfil (N pessoas, com posição); os 3 destaques reaproveitam os textos da Home.
+- Home mobile: slider do topo com bolinhas, ponta do próximo card e auto-avanço de 5 s (para na primeira interação).
 - Sem headless: tema filho do Kadence com templates PHP.
 - `#primary` é o seletor da navegação persistente; todo template terá exatamente um `<main id="primary">`. O plugin não é alterado para isso.
 - Textos do rodapé são globais; textos da Home são editados na própria página Home.

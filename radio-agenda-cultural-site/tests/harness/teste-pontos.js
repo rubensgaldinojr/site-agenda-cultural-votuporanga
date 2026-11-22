@@ -35,18 +35,50 @@ const lerPontos = (page, sel) => page.evaluate((s) => {
   ok(h && h.n === 4 && h.vis && h.ativo === 0 && h.atual === 1, 'topo da Home: 4 bolinhas, a 1ª ativa');
   ok(h.toque[0] === 28 && h.toque[1] === 28 && h.ativoW === 22 && h.inatW === 8, `bolinhas: área de toque de ${h.toque.join('x')}px, a ativa alongada (22px) e as outras redondas (8px)`);
   const geo = await page.evaluate(() => { const c = document.querySelector('.rac-hero-cards'); const it = c.querySelector('.rac-hero-cards__item').getBoundingClientRect(); return { larg: Math.round(it.width), cont: Math.round(c.getBoundingClientRect().width), snap: getComputedStyle(c).scrollSnapType }; });
-  ok(geo.larg === geo.cont && geo.snap.includes('x') && geo.larg === 339, `cada card ocupa a largura toda do slider (${geo.larg}px)`);
+  const pico = await page.evaluate(() => { const it = [...document.querySelectorAll('.rac-hero-cards__item')]; return { prox: Math.round(it[1].getBoundingClientRect().left), larg: window.innerWidth }; });
+  ok(Math.abs(geo.larg - 291) <= 2 && geo.snap.includes('x') && pico.prox < pico.larg - 20, `cada card tem ${geo.larg}px (86%) e a ponta do próximo aparece (começa em ${pico.prox}px de ${pico.larg}px)`);
   // rolar com o dedo (rolagem programática) acompanha as bolinhas
   await page.evaluate(() => { const c = document.querySelector('.rac-hero-cards'); c.scrollTo({ left: c.clientWidth * 2 + 24, behavior: 'instant' }); });
   ok(await esperar(page, () => document.querySelectorAll('.rac-hero-cards + .rac-pontos .rac-pontos__ponto')[2].getAttribute('aria-current') === 'true'), 'ao rolar até o 3º card, a 3ª bolinha fica ativa');
   // tocar na bolinha leva ao card
   await page.click('.rac-hero-cards + .rac-pontos .rac-pontos__ponto:nth-child(4)');
   ok(await esperar(page, () => { const c = document.querySelector('.rac-hero-cards'); return document.querySelectorAll('.rac-hero-cards + .rac-pontos .rac-pontos__ponto')[3].getAttribute('aria-current') === 'true' && c.scrollLeft >= c.scrollWidth - c.clientWidth - 2; }), 'tocar na 4ª bolinha leva ao último card (Blog)');
-  const ultimo = await page.evaluate(() => { const it = [...document.querySelectorAll('.rac-hero-cards__item')][3]; const r = it.getBoundingClientRect(); return { esq: Math.round(r.left), kicker: it.querySelector('.rac-destaque__kicker').textContent }; });
-  ok(Math.abs(ultimo.esq - 18) <= 2 && ultimo.kicker === 'Blog', `o último card encaixa na margem de 18px (${ultimo.kicker}, esq ${ultimo.esq})`);
+  const ultimo = await page.evaluate(() => { const it = [...document.querySelectorAll('.rac-hero-cards__item')][3]; const r = it.getBoundingClientRect(); return { esq: Math.round(r.right), kicker: it.querySelector('.rac-destaque__kicker').textContent }; });
+  ok(Math.abs(ultimo.esq - 357) <= 2 && ultimo.kicker === 'Blog', `o último card termina na margem direita de 18px (${ultimo.kicker}, borda direita em ${ultimo.esq}px)`);
   await page.click('.rac-hero-cards + .rac-pontos .rac-pontos__ponto:nth-child(1)');
   ok(await esperar(page, () => document.querySelector('.rac-hero-cards').scrollLeft < 3 && document.querySelectorAll('.rac-hero-cards + .rac-pontos .rac-pontos__ponto')[0].getAttribute('aria-current') === 'true'), 'tocar na 1ª bolinha volta ao card do fundador');
   await page.screenshot({ path: 'capturas/pontos-home-topo-m.png' });
+
+  /* ---------- Auto-avanço do topo ---------- */
+  const idxHero = (p) => p.evaluate(() => [...document.querySelectorAll('.rac-hero-cards + .rac-pontos .rac-pontos__ponto')].findIndex(b => b.getAttribute('aria-current') === 'true'));
+  const ctxA = await browser.newContext({ viewport: { width: 375, height: 800 } });
+  const pa = await ctxA.newPage();
+  await pa.goto(B + '/');
+  ok(await pa.evaluate(() => document.querySelector('.rac-hero-cards').getAttribute('data-rac-auto') === '5000'), 'topo da Home: auto-avanço de 5 s ligado');
+  await pa.waitForTimeout(5800);
+  ok((await idxHero(pa)) === 1, 'sem tocar em nada, depois de ~5 s o slider passa sozinho para o 2º card');
+  await pa.waitForTimeout(5200);
+  ok((await idxHero(pa)) === 2, 'e depois de mais 5 s, para o 3º (as bolinhas acompanham)');
+  await pa.evaluate(() => { const c = document.querySelector('.rac-hero-cards'); c.scrollTo({ left: c.scrollWidth, behavior: 'instant' }); });
+  await pa.waitForTimeout(5800);
+  ok((await idxHero(pa)) === 0, 'depois do último card, volta ao primeiro (rolagem do próprio script não conta como interação)');
+  await pa.dispatchEvent('.rac-hero-cards', 'pointerdown');
+  await pa.waitForTimeout(5800);
+  ok((await idxHero(pa)) === 0, 'depois de uma interação (toque/arrastar), o auto-avanço para de vez');
+  await ctxA.close();
+  const ctxH = await browser.newContext({ viewport: { width: 375, height: 800 } });
+  const ph = await ctxH.newPage();
+  await ph.goto(B + '/');
+  await ph.hover('.rac-hero-cards');
+  await ph.waitForTimeout(5800);
+  ok((await idxHero(ph)) === 0, 'com o mouse em cima do slider, o auto-avanço fica em pausa');
+  await ctxH.close();
+  const ctxR = await browser.newContext({ viewport: { width: 375, height: 800 }, reducedMotion: 'reduce' });
+  const pr = await ctxR.newPage();
+  await pr.goto(B + '/');
+  await pr.waitForTimeout(5800);
+  ok((await idxHero(pr)) === 0, '"reduzir movimento" ligado: o slider não passa sozinho');
+  await ctxR.close();
 
   /* ---------- Outras faixas da Home ---------- */
   const e = await lerPontos(page, '.rac-home-destaques-estacoes');

@@ -6,6 +6,10 @@
    laranja, e tocar numa bolinha leva até aquele ponto. Há uma bolinha por posição de encaixe alcançável
    (normalmente, uma por card; os últimos cards, que não conseguem chegar ao início da faixa, dividem a última).
 
+   Faixas com data-rac-auto="ms" (topo da Home) também avançam sozinhas, como um banner: a cada N ms, voltando ao
+   primeiro card no fim. Param de vez quando a pessoa interage (toque, roda do mouse, teclado, bolinhas), pausam com o
+   mouse ou o foco em cima, com a aba escondida e com a faixa fora da tela, e não rodam com "reduzir movimento".
+
    Faixas atendidas: topo da Home (4 cards), Estações em destaque, Blog, Literatura e "Da biblioteca".
    No desktop as bolinhas ficam escondidas (o carrossel infinito tem as próprias setas).
    Roda no carregamento e a cada troca de conteúdo (RAC.aoCarregar); o que é ligado fora do #primary
@@ -110,7 +114,27 @@
     // imagens que terminam de carregar mudam a largura do conteúdo
     window.addEventListener('load', desenhar);
 
+    /* ---- auto-avanço (só nas faixas com data-rac-auto) ---- */
+    var intervalo = parseInt(faixa.getAttribute('data-rac-auto'), 10);
+    var relogio = 0, parado = false, sobre = false;
+    if (intervalo > 0 && !reduz.matches) {
+      var parar = function () { parado = true; };
+      var entrar = function () { sobre = true; };
+      var sair = function () { sobre = false; };
+      var noEcra = function () { var r = faixa.getBoundingClientRect(); return r.bottom > 0 && r.top < window.innerHeight; };
+      var passar = function () {
+        if (parado || sobre || document.hidden || !mq.matches || total < 2 || !noEcra()) return;
+        faixa.scrollTo({ left: posicoes[(Math.max(0, ativo) + 1) % total], behavior: 'smooth' });
+      };
+      ['pointerdown', 'touchstart', 'wheel', 'keydown'].forEach(function (ev) { faixa.addEventListener(ev, parar, { passive: true }); });
+      pontos.addEventListener('click', parar);
+      faixa.addEventListener('mouseenter', entrar); faixa.addEventListener('mouseleave', sair);
+      faixa.addEventListener('focusin', entrar); faixa.addEventListener('focusout', sair);
+      relogio = setInterval(passar, intervalo);
+    }
+
     limpezas.push(function () {
+      if (relogio) clearInterval(relogio);
       faixa.removeEventListener('scroll', aoRolar);
       window.removeEventListener('resize', desenhar);
       window.removeEventListener('load', desenhar);

@@ -31,6 +31,8 @@ function rac_campos_autor() {
             array( 'key' => 'field_rac_autor_desde', 'label' => 'Texto de "desde"', 'name' => 'autor_desde', 'type' => 'text', 'instructions' => 'Ex.: Escreve desde 2021.' ),
             array( 'key' => 'field_rac_autor_citacao', 'label' => 'Citação favorita', 'name' => 'autor_citacao', 'type' => 'textarea', 'rows' => 3, 'new_lines' => '' ),
             array( 'key' => 'field_rac_autor_citacao_de', 'label' => 'Autor da citação', 'name' => 'autor_citacao_de', 'type' => 'text', 'instructions' => 'Nome e sobrenome da pessoa citada.' ),
+            array( 'key' => 'field_rac_autor_no_sobre', 'label' => 'Aparecer na página Sobre ("Quem faz")', 'name' => 'autor_no_sobre', 'type' => 'true_false', 'ui' => 1, 'default_value' => 0, 'message' => '', 'instructions' => 'Marque para esta pessoa aparecer na seção "As pessoas por trás da rádio" da página Sobre. Pode marcar quantas quiser.' ),
+            array( 'key' => 'field_rac_autor_ordem_sobre', 'label' => 'Posição na página Sobre', 'name' => 'autor_ordem_sobre', 'type' => 'number', 'min' => 1, 'step' => 1, 'instructions' => 'Número menor aparece primeiro (1, 2, 3…). Vazio ou empate: ordem alfabética pelo nome.' ),
         ),
         'location' => array( array( array( 'param' => 'user_form', 'operator' => '==', 'value' => 'edit' ) ) ),
         'position' => 'normal',

@@ -26,12 +26,8 @@ $foto_fundador = (int) rac_campo( 'home_fundador_foto', $pagina_id, 0 );
 $foto_sobre    = (int) rac_campo( 'home_sobre_foto', $pagina_id, 0 );
 $rotulo_total  = $total === 1 ? '1 estação' : $total . ' estações';
 
-// Os 3 destaques (Estações, Literatura, Blog): usados na faixa do desktop e nos cards do carrossel do mobile.
-$destaques = array(
-    array( 'kicker' => 'Estações', 'titulo' => $rotulo_total . ' no ar, 24h por dia', 'texto' => $t( 'home_destaque1_texto' ) ),
-    array( 'kicker' => 'Literatura', 'titulo' => $t( 'home_destaque2_titulo' ), 'texto' => $t( 'home_destaque2_texto' ) ),
-    array( 'kicker' => 'Blog', 'titulo' => $t( 'home_destaque3_titulo' ), 'texto' => $t( 'home_destaque3_texto' ) ),
-);
+// Os 3 destaques (Estações, Literatura, Blog): usados na faixa do desktop e nos cards do slider do mobile.
+$destaques = rac_destaques_home();
 
 // Cartão "sobre o fundador" (desktop: no topo, ao lado do texto; mobile: 1º card do carrossel).
 $cartao_fundador = function () use ( $foto_fundador, $fundador_nome, $t ) {
@@ -84,7 +80,7 @@ get_header();
             <div class="rac-home-hero__lado"><?php $cartao_fundador(); ?></div>
 
             <!-- Mobile: 4 cards em carrossel (fundador + os 3 destaques); no desktop ficam escondidos -->
-            <div class="rac-hero-cards" role="region" aria-label="Sobre a rádio" tabindex="0">
+            <div class="rac-hero-cards" role="region" aria-label="Sobre a rádio" tabindex="0" data-rac-auto="5000">
                 <div class="rac-hero-cards__item"><?php $cartao_fundador(); ?></div>
                 <?php foreach ( $destaques as $d ) : ?>
                     <div class="rac-hero-cards__item">
