@@ -37,14 +37,15 @@
 .rac-sobre-bloco__texto p { margin: 0; font-size: 17px; line-height: 1.85; color: var(--text-body); }
 .rac-sobre-bloco__texto a { color: var(--accent-text); text-decoration: underline; text-underline-offset: 3px; }
 
-/* Figura: foto com cantos arredondados e um bloco laranja suave deslocado atrás (só decoração) */
-.rac-sobre-figura { position: relative; margin: 0; }
-.rac-sobre-figura::before { content: ''; position: absolute; z-index: 0; border-radius: 22px; background: var(--accent-soft); inset: 16px -16px -16px 16px; }
-.rac-sobre-figura--paisagem::before { inset: 16px 16px -16px -16px; }
-.rac-sobre-figura__img { position: relative; z-index: 1; overflow: hidden; border-radius: 20px; background: var(--surface2); aspect-ratio: 4 / 5; }
+/* Figura: foto com cantos arredondados e um bloco laranja suave deslocado atrás (só decoração). O bloco acompanha SÓ a foto
+   (fica no ::before da caixa da imagem, e não da figura, para não crescer por trás da legenda). */
+.rac-sobre-figura { margin: 0; }
+.rac-sobre-figura__img { position: relative; isolation: isolate; border-radius: 20px; background: var(--surface2); aspect-ratio: 4 / 5; }
 .rac-sobre-figura--paisagem .rac-sobre-figura__img { aspect-ratio: 3 / 2; }
-.rac-body .rac-sobre-figura__img img { display: block; width: 100%; height: 100%; max-width: none; object-fit: cover; }
-.rac-sobre-figura figcaption { position: relative; z-index: 1; margin-top: 26px; font-size: 12px; line-height: 1.5; color: var(--muted); }
+.rac-sobre-figura__img::before { content: ''; position: absolute; z-index: -1; inset: 16px -16px -16px 16px; border-radius: 22px; background: var(--accent-soft); }
+.rac-sobre-figura--paisagem .rac-sobre-figura__img::before { inset: 16px 16px -16px -16px; }
+.rac-body .rac-sobre-figura__img img { display: block; width: 100%; height: 100%; max-width: none; object-fit: cover; border-radius: inherit; }
+.rac-sobre-figura figcaption { margin-top: 28px; font-size: 12px; line-height: 1.5; color: var(--muted); }
 .rac-sobre-bloco--sozinho .rac-sobre-figura__img { aspect-ratio: 21 / 9; }
 
 /* ---------- Quem faz ---------- */
@@ -122,11 +123,11 @@
   .rac-sobre-bloco--inverso .rac-sobre-figura { order: -1; }
   .rac-sobre-bloco__texto, .rac-sobre-bloco--inverso .rac-sobre-bloco__texto { max-width: none; justify-self: stretch; gap: 14px; }
   .rac-sobre-bloco__texto p { font-size: 15px; line-height: 1.8; }
-  .rac-sobre-figura::before, .rac-sobre-figura--paisagem::before { inset: 10px -10px -10px 10px; border-radius: 16px; }
-  .rac-sobre-figura--paisagem::before { inset: 10px 10px -10px -10px; }
   .rac-sobre-figura__img, .rac-sobre-figura--paisagem .rac-sobre-figura__img { aspect-ratio: 4 / 3; border-radius: 14px; }
+  .rac-sobre-figura__img::before { inset: 10px -10px -10px 10px; border-radius: 16px; }
+  .rac-sobre-figura--paisagem .rac-sobre-figura__img::before { inset: 10px 10px -10px -10px; }
   .rac-sobre-bloco--sozinho .rac-sobre-figura__img { aspect-ratio: 16 / 9; }
-  .rac-sobre-figura figcaption { margin-top: 18px; }
+  .rac-sobre-figura figcaption { margin-top: 22px; }
 
   .rac-sobre-equipe { padding: 0 18px; }
   .rac-sobre-equipe__topo { margin: 0 -18px; padding: 28px 18px 8px; }

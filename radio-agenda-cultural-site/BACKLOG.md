@@ -20,7 +20,7 @@
 | 3B-1 | Home: topo, destaques, estações em destaque (mais ouvidas e descoberta), todas as estações e Sobre nós | ✅ testada no site real e mergeada (PR #4) |
 | 3B-2 | Home: carrosséis de Blog e Literatura, Podcasts e Recados dos ouvintes; "Da biblioteca" na página da estação | ✅ testada no site real e mergeada (PR #5) |
 | 4 (4A+4B) | Blog (listagem, categorias, tags), página do Autor e Post com 8 formatos, compartilhar, caixa do autor, comentários e relacionados + ajustes pós-teste (player, cards, toggle, bolinhas) | 🔨 código pronto e testado pelo Rubens (tema 0.6.3, na branch). **PR ainda não aberto**: vai junto com a próxima entrega (B-57/B-58) |
-| 5A | Sobre | 🔨 código pronto (tema 0.7.1, com os ajustes pós-teste: links nos destaques, botão do autor embaixo, foto com borda, história com 2 imagens); aguardando teste manual no site |
+| 5A | Sobre | 🔨 código pronto (tema 0.7.2, com os ajustes pós-teste: links nos destaques, botão do autor embaixo, foto com borda, história com 2 imagens); aguardando teste manual no site |
 | 5B | Contato | ⏳ |
 | 5C | Revisão geral | ⏳ |
 

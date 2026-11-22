@@ -20,7 +20,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'RAC_TEMA_VERSAO', '0.7.1' );
+define( 'RAC_TEMA_VERSAO', '0.7.2' );
 
 require_once get_stylesheet_directory() . '/inc/helpers.php';
 require_once get_stylesheet_directory() . '/inc/customizer.php';

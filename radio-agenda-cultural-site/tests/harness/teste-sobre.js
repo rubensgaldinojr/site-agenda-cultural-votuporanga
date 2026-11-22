@@ -75,7 +75,7 @@ const vis = (page, sel) => page.evaluate((s) => { const e = document.querySelect
       n: f.length, retrato: f[0].classList.contains('rac-sobre-figura--retrato'), paisagem: f[1].classList.contains('rac-sobre-figura--paisagem'),
       prop1: Math.round(r(f[0].querySelector('.rac-sobre-figura__img')).width / r(f[0].querySelector('.rac-sobre-figura__img')).height * 100), prop2: Math.round(r(f[1].querySelector('.rac-sobre-figura__img')).width / r(f[1].querySelector('.rac-sobre-figura__img')).height * 100),
       lado1: r(f[0]).left < r(t[0]).left, lado2: r(t[1]).left < r(f[1]).left, leg: f.map(x => x.querySelector('figcaption').textContent), alt: f.map(x => x.querySelector('img').alt),
-      raio: getComputedStyle(f[0].querySelector('.rac-sobre-figura__img')).borderRadius, deco: getComputedStyle(f[0], '::before').backgroundColor, cols: bl.map(b => getComputedStyle(b).gridTemplateColumns.split(' ').length).join(), sozinho: bl.map(b => b.classList.contains('rac-sobre-bloco--sozinho')).join(),
+      raio: getComputedStyle(f[0].querySelector('.rac-sobre-figura__img')).borderRadius, deco: getComputedStyle(f[0].querySelector('.rac-sobre-figura__img'), '::before').backgroundColor, decoFigura: getComputedStyle(f[0], '::before').content, decoInset: getComputedStyle(f[0].querySelector('.rac-sobre-figura__img'), '::before').inset, decoH: getComputedStyle(f[0].querySelector('.rac-sobre-figura__img'), '::before').height, imgH: getComputedStyle(f[0].querySelector('.rac-sobre-figura__img')).height, cols: bl.map(b => getComputedStyle(b).gridTemplateColumns.split(' ').length).join(), sozinho: bl.map(b => b.classList.contains('rac-sobre-bloco--sozinho')).join(),
       semOverflow: document.documentElement.scrollWidth <= window.innerWidth,
     };
   });
@@ -83,7 +83,8 @@ const vis = (page, sel) => page.evaluate((s) => { const e = document.querySelect
   ok(im.prop1 === 80 && im.prop2 === 150, `proporções das imagens: retrato 4:5 (${im.prop1}%) e paisagem 3:2 (${im.prop2}%), cortadas sem deformar`);
   ok(im.lado1 && im.lado2, 'a Imagem 1 fica à esquerda do texto e a Imagem 2 à direita');
   ok(im.leg.join('|') === 'Legenda da imagem 1|Legenda da imagem 2' && im.alt.join('|') === 'Legenda da imagem 1|Legenda da imagem 2', 'legendas opcionais aparecem embaixo e servem de texto alternativo da imagem');
-  ok(im.raio === '20px' && im.deco !== 'rgba(0, 0, 0, 0)' && im.semOverflow, 'cantos de 20px, bloco laranja suave atrás da foto (decoração) e sem rolagem horizontal');
+  ok(im.raio === '20px' && im.deco === 'rgb(253, 238, 226)' && im.semOverflow, 'cantos de 20px, bloco laranja suave atrás da foto (decoração) e sem rolagem horizontal');
+  ok(im.decoFigura === 'none' && im.decoH === im.imgH, `o bloco laranja acompanha só a foto, não a legenda (altura do bloco ${im.decoH} = altura da foto ${im.imgH})`);
   await page.screenshot({ path: 'capturas/sobre-imagens-d.png', fullPage: true });
   await page.goto(B + '/f4/sobre/?img1=1');
   ok((await cnt(page, '.rac-sobre-figura')) === 1 && (await cnt(page, '.rac-sobre-bloco:nth-of-type(2) .rac-sobre-figura')) === 1 && (await cnt(page, '.rac-sobre-bloco--sozinho')) === 1 && (await cnt(page, '.rac-sobre-figura figcaption')) === 0, 'só a Imagem 1: o bloco 1 tem imagem + texto; o bloco 2 fica só com texto; sem legenda, nada é desenhado');

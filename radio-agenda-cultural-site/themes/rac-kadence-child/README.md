@@ -1,6 +1,6 @@
 # Tema filho do Kadence — Rádio Agenda Cultural
 
-Versão 0.7.1 (Fases 1, 2, 3A, 3B-1, 3B-2, 4 e 5A). Requer o tema **Kadence** instalado (é o tema pai).
+Versão 0.7.2 (Fases 1, 2, 3A, 3B-1, 3B-2, 4 e 5A). Requer o tema **Kadence** instalado (é o tema pai).
 
 ## Instalação (site de desenvolvimento)
 
