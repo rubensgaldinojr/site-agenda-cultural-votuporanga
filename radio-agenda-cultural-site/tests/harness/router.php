@@ -3,7 +3,7 @@ $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 // Fase 4 (blog, autor, post, comentários) usa um conjunto próprio de simulações
 // (o post de exemplo /blog/post-x/ dos testes de navegação usa o modelo single.php da Fase 4, então também roda nelas)
 if ($uri==='/blog/post-x/') $uri = '/f4/post-601/';
-require __DIR__.(strpos($uri,'/f4/')===0 ? '/wpstubs4.php' : '/wpstubs.php');
+require __DIR__.((strpos($uri,'/f4/')===0 || ($uri==='/wp-admin/admin-ajax.php' && ($_POST['action'] ?? '')==='rac_contato')) ? '/wpstubs4.php' : '/wpstubs.php');
 if ($uri==='/h/silencio.wav' && !is_file(__DIR__.'/silencio.wav')) { $w=fopen(__DIR__.'/silencio.wav','wb'); $n=8000*60*2; fwrite($w,'RIFF'.pack('V',36+$n).'WAVEfmt '.pack('VvvVVvv',16,1,1,8000,16000,2,16).'data'.pack('V',$n).str_repeat("\0",$n)); fclose($w); }
 if (strpos($uri,'/theme/')===0) { $f=THEME_DIR.substr($uri,6); }
 elseif (strpos($uri,'/plugin/')===0) { $f=PLUGIN_DIR.substr($uri,7); }
@@ -16,7 +16,7 @@ if (isset($_GET['logoescuro'])) $GLOBALS['mods']['rac_logo_escuro']=8;
 $GLOBALS['mods'] += ['rac_logo_escuro'=>0];
 
 // endpoint AJAX do metadado (plugin real)
-if ($uri==='/wp-admin/admin-ajax.php') { require PLUGIN_DIR.'/racr-player-radio.php'; do_action('wp_ajax_nopriv_'.($_POST['action']??'')); exit; }
+if ($uri==='/wp-admin/admin-ajax.php') { require PLUGIN_DIR.'/racr-player-radio.php'; if (($_POST['action'] ?? '')==='rac_contato') { require THEME_DIR.'/functions.php'; } do_action('wp_ajax_nopriv_'.($_POST['action']??'')); exit; }
 // plugin real do player
 require PLUGIN_DIR.'/racr-player-radio.php';
 // CSS do tema pai (simulado), enfileirado antes do CSS do tema filho

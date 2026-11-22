@@ -3,3 +3,5 @@ capturas/
 server.log
 pid.txt
 ultimo-recado.json
+contato-*.json
+contato-*.flag

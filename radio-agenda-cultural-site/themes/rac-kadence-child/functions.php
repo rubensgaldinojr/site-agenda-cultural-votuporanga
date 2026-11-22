@@ -12,6 +12,7 @@
  * Fase 4: Blog, Post (formatos, comentários, compartilhar) e Autor
  *         (inc/blog.php, inc/autor.php, inc/formatos.php, inc/comentarios.php).
  * Fase 5A: página Sobre (page-sobre.php, inc/sobre.php).
+ * Fase 5B: página Contato e mensagens no painel (page-contato.php, inc/contato.php).
  *
  * REGRA CRÍTICA: o plugin troca via AJAX apenas o conteúdo de "#primary".
  * Todo template deste tema precisa ter exatamente UM <main id="primary">,
@@ -20,7 +21,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'RAC_TEMA_VERSAO', '0.7.2' );
+define( 'RAC_TEMA_VERSAO', '0.8.0' );
 
 require_once get_stylesheet_directory() . '/inc/helpers.php';
 require_once get_stylesheet_directory() . '/inc/customizer.php';
@@ -34,6 +35,7 @@ require_once get_stylesheet_directory() . '/inc/autor.php';
 require_once get_stylesheet_directory() . '/inc/formatos.php';
 require_once get_stylesheet_directory() . '/inc/comentarios.php';
 require_once get_stylesheet_directory() . '/inc/sobre.php';
+require_once get_stylesheet_directory() . '/inc/contato.php';
 
 /* ============================================================
    1. CONFIGURAÇÃO DO TEMA
@@ -115,6 +117,9 @@ function rac_enqueue_assets() {
     // Página Sobre (Fase 5).
     wp_enqueue_style( 'rac-sobre', $uri . '/assets/css/sobre.css', array( 'rac-blog' ), filemtime( $dir . '/assets/css/sobre.css' ) );
 
+    // Página Contato (Fase 5).
+    wp_enqueue_style( 'rac-contato', $uri . '/assets/css/contato.css', array( 'rac-sobre' ), filemtime( $dir . '/assets/css/contato.css' ) );
+
     wp_enqueue_script( 'rac-tema-js', $uri . '/assets/js/rac.js', array(), filemtime( $dir . '/assets/js/rac.js' ), true );
     // Carrosséis e recados da Home (Fase 3B-2): carregados em todas as páginas.
     wp_enqueue_script( 'rac-carrossel-js', $uri . '/assets/js/carrossel.js', array( 'rac-tema-js' ), filemtime( $dir . '/assets/js/carrossel.js' ), true );
@@ -125,6 +130,7 @@ function rac_enqueue_assets() {
     wp_enqueue_script( 'rac-blog-js', $uri . '/assets/js/blog.js', array( 'rac-tema-js' ), filemtime( $dir . '/assets/js/blog.js' ), true );
     wp_enqueue_script( 'rac-compartilhar-js', $uri . '/assets/js/compartilhar.js', array(), filemtime( $dir . '/assets/js/compartilhar.js' ), true );
     wp_enqueue_script( 'rac-comentarios-js', $uri . '/assets/js/comentarios.js', array( 'rac-tema-js' ), filemtime( $dir . '/assets/js/comentarios.js' ), true );
+    wp_enqueue_script( 'rac-contato-js', $uri . '/assets/js/contato.js', array( 'rac-tema-js' ), filemtime( $dir . '/assets/js/contato.js' ), true );
 
     // Player fixo e cards de estação (Fase 2). Só quando há player na página.
     if ( rac_tem_player() ) {

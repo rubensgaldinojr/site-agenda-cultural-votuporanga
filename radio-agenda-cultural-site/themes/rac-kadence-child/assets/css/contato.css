@@ -1,0 +1,94 @@
+/* =========================================================
+   Rádio Agenda Cultural — página Contato (Fase 5B)
+   Texto e contatos à esquerda, formulário à direita (Contato.dc.html).
+   Carregado em todas as páginas (navegação persistente). Só var(--token). Ponto de quebra: 900px.
+   ========================================================= */
+
+.rac-contato { max-width: 1280px; margin: 0 auto; padding: 72px 56px 88px; display: grid; grid-template-columns: minmax(0, 1fr) 600px; gap: 72px; align-items: start; }
+
+/* ---------- Texto e contatos ---------- */
+.rac-contato__info { display: flex; flex-direction: column; gap: 16px; padding-top: 8px; }
+.rac-body .rac-contato__info h1 { margin: 0; font-size: 48px; letter-spacing: -.02em; line-height: 1.08; }
+.rac-contato__texto { margin: 0; font-size: 16px; line-height: 1.75; color: var(--text-body); text-wrap: pretty; }
+.rac-contato__linhas { margin-top: 20px; display: flex; flex-direction: column; border-bottom: 1px solid var(--line); }
+.rac-contato__linha { padding: 16px 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 3px; }
+.rac-contato__linha > span { font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.rac-contato__linha strong { font-size: 15px; font-weight: 400; color: var(--text); }
+.rac-body .rac-contato__linha a { font-size: 15px; font-weight: 500; }
+.rac-contato__linha--redes { flex-direction: row; align-items: center; justify-content: space-between; }
+.rac-contato__redes { display: flex; gap: 8px; }
+.rac-body .rac-contato__redes a {
+  width: 34px; height: 34px; border-radius: 50%; background: var(--surface2); border: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 500; color: var(--text-body);
+}
+.rac-body .rac-contato__redes a:hover { border-color: var(--accent); color: var(--accent-text); }
+
+/* ---------- Cartão do formulário ---------- */
+.rac-contato__cartao { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 32px; box-shadow: 0 18px 40px -30px rgba(60, 40, 20, .3); }
+.rac-contato__form { display: flex; flex-direction: column; gap: 18px; }
+.rac-contato__form[hidden], .rac-contato__enviado[hidden], .rac-contato__musica[hidden], .rac-contato__erro[hidden] { display: none; }
+
+.rac-contato__assuntos { border: 0; margin: 0; padding: 0; min-width: 0; }
+.rac-contato__assuntos legend { padding: 0; margin-bottom: 8px; font-size: 12px; font-weight: 500; color: var(--text-body); }
+.rac-contato__chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.rac-contato__chip { position: relative; cursor: pointer; }
+.rac-contato__chip input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
+.rac-contato__chip span {
+  display: block; white-space: nowrap; padding: 8px 14px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line);
+  font-size: 13px; font-weight: 500; color: var(--text-body); transition: background-color .15s ease, border-color .15s ease;
+}
+.rac-contato__chip:hover span { border-color: var(--text); }
+.rac-contato__chip input:checked + span { background: var(--text); border-color: var(--text); color: var(--bg); }
+.rac-contato__chip input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.rac-contato__dupla { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.rac-contato .rac-campo { gap: 6px; }
+.rac-contato .rac-campo > span { font-size: 12px; font-weight: 500; color: var(--text-body); }
+.rac-body .rac-contato .rac-campo input, .rac-body .rac-contato .rac-campo textarea { padding: 12px 14px; border-radius: 10px; font-size: 14px; }
+.rac-body .rac-contato .rac-campo textarea { line-height: 1.6; min-height: 130px; }
+
+.rac-contato__musica { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 16px; border-radius: 12px; background: var(--accent-soft); }
+.rac-contato__musica .rac-campo > span { color: var(--accent-text); }
+.rac-body .rac-contato__musica .rac-campo input { background: var(--surface); border-color: transparent; padding: 11px 14px; }
+
+.rac-contato__erro { margin: 0; padding: 10px 14px; border-radius: 12px; background: var(--surface2); color: var(--live-text); font-size: 14px; }
+.rac-contato__rodape { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 4px; }
+.rac-contato__rodape > span { font-size: 12px; line-height: 1.5; color: var(--muted); }
+.rac-contato .rac-botao-cheio:disabled { opacity: .6; cursor: progress; }
+
+/* ---------- Tela "Mensagem enviada" ---------- */
+.rac-contato__enviado { min-height: 420px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 12px; }
+.rac-contato__ok { width: 52px; height: 52px; border-radius: 50%; background: var(--accent-soft); display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--accent-text); }
+.rac-body .rac-contato__enviado h2 { margin: 6px 0 0; font-size: 26px; font-weight: 400; }
+.rac-contato__enviado p { margin: 0; max-width: 340px; font-size: 14px; line-height: 1.65; color: var(--text-body); }
+.rac-body .rac-contato__enviado .rac-botao-contorno { margin-top: 8px; padding: 10px 20px; font-size: 13px; background: var(--surface); cursor: pointer; font-family: inherit; }
+.rac-body .rac-contato__enviado .rac-botao-contorno:hover, .rac-body .rac-contato__enviado .rac-botao-contorno:focus { background: var(--text); color: var(--bg); }
+
+/* =========================================================
+   MOBILE (< 900px)
+   ========================================================= */
+@media (max-width: 899px) {
+  .rac-contato { display: flex; flex-direction: column; align-items: stretch; gap: 0; padding: 0; }
+  .rac-contato__info { padding: 32px 18px 20px; gap: 10px; }
+  .rac-contato__info .rac-eyebrow { font-size: 10px; }
+  .rac-body .rac-contato__info h1 { font-size: 30px; letter-spacing: -.015em; line-height: 1.1; }
+  .rac-contato__texto { font-size: 14px; line-height: 1.65; }
+  .rac-contato__linhas { margin-top: 8px; }
+  .rac-contato__linha { padding: 12px 0; }
+  .rac-contato__cartao { margin: 0 18px 32px; padding: 18px; border-radius: 16px; box-shadow: none; }
+  .rac-contato__form { gap: 14px; }
+  .rac-contato__chips { gap: 6px; }
+  .rac-contato__chip span { height: 36px; display: flex; align-items: center; padding: 0 12px; font-size: 12px; }
+  .rac-contato__dupla { grid-template-columns: 1fr; gap: 14px; }
+  .rac-body .rac-contato .rac-campo input { height: 46px; padding: 0 14px; }
+  .rac-contato__musica { grid-template-columns: 1fr; gap: 10px; padding: 12px; }
+  .rac-body .rac-contato__musica .rac-campo input { height: 44px; padding: 0 14px; }
+  .rac-body .rac-contato .rac-campo textarea { min-height: 110px; line-height: 1.55; }
+  .rac-contato__rodape { flex-direction: column-reverse; align-items: stretch; gap: 8px; }
+  .rac-contato__rodape > span { text-align: center; font-size: 11px; }
+  .rac-contato .rac-botao-cheio { height: 48px; padding: 0; }
+  .rac-contato__enviado { min-height: 0; padding: 40px 8px; gap: 10px; }
+  .rac-contato__ok { width: 46px; height: 46px; font-size: 18px; }
+  .rac-body .rac-contato__enviado h2 { font-size: 22px; }
+  .rac-contato__enviado p { font-size: 13px; line-height: 1.6; }
+}

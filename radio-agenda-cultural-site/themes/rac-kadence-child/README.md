@@ -1,6 +1,6 @@
 # Tema filho do Kadence — Rádio Agenda Cultural
 
-Versão 0.7.2 (Fases 1, 2, 3A, 3B-1, 3B-2, 4 e 5A). Requer o tema **Kadence** instalado (é o tema pai).
+Versão 0.8.0 (Fases 1, 2, 3A, 3B-1, 3B-2, 4, 5A e 5B). Requer o tema **Kadence** instalado (é o tema pai).
 
 ## Instalação (site de desenvolvimento)
 
@@ -190,6 +190,24 @@ Podcasts (só se houver séries) e Recados dos ouvintes.
   livros" e "Veja todas as publicações". **Convite final** leva ao Contato (`/contato/`).
 - No mobile: foto de 72px ao lado do nome, bio e itens em largura total, sem a faixa de destaques.
 
+### Página Contato (Fase 5B, tema 0.8.0)
+
+- **Modelo** `page-contato.php` (vale para o slug `contato`; escolhendo o modelo **"Contato"** em Atributos da página aparecem os campos
+  do grupo "Página Contato"). Texto e contatos à esquerda, formulário à direita (mobile: em coluna).
+- **Formulário:** assunto em botões (Sugestão de música, Pedido musical, Parcerias, Outro); Música e Artista aparecem só nos dois
+  primeiros (Música é obrigatória neles); Nome, E-mail e Mensagem. Sem recarregar a página (a rádio continua tocando) e com tela
+  "Mensagem enviada". `?assunto=pedido-musical` deixa um assunto já marcado.
+- **O que acontece com cada mensagem** (`inc/contato.php`): (1) é **salva no painel**, em **Mensagens de contato** (menu lateral), com
+  assunto, nome, e-mail, música e artista, e a marca "e-mail enviado?"; (2) é **enviada por e-mail** (`wp_mail`) para o endereço do campo
+  **"E-mail de destino"** da página Contato (vazio = e-mail do administrador, em Configurações → Geral). "Responder" no e-mail já vai
+  para quem escreveu (Reply-To). Se o e-mail falhar, a pessoa ainda vê "enviada" e a mensagem fica no painel marcada "⚠ não saiu".
+- **Anti-spam:** campo-armadilha escondido, mínimo de 3 s entre abrir e enviar, 5 mensagens por hora por visitante e 40 por hora no total.
+  Sem nonce (a página pode estar em cache do LiteSpeed). Nada de IP guardado (só um código irreversível, por 1 hora).
+- **Linhas de contato:** "E-mail" (campo "E-mail público") e "Redes" (Instagram, Facebook, YouTube) só aparecem se preenchidos; "Onde
+  estamos" tem texto padrão. Nenhum e-mail é inventado.
+- **Entrega do e-mail:** o remetente é `wordpress@<domínio do site>`. Para a entrega ficar confiável (não cair em spam), o ideal é enviar
+  por uma caixa do domínio (SMTP) — etapa planejada junto com a criação do e-mail na Hostinger.
+
 ## Regras que não podem ser quebradas
 
 - Todo template tem **exatamente um** `<main id="primary">`: é a área que o plugin
@@ -219,13 +237,14 @@ style.css  functions.php  header.php  footer.php
 index.php  page.php  single.php  404.php          (genéricos; os definitivos vêm nas Fases 3–5)
 page-componentes.php                              (prévia de teste dos componentes)
 page-sobre.php  inc/sobre.php                     (Fase 5A)
+page-contato.php  inc/contato.php                 (Fase 5B)
 page-estacoes.php  single-estacao.php             (Fase 3A)
 front-page.php                                    (Fases 3B-1 e 3B-2)
 home.php  category.php  tag.php  page-blog.php  author.php   (Fase 4A)
 single.php  comments.php                          (Fase 4B; os formatos ficam em template-parts/formatos/)
-inc/helpers.php  inc/customizer.php  inc/player.php  inc/acf-campos.php  inc/home.php  inc/conteudo.php  inc/recados.php  inc/blog.php  inc/autor.php  inc/formatos.php  inc/comentarios.php  inc/paises.php
+inc/helpers.php  inc/customizer.php  inc/player.php  inc/acf-campos.php  inc/home.php  inc/conteudo.php  inc/recados.php  inc/contato.php  inc/blog.php  inc/autor.php  inc/formatos.php  inc/comentarios.php  inc/paises.php
 template-parts/theme-toggle.php  player-fixo.php  card-estacao.php  card-estacao-imagem.php  card-post.php  card-livro.php  tile-estacao.php  filtro.php  listagem.php  caixa-autor.php  compartilhar.php  aviso-radio.php  formatos/
-assets/css/tema.css  base.css  componentes.css  paginas.css  home.css  blog.css  sobre.css
-assets/js/rac.js  player.js  estacao.js  carrossel.js  recados.js  blog.js  compartilhar.js  comentarios.js  pontos.js
+assets/css/tema.css  base.css  componentes.css  paginas.css  home.css  blog.css  sobre.css  contato.css
+assets/js/rac.js  player.js  estacao.js  carrossel.js  recados.js  blog.js  compartilhar.js  comentarios.js  pontos.js  contato.js
 assets/img/placeholder-topo.jpg  assets/flags/*.svg
 ```

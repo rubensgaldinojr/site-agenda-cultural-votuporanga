@@ -37,7 +37,11 @@ function post_class($c=''){ echo 'class="post '.$c.'"'; }
 function esc_html($s){ return htmlspecialchars((string)$s, ENT_QUOTES); } function esc_attr($s){ return esc_html($s); }
 function esc_url($s){ return htmlspecialchars((string)$s, ENT_QUOTES); } function esc_url_raw($s){ return (string)$s; }
 function esc_textarea($s){ return esc_html($s); }
-function sanitize_textarea_field($s){return $s;} function sanitize_email($s){return $s;} function sanitize_text_field($s){return $s;}
+function sanitize_textarea_field($s){ return trim(strip_tags((string)$s)); }
+function sanitize_text_field($s){ return trim(strip_tags(preg_replace('/[\r\n\t ]+/',' ',(string)$s))); }
+function sanitize_email($s){ $s=trim((string)$s); return filter_var($s,FILTER_VALIDATE_EMAIL) ? $s : ''; }
+function is_email($s){ return (bool)filter_var((string)$s,FILTER_VALIDATE_EMAIL); }
+function absint($n){ return abs((int)$n); }
 function antispambot($e){ return $e; }
 function wp_unslash($s){ return $s; }
 function wp_parse_url($u,$c=-1){ return $c===-1 ? parse_url($u) : parse_url($u,$c); }
@@ -110,7 +114,7 @@ $GLOBALS['P'][616]=['t'=>'Episódio 12: histórias do rádio de bairro','a'=>3,'
 $GLOBALS['P'][615]=['t'=>'Rascunho que não aparece','a'=>1,'c'=>[11],'g'=>[],'d'=>'2026-10-29 10:00:00','thumb'=>'','cap'=>'','ex'=>'','html'=>'<p>x</p>','f'=>['formato'=>'texto'],'status'=>'draft'];
 foreach($GLOBALS['P'] as $id=>$p){ $GLOBALS['fields'][$id]=$p['f']; }
 foreach($GLOBALS['usuarios'] as $uid=>$u){ $GLOBALS['fields']['user_'.$uid]=$u['campos']; }
-$GLOBALS['paginas']=[2000=>'/f4/blog/', 2001=>'/f4/blogp/'];
+$GLOBALS['paginas']=[2000=>'/f4/blog/', 2001=>'/f4/blogp/', 3000=>'/f4/sobre/', 4000=>'/f4/contato/'];
 $GLOBALS['ctx']='home'; $GLOBALS['obj']=null; $GLOBALS['paged']=1; $GLOBALS['post']=null;
 
 // comentários do post 601 (árvore) e do 604
@@ -142,6 +146,20 @@ function get_userdata($id){ $u=$GLOBALS['usuarios'][$id] ?? null; return $u ? (o
 function wp_update_user($d){ if(isset($d['user_nicename'])) $GLOBALS['usuarios'][$d['ID']]['slug']=$d['user_nicename']; $GLOBALS['usuario_atualizado'][]=$d; return $d['ID']; }
 function get_page_uri($id){ return isset($GLOBALS['paginas'][$id]) ? 'blog' : ''; }
 function add_rewrite_rule($r,$q,$pos='bottom'){ $GLOBALS['regras'][]=[$r,$q,$pos]; }
+/* ---- Contato (Fase 5B): mensagens, e-mail e limites, gravados em arquivos para atravessar as requisições do teste ---- */
+define('HOUR_IN_SECONDS', 3600);
+function _tmp($n){ return (getenv('RAC_HARNESS_TMP') ?: __DIR__).'/'.$n; }
+function _ler($n){ $f=_tmp($n); return is_file($f) ? (json_decode(file_get_contents($f),true) ?: []) : []; }
+function _gravar($n,$d){ file_put_contents(_tmp($n), json_encode($d, JSON_UNESCAPED_UNICODE)); }
+function get_transient($k){ $t=_ler('contato-transients.json'); return $t[$k] ?? false; }
+function set_transient($k,$v,$e=0){ $t=_ler('contato-transients.json'); $t[$k]=$v; _gravar('contato-transients.json',$t); return true; }
+function wp_salt($s=''){ return 'sal-de-teste'; }
+function register_post_type($tipo,$args=[]){ $GLOBALS['cpts'][$tipo]=$args; }
+function add_meta_box(...$a){ $GLOBALS['metaboxes'][]=$a; }
+function wp_insert_post($d){ $m=_ler('contato-msgs.json'); $id=9001+count($m); $m[$id]=['titulo'=>$d['post_title'],'conteudo'=>$d['post_content'],'tipo'=>$d['post_type'],'status'=>$d['post_status'],'meta'=>[]]; _gravar('contato-msgs.json',$m); return $id; }
+function wp_mail($para,$assunto,$corpo,$cab=[]){ if(is_file(_tmp('contato-falha-email.flag'))) return false; $e=_ler('contato-emails.json'); $e[]=['para'=>$para,'assunto'=>$assunto,'corpo'=>$corpo,'cabecalhos'=>$cab]; _gravar('contato-emails.json',$e); return true; }
+function wp_send_json_success($d=null){ header('Content-Type: application/json'); echo json_encode(['success'=>true,'data'=>$d]); exit; }
+function wp_send_json_error($d=null){ header('Content-Type: application/json'); echo json_encode(['success'=>false,'data'=>$d]); exit; }
 function is_wp_error($x){ return false; }
 function checked($a,$b=true,$echo=true){ $r = ((string)$a===(string)$b) ? ' checked="checked"' : ''; if($echo) echo $r; return $r; }
 function post_password_required(){ return false; }
@@ -151,9 +169,9 @@ function sanitize_key($k){ return preg_replace('/[^a-z0-9_\-]/','',strtolower($k
 function locate_template($n){ return file_exists(THEME_DIR.'/'.$n) ? THEME_DIR.'/'.$n : ''; }
 function flush_rewrite_rules($h=true){}
 function acf_add_local_field_group($g){ $GLOBALS['acf_groups'][]=$g; }
-function get_post_type($id=null){ $id=is_object($id)?$id->ID:$id; return isset($GLOBALS['P'][$id])?'post':(($id>=100&&$id<200)?'estacao':false); }
-function get_post_meta($id,$k,$s=false){ return $GLOBALS['meta'][$id][$k] ?? ''; }
-function update_post_meta($id,$k,$v){ $GLOBALS['meta'][$id][$k]=$v; return true; }
+function get_post_type($id=null){ $id=is_object($id)?$id->ID:$id; if(isset($GLOBALS['paginas'][$id])) return 'page'; return isset($GLOBALS['P'][$id])?'post':(($id>=100&&$id<200)?'estacao':false); }
+function get_post_meta($id,$k,$s=false){ if($id>=9001){ $m=_ler('contato-msgs.json'); return $m[$id]['meta'][$k] ?? ''; } return $GLOBALS['meta'][$id][$k] ?? ''; }
+function update_post_meta($id,$k,$v){ $GLOBALS['meta'][$id][$k]=$v; if($id>=9001){ $m=_ler('contato-msgs.json'); if(isset($m[$id])){ $m[$id]['meta'][$k]=$v; _gravar('contato-msgs.json',$m); } } return true; }
 function wp_unique_post_slug($slug,$id,$st,$tipo,$pai){ return $slug; }
 function wp_update_post($d){ $id=$d['ID']; if(isset($d['post_title'])) $GLOBALS['P'][$id]['t']=$d['post_title']; if(isset($d['post_name'])) $GLOBALS['P'][$id]['slug']=$d['post_name']; $GLOBALS['atualizado'][]=$d; return $id; }
 function add_query_arg(...$a){ if(is_array($a[0])){ $args=$a[0]; $url=$a[1]??($_SERVER['REQUEST_URI']??''); } else { $args=[$a[0]=>$a[1]]; $url=$a[2]??($_SERVER['REQUEST_URI']??''); } $hash=''; if(($p=strpos($url,'#'))!==false){ $hash=substr($url,$p); $url=substr($url,0,$p); } $q=''; if(($p=strpos($url,'?'))!==false){ $q=substr($url,$p+1); $url=substr($url,0,$p); } parse_str($q,$cur); foreach($args as $k=>$v){ if($v===false||$v===null) unset($cur[$k]); else $cur[$k]=$v; } $s=http_build_query($cur); return $url.($s?'?'.$s:'').$hash; }
@@ -181,7 +199,7 @@ function wp_get_attachment_caption($aid){ $id=$aid-5000; return $GLOBALS['P'][$i
 function get_the_post_thumbnail($id=null,$size='',$attr=[]){ $id=_id($id); $t=$GLOBALS['P'][$id]['thumb'] ?? ($GLOBALS['LV'][$id]['thumb'] ?? ''); if(!$t) return ''; $c=isset($attr['class'])?' class="'.$attr['class'].'"':''; $alt=$attr['alt']??''; return '<img'.$c.' src="'.$t.'" alt="'.esc_attr($alt).'" loading="'.($attr['loading']??'lazy').'">'; }
 function get_the_post_thumbnail_url($id,$s=''){ return $GLOBALS['P'][_id($id)]['thumb'] ?? ''; }
 function wp_get_attachment_image($id,$size,$icon,$attr){ $src = ($id==7)?'/h/logo-claro.svg':(($id==55)?'/h/capa-1.svg':(($id==56)?'/h/foto2.svg':'/h/logo-escuro.svg')); return '<img src="'.$src.'" class="'.esc_attr($attr['class']??'').'" alt="'.esc_attr($attr['alt']??'').'" height="34">'; }
-function get_option($k,$d=false){ if($k==='page_on_front') return 1000; if($k==='page_for_posts') return empty($GLOBALS['sem_pagina_posts']) ? 2000 : 0; return 0; }
+function get_option($k,$d=false){ if($k==='page_on_front') return 1000; if($k==='page_for_posts') return empty($GLOBALS['sem_pagina_posts']) ? 2000 : 0; if($k==='admin_email') return 'admin@site.test'; return 0; }
 function get_page_by_path($s){ return ($s==='blog' && !empty($GLOBALS['sem_pagina_posts'])) ? (object)['ID'=>2001] : null; }
 function get_template_part($slug,$name=null,$args=[]){ include THEME_DIR.'/'.$slug.'.php'; }
 function get_header(){ include THEME_DIR.'/header.php'; } function get_footer(){ include THEME_DIR.'/footer.php'; }

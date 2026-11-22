@@ -21,7 +21,7 @@
 | 3B-2 | Home: carrosséis de Blog e Literatura, Podcasts e Recados dos ouvintes; "Da biblioteca" na página da estação | ✅ testada no site real e mergeada (PR #5) |
 | 4 (4A+4B) | Blog (listagem, categorias, tags), página do Autor e Post com 8 formatos, compartilhar, caixa do autor, comentários e relacionados + ajustes pós-teste (player, cards, toggle, bolinhas) | ✅ testada no site real e mergeada (PR #6, junto com a 5A) |
 | 5A | Sobre (com os ajustes pós-teste: links nos destaques, botão do autor embaixo, foto com borda, história com 2 imagens) | ✅ testada no site real (0.7.2) e mergeada (PR #6) |
-| 5B | Contato | ⏳ |
+| 5B | Contato (envio nativo do WordPress + mensagens salvas no painel) | 🔨 código pronto (tema 0.8.0); aguardando teste manual no site, incluindo o teste de entrega do e-mail |
 | 5C | Revisão geral | ⏳ |
 
 ## Itens
@@ -36,7 +36,7 @@
 | B-04 | Decidir se existe página individual de livro (`/livro/slug`) | 💡 | Hoje o CPT é público e não tem template nem mockup |
 | B-05 | Informar se o ACF é Pro (para usar página de opções) ou free | ✅ | ACF free; textos globais do rodapé ficam na Personalização do WordPress |
 | B-06 | Definir a página fixa usada como "mural" dos recados da Home | 💡 | Precisa ter comentários abertos |
-| B-07 | Escolher o formulário de Contato (wp_mail nativo ou plugin leve) | 💡 | Opções serão apresentadas na Fase 5 |
+| B-07 | Escolher o formulário de Contato (wp_mail nativo ou plugin leve) | ✅ | Decidido: envio nativo (wp_mail) + mensagens salvas no painel; e-mail de destino definido no painel (campo da página Contato) |
 
 ### Com o Claude (implementação)
 
@@ -91,9 +91,11 @@
 | B-57 | Home mobile — slider do topo (4 cards): passa sozinho (5 s) e mostra a ponta do próximo card | 4 | ✅ | Feito no 0.7.0 (junto com o Sobre): cards de 86%, bolinhas, auto-avanço que para na interação, pausa com mouse/foco e respeita "reduzir movimento". Aguardando teste no site real |
 | B-58 | PR da Fase 4 + 5A e merge | 4–5A | ✅ | PR #6 mergeado (main no 0.7.2) |
 | B-59 | **Fase 5A — Sobre** (código pronto no 0.7.0, aguardando teste no site real): topo com foto e a história; "Quem faz" (3 autores alternando o lado da foto, com cards pequenos de livros e artigos e o botão "Página do autor"); 3 destaques; convite para o Contato. Inclui os campos de autor "exibir no Sobre" e "ordem" | 5 | ⏳ | Textos provisórios do mockup (Rubens decidiu seguir com eles por enquanto). História em blocos com 2 imagens opcionais (abas no painel). "Quem faz" lista N pessoas: marcar "Aparecer na página Sobre" no perfil + posição. Foto de cada pessoa = foto do perfil |
-| B-60 | **Fase 5 — Contato**: assunto em botões (Sugestão de música, Pedido musical, Parcerias, Outro); campos Música e Artista só nos dois primeiros; tela de confirmação; envio por e-mail | 5 | ⏳ | Mockup `Contato.dc.html` pronto. Depende de B-07 (nativo ou plugin) e do e-mail de destino. Anti-spam como nos recados (campo-armadilha + 3 s) |
+| B-60 | **Fase 5B — Contato** (código pronto no 0.8.0; aguardando teste no site real): assunto em botões (Sugestão de música, Pedido musical, Parcerias, Outro); campos Música e Artista só nos dois primeiros; tela de confirmação; envio por e-mail | 5 | ⏳ | Decisão B-07: nativo. E-mail de destino fica no painel (vazio = administrador). Anti-spam: campo-armadilha + 3 s + limites por hora |
 | B-61 | **Fase 5 — Revisão geral**: acessibilidade (teclado, contraste, leitor de tela), desempenho (imagens, fontes, cache LiteSpeed), 404, SEO (Rank Math), conferência em celular e desktop, revalidação no domínio final (B-32) | 5 | ⏳ | Último passo antes de considerar o site pronto |
 | B-62 | Itens que **não estão nos mockups** e valem uma conversa: página de busca, política de privacidade/cookies (LGPD; o Spotify/YouTube carregam conteúdo de terceiros), imagem de compartilhamento (Open Graph) e favicon | — | 💡 | Sugestão do Claude; decidir se entram na Fase 5 |
+| B-63 | **E-mail do domínio na Hostinger** (`contato@radioagendacultural.com.br`): criar a caixa, conferir DNS (MX, SPF, DKIM), webmail e configurar o WordPress para enviar por SMTP com essa caixa; depois trocar o "E-mail de destino" e o "E-mail público" da página Contato | 5B | ⏳ | Rubens quer ajuda passo a passo; não bloqueia a 5B. Melhora a entrega dos e-mails do formulário |
+| B-64 | Testar no site real o **envio do formulário de Contato**: chega o e-mail? cai em spam? aparece em "Mensagens de contato"? | 5B | ⏳ | Mesmo se o e-mail falhar, a mensagem fica salva no painel (marcada "⚠ não saiu") |
 | B-40 | `catalogo-livros-rac.php` está duplicado na raiz do repositório (idêntico ao de `plugins/`) | 💡 | Remover a cópia da raiz? |
 
 ## Decisões tomadas
@@ -103,6 +105,7 @@
 - Cards de estação com imagem: o card inteiro abre a página da estação e só o botão de play toca (lista compacta "Todas as estações" mantém o clique que toca). Barra do player: linha laranja no topo (em vez de inverter as cores) e mais alta no mobile.
 - Merge: o Claude **sempre indica explicitamente a hora de fazer o merge no site do GitHub** (depois de o Rubens aprovar a versão no site real), com o passo a passo; nunca assume. Depois do merge, o Claude reinicia a branch a partir da `main`.
 - Segurança de versões: antes de gerar o zip ou de fazer o merge, rodar `scripts/verificar-estado.sh` (só lê; mostra alterações soltas, se o computador está igual ao GitHub, se falta o merge e a versão do tema de cada lugar). O zip sempre sai da pasta atual; o nome do arquivo é a versão lida de `style.css` daquela pasta.
+- Contato: envio nativo do WordPress (wp_mail), com cada mensagem também salva no painel ("Mensagens de contato"); e-mail de destino definido no painel; sem plugin de formulário (a navegação persistente quebraria scripts de plugin).
 - Sobre: textos provisórios do mockup até o Rubens enviar os reais; "Quem faz" = usuários marcados no perfil (N pessoas, com posição); os 3 destaques reaproveitam os textos da Home.
 - Home mobile: slider do topo com bolinhas, ponta do próximo card e auto-avanço de 5 s (para na primeira interação).
 - Sem headless: tema filho do Kadence com templates PHP.

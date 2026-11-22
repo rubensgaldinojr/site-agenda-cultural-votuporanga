@@ -260,3 +260,7 @@
   .rac-home-hero__grade > .rac-pontos { margin-top: -6px; }
   .rac-biblioteca .rac-secao__inner > .rac-pontos { margin-top: 4px; }
 }
+
+/* Botões principais do tema: sem o azul do Kadence ao focar/clicar */
+.rac-body .rac-botao-cheio:focus, .rac-body .rac-botao-cheio:active { background: var(--accent); color: var(--on-accent); }
+.rac-body .rac-botao-contorno:focus, .rac-body .rac-botao-contorno:active { background: transparent; color: var(--text); }

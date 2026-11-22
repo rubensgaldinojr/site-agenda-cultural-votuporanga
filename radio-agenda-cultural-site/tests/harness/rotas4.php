@@ -26,6 +26,10 @@ if ($base==='/f4/sobre/') {
   if (isset($_GET['semequipe'])) foreach ($GLOBALS['usuarios'] as $i=>$u) unset($GLOBALS['usuarios'][$i]['meta']['autor_no_sobre']);
   if (isset($_GET['muitos'])) { for ($k=7;$k<=9;$k++) $GLOBALS['usuarios'][$k]=['login'=>'u'.$k,'slug'=>'pessoa-'.$k,'nome'=>'Pessoa '.$k,'bio'=>'Bio da pessoa '.$k.'.','meta'=>['autor_no_sobre'=>'1','autor_ordem_sobre'=>(string)(10+$k)],'avatar'=>'','campos'=>[]]; }
   f4_principal('page',(object)['ID'=>3000],[],1,'page-sobre.php'); return; }
+if ($base==='/f4/contato/') {
+  $GLOBALS['title']='Contato';
+  if (isset($_GET['textos'])) $GLOBALS['fields'][4000]=['contato_email_destino'=>'redacao@exemplo.com','contato_titulo'=>'Título editado','contato_texto'=>'Texto editado.','contato_email_publico'=>'oi@exemplo.com','contato_local'=>'Rua Seis, 100 — Votuporanga','contato_instagram'=>'https://instagram.com/radioagenda','contato_facebook'=>'https://facebook.com/radioagenda','contato_youtube'=>'https://youtube.com/@radioagenda','contato_enviado'=>'Recebido! Em breve respondemos.'];
+  f4_principal('page',(object)['ID'=>4000],[],1,'page-contato.php'); return; }
 if ($base==='/f4/blogp/') { $GLOBALS['sem_pagina_posts']=true; $GLOBALS['title']='Blog (página comum)'; f4_principal('page',(object)['ID'=>2001],[],$pg,'page-blog.php'); return; }
 if (preg_match('#^/f4/categoria/([a-z0-9-]+)/$#',$base,$m)) { $t=get_category_by_slug($m[1]); if($t){ $GLOBALS['title']=$t->name; f4_principal('category',$t,['category_name'=>$m[1]],$pg,'category.php'); return; } }
 if (preg_match('#^/f4/tag/([a-z0-9-]+)/$#',$base,$m)) { $t=get_term_by('slug',$m[1],'post_tag'); if($t){ $GLOBALS['title']='#'.$t->name; f4_principal('tag',$t,['tag_id'=>$t->term_id],$pg,'tag.php'); return; } }

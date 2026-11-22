@@ -19,6 +19,8 @@ NODE_PATH=$(npm root -g) node teste-fase3b2.js  # Fase 3B-2: carrosséis, livros
 NODE_PATH=$(npm root -g) node teste-fase4.js   # Fase 4: Blog, categorias, tags, Autor, Post (7 formatos), compartilhar, comentários (usa as rotas /f4/*: wpstubs4.php + rotas4.php)
 NODE_PATH=$(npm root -g) node teste-pontos.js   # bolinhas dos carrosséis no mobile e slider do topo da Home
 NODE_PATH=$(npm root -g) node teste-sobre.js    # Fase 5A: página Sobre (rota /f4/sobre/)
+NODE_PATH=$(npm root -g) node teste-contato.js  # Fase 5B: página Contato, envio, tela de confirmação, e-mail que falha, limites (rota /f4/contato/ + admin-ajax)
+php teste-contato.php                           # lógica do Contato: validações, destino do e-mail, cabeçalhos, painel, limites
 php teste-sobre.php                             # lógica do Sobre: quem aparece, ordem, itens, textos padrão, campos ACF
 php teste-fase4.php                             # lógica da Fase 4 em PHP puro: formatos, vídeo, Spotify, título automático, tirinhas, filtros, anti-spam
 php teste-home.php                              # lógica da Home em PHP puro: mais ouvidas, descoberta, cache
