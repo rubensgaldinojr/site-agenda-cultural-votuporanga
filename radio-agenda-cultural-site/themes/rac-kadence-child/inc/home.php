@@ -32,6 +32,21 @@ function rac_home_texto( $nome, $pagina_id = null ) {
     return (string) rac_campo( $nome, $pagina_id, isset( $padroes[ $nome ] ) ? $padroes[ $nome ] : '' );
 }
 
+/**
+ * Os 3 destaques (Estações, Literatura, Blog), usados na Home (faixa do desktop e cards do
+ * mobile) e na página Sobre (que também usa 'url' e 'link'). Textos editados na página inicial.
+ */
+function rac_destaques_home() {
+    $home  = (int) get_option( 'page_on_front' );
+    $total = count( rac_listar_estacoes() );
+    $t     = function ( $nome ) use ( $home ) { return rac_home_texto( $nome, $home ); };
+    return array(
+        array( 'kicker' => 'Estações', 'titulo' => ( $total === 1 ? '1 estação' : $total . ' estações' ) . ' no ar, 24h por dia', 'texto' => $t( 'home_destaque1_texto' ), 'url' => rac_url_pagina( 'estacoes' ), 'link' => 'Veja todas as estações' ),
+        array( 'kicker' => 'Literatura', 'titulo' => $t( 'home_destaque2_titulo' ), 'texto' => $t( 'home_destaque2_texto' ), 'url' => rac_url_pagina( 'literatura' ), 'link' => 'Veja todos os livros' ),
+        array( 'kicker' => 'Blog', 'titulo' => $t( 'home_destaque3_titulo' ), 'texto' => $t( 'home_destaque3_texto' ), 'url' => function_exists( 'rac_url_blog' ) ? rac_url_blog() : rac_url_pagina( 'blog' ), 'link' => 'Veja todas as publicações' ),
+    );
+}
+
 /** Ouvintes de uma estação (campo "Ouvintes"; vazio conta como 0). */
 function rac_ouvintes( $id ) {
     return max( 0, (int) rac_campo( 'ouvintes', $id, 0 ) );

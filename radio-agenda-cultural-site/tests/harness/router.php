@@ -1,6 +1,9 @@
 <?php
-require __DIR__.'/wpstubs.php';
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+// Fase 4 (blog, autor, post, comentários) usa um conjunto próprio de simulações
+// (o post de exemplo /blog/post-x/ dos testes de navegação usa o modelo single.php da Fase 4, então também roda nelas)
+if ($uri==='/blog/post-x/') $uri = '/f4/post-601/';
+require __DIR__.(strpos($uri,'/f4/')===0 ? '/wpstubs4.php' : '/wpstubs.php');
 if ($uri==='/h/silencio.wav' && !is_file(__DIR__.'/silencio.wav')) { $w=fopen(__DIR__.'/silencio.wav','wb'); $n=8000*60*2; fwrite($w,'RIFF'.pack('V',36+$n).'WAVEfmt '.pack('VvvVVvv',16,1,1,8000,16000,2,16).'data'.pack('V',$n).str_repeat("\0",$n)); fclose($w); }
 if (strpos($uri,'/theme/')===0) { $f=THEME_DIR.substr($uri,6); }
 elseif (strpos($uri,'/plugin/')===0) { $f=PLUGIN_DIR.substr($uri,7); }
@@ -28,6 +31,7 @@ $rotas = [
   '/sobre/'=>['Sobre','page'], '/literatura/'=>['Literatura','page'], '/contato/'=>['Contato','page'],
 ];
 if ($uri==='/componentes/') { $GLOBALS['title']='Componentes'; include THEME_DIR.'/page-componentes.php'; return; }
+if (strpos($uri,'/f4/')===0) { do_action('wp_loaded'); require __DIR__.'/rotas4.php'; return; }
 function aplicar_flags() {
   if (isset($_GET['posts'])) { for ($k=504;$k<=509;$k++) $GLOBALS['posts_db'][$k]=['title'=>'Post de teste '.$k,'cat'=>'Crônicas','data'=>'0'.($k-500).' out 2026','aid'=>1+($k%3),'thumb'=>($k%2)?'/h/foto1.svg':'/h/foto2.svg']; $GLOBALS['posts_db']=array_slice($GLOBALS['posts_db'],0,(int)$_GET['posts'],true); }
   if (isset($_GET['livros'])) { $GLOBALS['livros_db']=array_slice($GLOBALS['livros_db'],0,(int)$_GET['livros'],true); }

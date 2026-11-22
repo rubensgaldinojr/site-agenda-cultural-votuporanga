@@ -105,8 +105,8 @@ const lerHome = (page) => page.evaluate(() => {
   await page.click('.rac-home-hero .rac-cta-estacao');
   ok(await esperar(page, () => window.__audio.paused && document.querySelectorAll('.is-tocando').length === 0), 'o botão do topo também pausa, e tudo se apaga');
   const desc = await page.evaluate(() => document.querySelector('.rac-card-img--descoberta .rac-card-img__nome').textContent.trim());
-  await page.click('.rac-card-img--descoberta .rac-card-img__nome');
-  ok(await esperar(page, n => !window.__audio.paused && document.getElementById('racr-nome-estacao').textContent.trim() === n, desc), `clicar no card da descoberta toca a estação (${desc})`);
+  await page.click('.rac-card-img--descoberta .rac-card-img__play');
+  ok(await esperar(page, n => !window.__audio.paused && document.getElementById('racr-nome-estacao').textContent.trim() === n, desc), `o play do card da descoberta toca a estação (${desc})`);
   await page.click('.rac-todas__grade--d .rac-card-est:nth-child(1)');
   ok(await esperar(page, () => document.getElementById('racr-nome-estacao').textContent.trim() === 'Blues & Jazz Clube'), 'clicar num card de "Todas as estações" toca aquela estação');
   const linkAnte = await page.evaluate(() => window.__audio.currentTime);
@@ -158,8 +158,7 @@ const lerHome = (page) => page.evaluate(() => {
     return {
       fotoCobre: Math.round(r('.rac-home-hero__foto').width) === window.innerWidth, h1: cs('.rac-home-hero__titulo', 'fontSize'),
       cta: [Math.round(r('.rac-home-hero .rac-cta-estacao').width), Math.round(r('.rac-home-hero .rac-cta-estacao').height)], claro: cs('.rac-botao-claro', 'display'),
-      fundador: Math.round(r('.rac-fundador').width), fundBg: cs('.rac-fundador', 'backdropFilter'),
-      destCols: cs('.rac-destaques__grade', 'flexDirection'), destTxt: cs('.rac-destaque__texto', 'display'),
+      cards: (() => { const c = q('.rac-hero-cards'); const it = [...c.querySelectorAll('.rac-hero-cards__item')]; return { n: it.length, rola: c.scrollWidth > c.clientWidth + 10, snap: getComputedStyle(c).scrollSnapType, larg: Math.round(it[0].getBoundingClientRect().width), esq: Math.round(it[0].getBoundingClientRect().left), segundoVisivel: it[1].getBoundingClientRect().left < window.innerWidth - 20, primeiro: it[0].querySelector('.rac-fundador__nome') ? it[0].querySelector('.rac-fundador__nome').textContent.replace(/\s+/g, ' ').trim() : null, kickers: it.slice(1).map(i => i.querySelector('.rac-destaque__kicker').textContent), ladoDesktop: cs('.rac-home-hero__lado', 'display'), faixaDesktop: cs('.rac-destaques', 'display'), semOverflow: document.documentElement.scrollWidth <= window.innerWidth }; })(),
       rola: lista.scrollWidth > lista.clientWidth + 10, cardL: Math.round(c0.width), cardAlt: Math.round(c0.height), snap: getComputedStyle(lista).scrollSnapType,
       sub: cs('.rac-home-estacoes__topo span', 'display'), todasD: cs('.rac-todas__grade--d', 'display'),
       todasCols: cs('.rac-todas__grade--m', 'gridTemplateColumns').split(' ').length, todasN: document.querySelectorAll('.rac-todas__grade--m .rac-card-est--compact').length,
@@ -172,12 +171,14 @@ const lerHome = (page) => page.evaluate(() => {
   ok(mm.botaoSobre[0] === mm.botaoSobre[1], `mobile: botão do "Sobre nós" em largura total (${mm.botaoSobre[0]}px)`);
   ok(mm.fotoCobre && mm.h1 === '30px', `mobile: foto de fundo cobre o topo e o título tem ${mm.h1}`);
   ok(mm.cta[0] >= 330 && mm.cta[1] === 48 && mm.claro === 'none', `mobile: "Ouvir agora" em largura total (${mm.cta.join('x')}) e o botão secundário escondido`);
-  ok(mm.fundador >= 330 && mm.destCols === 'column' && mm.destTxt === 'none', 'mobile: card do fundador em largura total; destaques empilhados, só kicker e título');
+  ok(mm.cards.n === 4 && mm.cards.primeiro.startsWith('Nome do Fundador') && mm.cards.kickers.join() === 'Estações,Literatura,Blog', 'mobile: 4 cards em carrossel — 1º o do fundador ("Sobre o autor"), depois Estações, Literatura e Blog');
+  ok(mm.cards.rola && mm.cards.snap.includes('x') && Math.abs(mm.cards.esq - 18) <= 1 && Math.abs(mm.cards.larg - 291) <= 2 && mm.cards.segundoVisivel, `mobile: slider com cards de ${mm.cards.larg}px (86% da largura), margem de 18px e a ponta do próximo card aparecendo, com rolagem lateral e encaixe`);
+  ok(mm.cards.ladoDesktop === 'none' && mm.cards.faixaDesktop === 'none' && mm.cards.semOverflow, 'mobile: o card do fundador e a faixa de destaques do desktop ficam escondidos (sem duplicar) e a página não rola na horizontal');
   ok(mm.rola && mm.cardL === 240 && mm.snap.includes('x'), `mobile: estações em destaque rolam na horizontal (cards de ${mm.cardL}px com encaixe)`);
   ok(mm.sub === 'none' && mm.todasD === 'none' && mm.todasCols === 2 && mm.todasN === 12, 'mobile: "Todas as estações" em 2 colunas com cards compactos');
   ok(mm.sobre === 'column' && mm.sobreAlt === 200 && !mm.overflow, 'mobile: "Sobre nós" empilhado e sem rolagem horizontal');
-  await m.click('.rac-home-destaques-estacoes .rac-card-img:nth-child(2) .rac-card-img__nome');
-  ok(await esperar(m, () => !document.getElementById('racr-audio').paused && document.querySelectorAll('.rac-home-destaques-estacoes .rac-card-img.is-tocando').length === 1), 'mobile: tocar pelo card de destaque');
+  await m.click('.rac-home-destaques-estacoes .rac-card-img:nth-child(2) .rac-card-img__play');
+  ok(await esperar(m, () => !document.getElementById('racr-audio').paused && document.querySelectorAll('.rac-home-destaques-estacoes .rac-card-img.is-tocando').length === 1), 'mobile: tocar pelo botão do card de destaque');
   await m.screenshot({ path: 'capturas/f3b1-home-m.png', fullPage: true });
   for (const w of [320, 360, 412, 899]) { await m.setViewportSize({ width: w, height: 800 }); await m.goto(B + '/'); ok(await m.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), `${w}px: sem rolagem horizontal`); }
 

@@ -189,8 +189,10 @@
       if (dono) tocarEstacaoPorId(dono.getAttribute('data-estacao-id'));
       return;
     }
-    // card: qualquer ponto toca, menos links ("Ver estação" navega normalmente)
-    var card = e.target.closest('.rac-card-est, .rac-card-img');
+    // card compacto: qualquer ponto toca, menos links ("Ver estação" navega normalmente).
+    // O card com imagem (.rac-card-img) NÃO toca ao clicar: o card inteiro é um link para a página
+    // da estação (link esticado no CSS) e só o botão de play toca.
+    var card = e.target.closest('.rac-card-est');
     if (!card || e.target.closest('a')) return;
     tocarEstacaoPorId(card.getAttribute('data-estacao-id'));
   });

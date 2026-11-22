@@ -26,6 +26,28 @@ $foto_fundador = (int) rac_campo( 'home_fundador_foto', $pagina_id, 0 );
 $foto_sobre    = (int) rac_campo( 'home_sobre_foto', $pagina_id, 0 );
 $rotulo_total  = $total === 1 ? '1 estação' : $total . ' estações';
 
+// Os 3 destaques (Estações, Literatura, Blog): usados na faixa do desktop e nos cards do slider do mobile.
+$destaques = rac_destaques_home();
+
+// Cartão "sobre o fundador" (desktop: no topo, ao lado do texto; mobile: 1º card do carrossel).
+$cartao_fundador = function () use ( $foto_fundador, $fundador_nome, $t ) {
+    ?>
+    <div class="rac-fundador">
+        <span class="rac-fundador__avatar">
+            <?php if ( $foto_fundador ) : ?>
+                <?php echo wp_get_attachment_image( $foto_fundador, 'thumbnail', false, array( 'alt' => '' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+            <?php else : ?>
+                <b aria-hidden="true"><?php echo esc_html( mb_strtoupper( mb_substr( $fundador_nome, 0, 1 ) ) ); ?></b>
+            <?php endif; ?>
+        </span>
+        <span class="rac-fundador__texto">
+            <span class="rac-fundador__nome"><?php echo esc_html( $fundador_nome ); ?> <span>· <?php echo esc_html( $t( 'home_fundador_papel' ) ); ?></span></span>
+            <span class="rac-fundador__bio"><?php echo esc_html( $t( 'home_fundador_texto' ) ); ?> <a href="<?php echo esc_url( rac_url_pagina( 'sobre' ) ); ?>">Conheça →</a></span>
+        </span>
+    </div>
+    <?php
+};
+
 $posts_ids  = rac_posts_recentes( 6 );
 $livros_ids = rac_livros_recentes( 8 );
 $series     = rac_series_podcast();
@@ -55,42 +77,34 @@ get_header();
                     <a class="rac-botao-claro" href="<?php echo esc_url( rac_url_pagina( 'estacoes' ) ); ?>">Ver todas as estações</a>
                 </div>
             </div>
-            <div class="rac-home-hero__lado">
-                <div class="rac-fundador">
-                    <span class="rac-fundador__avatar">
-                        <?php if ( $foto_fundador ) : ?>
-                            <?php echo wp_get_attachment_image( $foto_fundador, 'thumbnail', false, array( 'alt' => '' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
-                        <?php else : ?>
-                            <b aria-hidden="true"><?php echo esc_html( mb_strtoupper( mb_substr( $fundador_nome, 0, 1 ) ) ); ?></b>
-                        <?php endif; ?>
-                    </span>
-                    <span class="rac-fundador__texto">
-                        <span class="rac-fundador__nome"><?php echo esc_html( $fundador_nome ); ?> <span>· <?php echo esc_html( $t( 'home_fundador_papel' ) ); ?></span></span>
-                        <span class="rac-fundador__bio"><?php echo esc_html( $t( 'home_fundador_texto' ) ); ?> <a href="<?php echo esc_url( rac_url_pagina( 'sobre' ) ); ?>">Conheça →</a></span>
-                    </span>
-                </div>
+            <div class="rac-home-hero__lado"><?php $cartao_fundador(); ?></div>
+
+            <!-- Mobile: 4 cards em carrossel (fundador + os 3 destaques); no desktop ficam escondidos -->
+            <div class="rac-hero-cards" role="region" aria-label="Sobre a rádio" tabindex="0" data-rac-auto="5000">
+                <div class="rac-hero-cards__item"><?php $cartao_fundador(); ?></div>
+                <?php foreach ( $destaques as $d ) : ?>
+                    <div class="rac-hero-cards__item">
+                        <div class="rac-destaque-card">
+                            <span class="rac-destaque__kicker"><?php echo esc_html( $d['kicker'] ); ?></span>
+                            <span class="rac-destaque__titulo"><?php echo esc_html( $d['titulo'] ); ?></span>
+                            <?php if ( $d['texto'] ) : ?><span class="rac-destaque__texto"><?php echo esc_html( $d['texto'] ); ?></span><?php endif; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
             </div>
         </div>
     </section>
 
-    <!-- Destaques -->
+    <!-- Destaques (desktop; no mobile viram cards do carrossel do topo) -->
     <section class="rac-destaques">
         <div class="rac-destaques__grade">
+            <?php foreach ( $destaques as $d ) : ?>
             <div class="rac-destaque">
-                <span class="rac-destaque__kicker">Estações</span>
-                <span class="rac-destaque__titulo"><?php echo esc_html( $rotulo_total . ' no ar, 24h por dia' ); ?></span>
-                <span class="rac-destaque__texto"><?php echo esc_html( $t( 'home_destaque1_texto' ) ); ?></span>
+                <span class="rac-destaque__kicker"><?php echo esc_html( $d['kicker'] ); ?></span>
+                <span class="rac-destaque__titulo"><?php echo esc_html( $d['titulo'] ); ?></span>
+                <span class="rac-destaque__texto"><?php echo esc_html( $d['texto'] ); ?></span>
             </div>
-            <div class="rac-destaque">
-                <span class="rac-destaque__kicker">Literatura</span>
-                <span class="rac-destaque__titulo"><?php echo esc_html( $t( 'home_destaque2_titulo' ) ); ?></span>
-                <span class="rac-destaque__texto"><?php echo esc_html( $t( 'home_destaque2_texto' ) ); ?></span>
-            </div>
-            <div class="rac-destaque">
-                <span class="rac-destaque__kicker">Blog</span>
-                <span class="rac-destaque__titulo"><?php echo esc_html( $t( 'home_destaque3_titulo' ) ); ?></span>
-                <span class="rac-destaque__texto"><?php echo esc_html( $t( 'home_destaque3_texto' ) ); ?></span>
-            </div>
+            <?php endforeach; ?>
         </div>
     </section>
 

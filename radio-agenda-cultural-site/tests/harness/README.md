@@ -16,6 +16,11 @@ NODE_PATH=$(npm root -g) node teste-fase2.js    # Fase 2: player fixo, cards, vo
 NODE_PATH=$(npm root -g) node teste-fase3a.js   # Fase 3A: página de Estações e Estação individual
 NODE_PATH=$(npm root -g) node teste-fase3b1.js  # Fase 3B-1: página inicial
 NODE_PATH=$(npm root -g) node teste-fase3b2.js  # Fase 3B-2: carrosséis, livros, podcasts, recados (leva ~4 min: tem esperas do avanço automático; precisa do Playwright)
+NODE_PATH=$(npm root -g) node teste-fase4.js   # Fase 4: Blog, categorias, tags, Autor, Post (7 formatos), compartilhar, comentários (usa as rotas /f4/*: wpstubs4.php + rotas4.php)
+NODE_PATH=$(npm root -g) node teste-pontos.js   # bolinhas dos carrosséis no mobile e slider do topo da Home
+NODE_PATH=$(npm root -g) node teste-sobre.js    # Fase 5A: página Sobre (rota /f4/sobre/)
+php teste-sobre.php                             # lógica do Sobre: quem aparece, ordem, itens, textos padrão, campos ACF
+php teste-fase4.php                             # lógica da Fase 4 em PHP puro: formatos, vídeo, Spotify, título automático, tirinhas, filtros, anti-spam
 php teste-home.php                              # lógica da Home em PHP puro: mais ouvidas, descoberta, cache
 php teste-conteudo.php                          # filtro anti-spam dos recados, livros, podcasts, tempo relativo
 ```

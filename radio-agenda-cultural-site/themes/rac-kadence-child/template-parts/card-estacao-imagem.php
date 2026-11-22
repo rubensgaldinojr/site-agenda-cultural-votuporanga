@@ -5,8 +5,9 @@
  * Imagem destacada da estação ao fundo (sem ela, o placeholder do tema),
  * selo "Ao vivo", nome, trecho de 1–2 linhas do "Texto Sobre a Estação",
  * link "Ver estação" e botão de play. Texto branco sobre um escurecimento
- * (igual nos dois temas). Clicar em qualquer ponto do card toca/pausa a
- * estação pelo player (assets/js/player.js), menos no link "Ver estação".
+ * (igual nos dois temas). Clicar em qualquer ponto do card ABRE a página da
+ * estação (o link "Ver estação" é esticado por CSS sobre o card); só o botão de
+ * play toca/pausa a estação pelo player (assets/js/player.js).
  *
  * Argumentos:
  *   'estacao' => ['id', 'nome', 'url']

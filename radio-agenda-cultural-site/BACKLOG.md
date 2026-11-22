@@ -18,9 +18,11 @@
 | 2 | CardEstacao, CardPost, PlayerFixo (visual), ThemeToggle | ✅ testada no site real e mergeada (PR #2) |
 | 3A | Listagem de Estações e Estação individual | ✅ testada no site real e mergeada (PR #3) |
 | 3B-1 | Home: topo, destaques, estações em destaque (mais ouvidas e descoberta), todas as estações e Sobre nós | ✅ testada no site real e mergeada (PR #4) |
-| 3B-2 | Home: carrosséis de Blog e Literatura, Podcasts e Recados dos ouvintes; "Da biblioteca" na página da estação | 🔨 código pronto; aguardando teste manual no site |
-| 4 | Blog, Post, Autor | ⏳ |
-| 5 | Sobre, Contato, revisão geral | ⏳ |
+| 3B-2 | Home: carrosséis de Blog e Literatura, Podcasts e Recados dos ouvintes; "Da biblioteca" na página da estação | ✅ testada no site real e mergeada (PR #5) |
+| 4 (4A+4B) | Blog (listagem, categorias, tags), página do Autor e Post com 8 formatos, compartilhar, caixa do autor, comentários e relacionados + ajustes pós-teste (player, cards, toggle, bolinhas) | 🔨 código pronto e testado pelo Rubens (tema 0.6.3, na branch). **PR ainda não aberto**: vai junto com a próxima entrega (B-57/B-58) |
+| 5A | Sobre | 🔨 código pronto (tema 0.7.2, com os ajustes pós-teste: links nos destaques, botão do autor embaixo, foto com borda, história com 2 imagens); aguardando teste manual no site |
+| 5B | Contato | ⏳ |
+| 5C | Revisão geral | ⏳ |
 
 ## Itens
 
@@ -43,8 +45,8 @@
 | B-10 | Campos da Estação para a Home: "Ouvintes" (número) e escolha da descoberta | 3B-1 | ✅ | Criados por código em `inc/acf-campos.php` (campo "Ouvintes" na estação; aba "Estações em destaque" na Home) |
 | B-11 | API do Zeno.fm para contagem de ouvintes | 3B | ✅ investigado | Não há API pública documentada de ouvintes (só a Metadata API, de música; "ouvintes atuais" só no painel web; a API privada `api.zeno.fm` exige pedir acesso). **Caminho:** campo manual "Ouvintes", que no futuro um script (ou a API, se liberada) pode atualizar |
 | B-12 | Lógica "Descoberta do editor" (sorteio diário fora do top 2, ou estação fixada) | 3B-1 | ✅ | Em `inc/home.php`; coberta por `tests/harness/teste-home.php` (rotação ao longo de um ano) |
-| B-13 | Formato de post (Texto, Poesia, Vídeo, Música, Tirinha, Imagem, Citação) | 4 | ⏳ | Hoje nenhum existe. Os templates devem funcionar sem o campo (cai em "Texto") e aceitar formatos novos depois. ACF a criar em conjunto |
-| B-14 | Campos de autor: papel, "escreve desde", citação favorita, origem da citação, foto, exibir no Sobre + ordem | 4–5 | ⏳ | Criar em conjunto |
+| B-13 | Formato de post (Texto, Poesia, Vídeo, Música, Podcast, Tirinha, Imagem, Citação) | 4 | ✅ | 8 formatos, campo ACF por código; sem o campo cai em "Texto"; formato novo = 1 linha no registro + campos + 1 arquivo em `template-parts/formatos/` |
+| B-14 | Campos de autor: papel, "escreve desde", citação favorita, origem da citação, foto | 4 | ✅ | Feito no perfil do usuário (grupo "Página do autor") + campo "Endereço da página do autor". **Falta** "exibir no Sobre + ordem" (vai com a Fase 5, B-59) |
 | B-15 | Podcasts na Home como subcategorias da categoria Podcasts | 3B-2 | 💡 | A seção de podcasts ainda não foi totalmente pensada: por ora Podcasts é só uma categoria do Blog. A seção da Home fica escondida até existirem subcategorias |
 | B-16 | Textos da Home editáveis direto na página Home (ACF na própria página) | 3B-1 | ✅ | Aba por seção; campo vazio mostra o texto provisório do mockup |
 | B-17 | PlayerFixo: capa, volume, "Tocando agora" separado em faixa/artista, bottom sheet no mobile | 2 | ✅ | Feito no tema, sem alterar o plugin. Falta validar com o Zeno.fm real (B-36) |
@@ -73,16 +75,35 @@
 | B-41 | Página de Estações com cards grandes (imagem de fundo, nome, "Ao vivo", trecho, "Ver estação" e play) | 3A | ✅ | Feito: 4 colunas no desktop, 2 no mobile; placeholder em toda estação sem imagem destacada |
 | B-42 | Seção de livros na página da estação ("Da biblioteca") | 3B-2 | ✅ | Livros com categoria de mesmo nome da estação primeiro, depois os mais recentes; reaproveita o card de livro |
 | B-43 | Renomear a categoria padrão "Uncategorized" e apagar o post "Hello world!" | — | 💡 | Aparecem nos cards de post em inglês; ajuste no painel (Posts → Categorias) |
-| B-44 | Tags nos cards de post do Blog: hoje o card mostra só categoria, data, título e autor; as tags não aparecem em lugar nenhum | 4 | 💡 | A tratar na Fase 4. Opções: (a) manter o card sem tags, como no mockup; (b) mostrar até 2 tags no card; (c) tags só na página do post (o mockup tem) com página de arquivo por tag. Pode-se ligar a tag com o nome de uma estação à página dessa estação |
+| B-44 | Tags nos cards de post do Blog | 4 | ✅ | Resolvido: cards do Blog seguem sem tags (como no mockup); as tags aparecem como `#tag` no fim do post e levam à página da tag (`/tag/nome/`, mesma listagem do Blog). Na página da estação, o card mostra um selinho com o nome da estação quando o post tem a tag/categoria dela |
 | B-45 | Futuro: plugin próprio para cadastrar e gerenciar podcasts (séries e episódios) | — | 💡 | Ideia do Rubens; hoje Podcasts é uma categoria do Blog |
 | B-46 | Preencher os dados reais da Home: foto, nome, papel e texto do fundador; textos de topo, destaques e Sobre nós; foto do Sobre; "Ouvintes" de cada estação; imagem destacada da Home | — | ⏳ | Tudo provisório até o Rubens preencher |
 | B-47 | Home como página inicial estática (feito), comentários liberados nela (recados) e "O comentário deve ser aprovado manualmente" (feito) | 3B-2 | ⏳ | Falta ligar "Permitir comentários" na página Home |
 | B-48 | Livro: página individual e card com botão de baixar; hoje o card de livro da Home leva à página Literatura | 4–5 | 💡 | Depende do mockup da Literatura (B-03) |
 | B-49 | Spam nos recados: se aparecer mesmo com a moderação manual, instalar o Akismet ou outro anti-spam; o tema já tem campo-armadilha e tempo mínimo | — | 💡 | Só se for preciso |
+| B-50 | Fase 4 — ajustes de painel (confirmar se tudo foi feito): Configurações → Discussão (comentários aninhados em 2 níveis, quebrar em páginas de ~10, aprovar manualmente); criar os usuários (autores e "Equipe Agenda Cultural") e preencher "Página do autor" no perfil; regravar Links permanentes (para `/autor/`); escolher a página "Blog" em Configurações → Leitura → Página de posts | 4 | ⏳ | Rubens já criou 3 usuários e testou os formatos; confirmar bio/perfil preenchidos, Links permanentes e página Blog como "Página de posts" |
+| B-51 | Tirinhas: confirmar os direitos de uso de cada tirinha publicada (o campo "Direitos/referência" é opcional) | 4 | 💡 | Tirinhas de terceiros normalmente têm direitos autorais; o tema só exibe a referência |
+| B-52 | Spotify no formato Música: o player do Spotify toca só prévias de 30 s para quem não está logado no Spotify, e carrega conteúdo de terceiros (privacidade) | 4 | 💡 | Alternativa futura: link para abrir no Spotify |
+| B-53 | "Ordenar por autor(a)" usa SQL próprio (junta a tabela de usuários); testar no site real | 4 | ⏳ | O simulador não executa SQL |
+| B-54 | Ajustes pós-teste da Fase 4 (0.6.2): contraste da barra do player, cards de estação (abrem a página; só o play toca; ativo mais visível; play maior no mobile), chave claro/escuro "selecionada", Home mobile com 4 cards em carrossel, campo de endereço do autor | 4 | ✅ | Aguardando teste no site real |
+| B-55 | Endereço dos posts com `/blog/` (`/blog/%postname%/`) e e-mail aparecendo no endereço do autor | 4 | ⏳ | Passos na mensagem de entrega: Links permanentes + campo "Endereço da página do autor" no perfil. Testar `/blog/page/2/` depois |
+| B-56 | Mobile: slider de largura total com 4 bolinhas no topo da Home e bolinhas em todos os carrosséis (Estações em destaque, Blog, Literatura, "Da biblioteca") | 4 | ✅ | Tema 0.6.3; aguardando teste no site real. Alternativa se preferir: setas no topo de cada seção |
+| B-57 | Home mobile — slider do topo (4 cards): passa sozinho (5 s) e mostra a ponta do próximo card | 4 | ✅ | Feito no 0.7.0 (junto com o Sobre): cards de 86%, bolinhas, auto-avanço que para na interação, pausa com mouse/foco e respeita "reduzir movimento". Aguardando teste no site real |
+| B-58 | Abrir o PR da Fase 4 (com os ajustes 0.6.x) e fazer o merge | 4 | ⏳ | Combinado: um PR só, junto com a próxima entrega |
+| B-59 | **Fase 5A — Sobre** (código pronto no 0.7.0, aguardando teste no site real): topo com foto e a história; "Quem faz" (3 autores alternando o lado da foto, com cards pequenos de livros e artigos e o botão "Página do autor"); 3 destaques; convite para o Contato. Inclui os campos de autor "exibir no Sobre" e "ordem" | 5 | ⏳ | Textos provisórios do mockup (Rubens decidiu seguir com eles por enquanto). História em blocos com 2 imagens opcionais (abas no painel). "Quem faz" lista N pessoas: marcar "Aparecer na página Sobre" no perfil + posição. Foto de cada pessoa = foto do perfil |
+| B-60 | **Fase 5 — Contato**: assunto em botões (Sugestão de música, Pedido musical, Parcerias, Outro); campos Música e Artista só nos dois primeiros; tela de confirmação; envio por e-mail | 5 | ⏳ | Mockup `Contato.dc.html` pronto. Depende de B-07 (nativo ou plugin) e do e-mail de destino. Anti-spam como nos recados (campo-armadilha + 3 s) |
+| B-61 | **Fase 5 — Revisão geral**: acessibilidade (teclado, contraste, leitor de tela), desempenho (imagens, fontes, cache LiteSpeed), 404, SEO (Rank Math), conferência em celular e desktop, revalidação no domínio final (B-32) | 5 | ⏳ | Último passo antes de considerar o site pronto |
+| B-62 | Itens que **não estão nos mockups** e valem uma conversa: página de busca, política de privacidade/cookies (LGPD; o Spotify/YouTube carregam conteúdo de terceiros), imagem de compartilhamento (Open Graph) e favicon | — | 💡 | Sugestão do Claude; decidir se entram na Fase 5 |
 | B-40 | `catalogo-livros-rac.php` está duplicado na raiz do repositório (idêntico ao de `plugins/`) | 💡 | Remover a cópia da raiz? |
 
 ## Decisões tomadas
 
+- Fase 4: filtros do Blog são LINKS (`?categoria=&autor=&ordem=`), não formulários, para a navegação persistente não parar o áudio; 9 posts por página; categorias e tags usam a mesma listagem; autor em `/autor/nome/`; "Carregar mais posts" na página do autor.
+- Fase 4: formato do post = campo ACF "Formato" (Texto, Poesia, Vídeo, Música, Podcast, Tirinha, Imagem, Citação); novos formatos = 1 linha em `rac_formatos_post()` + campos + um arquivo em `template-parts/formatos/`. Música = player do Spotify incorporado (campos país, nome, estilo, link) com título automático "Descoberta Musical: nome - país - estilo"; países com bandeira em imagem (funciona no Windows). Tirinha = imagem pelo editor + campos opcionais de direitos/referência. Compartilhar = WhatsApp, Facebook, X e Copiar link (botões grandes, com texto) + menu nativo do celular quando existir. Comentários = nativos do WordPress, enviados sem recarregar.
+- Cards de estação com imagem: o card inteiro abre a página da estação e só o botão de play toca (lista compacta "Todas as estações" mantém o clique que toca). Barra do player: linha laranja no topo (em vez de inverter as cores) e mais alta no mobile.
+- Segurança de versões: antes de gerar o zip ou de fazer o merge, rodar `scripts/verificar-estado.sh` (só lê; mostra alterações soltas, se o computador está igual ao GitHub, se falta o merge e a versão do tema de cada lugar). O zip sempre sai da pasta atual; o nome do arquivo é a versão lida de `style.css` daquela pasta.
+- Sobre: textos provisórios do mockup até o Rubens enviar os reais; "Quem faz" = usuários marcados no perfil (N pessoas, com posição); os 3 destaques reaproveitam os textos da Home.
+- Home mobile: slider do topo com bolinhas, ponta do próximo card e auto-avanço de 5 s (para na primeira interação).
 - Sem headless: tema filho do Kadence com templates PHP.
 - `#primary` é o seletor da navegação persistente; todo template terá exatamente um `<main id="primary">`. O plugin não é alterado para isso.
 - Textos do rodapé são globais; textos da Home são editados na própria página Home.

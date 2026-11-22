@@ -117,6 +117,12 @@
   display: flex; align-items: center; gap: 8px; padding: 4px 0;
   background: none; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif;
 }
+/* O Kadence pinta TODO <button> em :hover/:focus/:active (fundo azul e sombra). Sem este reset, depois do clique a área da chave
+   ficava "selecionada". O foco do teclado continua visível, mas só em volta do trilho. */
+.rac-body .rac-toggle, .rac-body .rac-toggle:hover, .rac-body .rac-toggle:focus, .rac-body .rac-toggle:active {
+  background: none; border: 0; box-shadow: none; outline: 0; color: inherit; -webkit-tap-highlight-color: transparent;
+}
+.rac-body .rac-toggle:focus-visible .rac-toggle__trilho { outline: 2px solid var(--accent); outline-offset: 3px; }
 .rac-toggle__rotulo { font-size: 11px; font-weight: 500; }
 .rac-toggle__rotulo--claro { color: var(--text); }
 .rac-toggle__rotulo--escuro { color: var(--muted); }
@@ -211,4 +217,46 @@
 
 @media (min-width: 900px) {
   .rac-menu-mobile { display: none !important; }
+}
+
+/* =========================================================
+   BOTÕES x KADENCE
+   O tema pai pinta TODO <button> em :hover/:focus/:active (fundo azul, texto branco e sombra grande). Depois do clique o botão
+   fica "selecionado" (foco). Os botões do tema que têm regra própria (.rac-body .classe) já vencem no fundo; aqui:
+   1) a sombra do Kadence é removida de todos os botões do tema; 2) os botões com seletor simples recuperam o próprio fundo.
+   ========================================================= */
+.rac-body button:hover, .rac-body button:focus, .rac-body button:active { box-shadow: none; }
+.rac-body .rac-card-est__play:focus, .rac-body .rac-card-est__play:active { background: var(--surface2); color: inherit; }
+.rac-body .rac-card-est.is-tocando .rac-card-est__play:focus, .rac-body .rac-card-est.is-tocando .rac-card-est__play:active { background: var(--accent); }
+.rac-body .rac-compartilhar__abrir:focus, .rac-body .rac-compartilhar__abrir:active { background: var(--text); color: var(--bg); }
+.rac-body .rac-compartilhar__fechar, .rac-body .rac-compartilhar__fechar:hover, .rac-body .rac-compartilhar__fechar:focus, .rac-body .rac-compartilhar__fechar:active,
+.rac-body .rac-player__fechar, .rac-body .rac-player__fechar:focus, .rac-body .rac-player__fechar:active,
+.rac-body .rac-coment__responder, .rac-body .rac-coment__responder:hover, .rac-body .rac-coment__responder:focus, .rac-body .rac-coment__responder:active { background: none; }
+.rac-body .rac-compartilhar__fechar, .rac-body .rac-player__fechar { color: var(--muted); }
+.rac-body .rac-coment__responder { color: var(--accent-text); }
+.rac-body .rac-filtros__abrir:hover, .rac-body .rac-filtros__abrir:focus, .rac-body .rac-filtros__abrir:active { background: var(--surface); color: var(--text); }
+
+/* =========================================================
+   BOLINHAS DOS CARROSSÉIS (mobile) — assets/js/pontos.js
+   ========================================================= */
+.rac-pontos { display: none; }
+@media (max-width: 899px) {
+  .rac-pontos { display: flex; justify-content: center; align-items: center; gap: 0; }
+  .rac-pontos[hidden] { display: none; }
+  /* área de toque de 28px; a bolinha visível é o ::before. Estados do Kadence neutralizados. */
+  .rac-body .rac-pontos__ponto, .rac-body .rac-pontos__ponto:hover, .rac-body .rac-pontos__ponto:focus, .rac-body .rac-pontos__ponto:active {
+    width: 28px; height: 28px; padding: 0; margin: 0; border: 0; border-radius: 0; background: none; box-shadow: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent;
+  }
+  .rac-body .rac-pontos__ponto:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; border-radius: 8px; }
+  .rac-pontos__ponto::before {
+    content: ''; display: block; width: 8px; height: 8px; border-radius: 999px;
+    background: color-mix(in srgb, var(--muted) 45%, transparent); transition: width .2s ease, background-color .2s ease;
+  }
+  .rac-pontos__ponto[aria-current="true"]::before { width: 22px; background: var(--accent); }
+  @media (prefers-reduced-motion: reduce) { .rac-pontos__ponto::before { transition: none; } }
+  .rac-faixa__inner > .rac-pontos { margin-top: -14px; }
+  .rac-home-estacoes > .rac-pontos { margin-top: -6px; }
+  .rac-home-hero__grade > .rac-pontos { margin-top: -6px; }
+  .rac-biblioteca .rac-secao__inner > .rac-pontos { margin-top: 4px; }
 }

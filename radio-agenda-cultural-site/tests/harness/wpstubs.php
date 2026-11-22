@@ -106,6 +106,7 @@ function get_term_by($campo,$valor,$tax){ if($tax==='post_tag' && $campo==='name
 $GLOBALS['tag_map']=[77=>[502], 88=>[703,705]];
 $GLOBALS['fields'][100]['texto_sobre_a_estacao']='<p>Primeiro parágrafo da estação Blues, que funciona como abertura.</p><p>Segundo parágrafo com mais detalhes sobre a programação.</p><p>Terceiro parágrafo de fechamento.</p>';
 
+function has_term($t,$tax,$id=null){ return $tax==='post_tag' && $t==='Blues & Jazz Clube' && in_array($id,$GLOBALS['tag_map'][77]); }
 function wp_strip_all_tags($t){ return strip_tags($t); }
 function wp_trim_words($t,$n=55,$mais='...'){ $p=preg_split('/\s+/',trim($t)); if(count($p)<=$n) return implode(' ',$p); return implode(' ',array_slice($p,0,$n)).$mais; }
 
