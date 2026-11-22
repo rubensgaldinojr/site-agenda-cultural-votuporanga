@@ -7,23 +7,26 @@
  * campos de texto (campo vazio = texto provisório do mockup).
  *
  * - Foto do topo: "Imagem destacada" da página (sem ela, o placeholder do tema).
- * - Nossa história: campo "História — texto" (o 1º parágrafo vira a abertura).
+ * - Nossa história (montada em blocos): abertura (1º parágrafo do texto principal) → Imagem 1 ao lado do resto do
+ *   texto principal → continuação ao lado da Imagem 2. Imagens opcionais (sem imagem, o texto ocupa a largura toda).
  * - Quem faz: usuários marcados em "Aparecer na página Sobre" (perfil), na posição escolhida,
  *   alternando o lado da foto; cada um com até 3 itens (livro e textos mais recentes).
- * - 3 destaques: os mesmos textos da Home. Convite final para o Contato.
+ * - 3 destaques: os mesmos textos da Home, cada um com um link para a página correspondente. Convite final para o Contato.
  */
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 $pagina_id = get_queried_object_id();
 $t         = function ( $nome ) use ( $pagina_id ) { return rac_sobre_texto( $nome, $pagina_id ); };
 
-// "História": o 1º parágrafo é a abertura (maior, em Outfit leve); o resto é texto corrido.
-$historia = trim( (string) $t( 'sobre_historia_texto' ) );
-$abertura = '';
-if ( preg_match( '#^\s*<p[^>]*>(.*?)</p>#is', $historia, $m ) ) {
-    $abertura = $m[1];
-    $historia = trim( substr( $historia, strlen( $m[0] ) ) );
-}
+$hist = rac_sobre_historia( $pagina_id );
+
+// Figura (imagem + legenda opcional); vazia quando não há imagem.
+$figura = function ( $id, $legenda, $classe ) {
+    if ( ! $id ) return '';
+    $html  = '<figure class="rac-sobre-figura ' . esc_attr( $classe ) . '"><div class="rac-sobre-figura__img rac-foto">' . wp_get_attachment_image( $id, 'large', false, array( 'alt' => $legenda, 'loading' => 'lazy' ) ) . '</div>';
+    if ( $legenda !== '' ) $html .= '<figcaption>' . esc_html( $legenda ) . '</figcaption>';
+    return $html . '</figure>';
+};
 
 $pessoas   = rac_autores_sobre();
 $destaques = rac_destaques_home();
@@ -44,14 +47,27 @@ get_header();
 
     <section class="rac-sobre-historia">
         <div class="rac-sobre-historia__inner">
-            <div class="rac-sobre-historia__titulo">
-                <span class="rac-eyebrow"><?php echo esc_html( $t( 'sobre_historia_rotulo' ) ); ?></span>
-                <h2><?php echo esc_html( $t( 'sobre_historia_titulo' ) ); ?></h2>
+            <div class="rac-sobre-historia__cab">
+                <div class="rac-sobre-historia__titulo">
+                    <span class="rac-eyebrow"><?php echo esc_html( $t( 'sobre_historia_rotulo' ) ); ?></span>
+                    <h2><?php echo esc_html( $t( 'sobre_historia_titulo' ) ); ?></h2>
+                </div>
+                <?php if ( $hist['abertura'] !== '' ) : ?><p class="rac-sobre-historia__abertura"><?php echo wp_kses_post( $hist['abertura'] ); ?></p><?php endif; ?>
             </div>
-            <div class="rac-sobre-historia__texto">
-                <?php if ( $abertura !== '' ) : ?><p class="rac-sobre-historia__abertura"><?php echo wp_kses_post( $abertura ); ?></p><?php endif; ?>
-                <div class="rac-sobre-historia__corpo"><?php echo wp_kses_post( $historia ); ?></div>
+
+            <?php if ( $hist['img1'] || $hist['texto1'] !== '' ) : ?>
+            <div class="rac-sobre-bloco<?php echo ( $hist['img1'] && $hist['texto1'] !== '' ) ? '' : ' rac-sobre-bloco--sozinho'; ?>">
+                <?php echo $figura( $hist['img1'], $hist['leg1'], 'rac-sobre-figura--retrato' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+                <?php if ( $hist['texto1'] !== '' ) : ?><div class="rac-sobre-bloco__texto"><?php echo wp_kses_post( $hist['texto1'] ); ?></div><?php endif; ?>
             </div>
+            <?php endif; ?>
+
+            <?php if ( $hist['img2'] || $hist['texto2'] !== '' ) : ?>
+            <div class="rac-sobre-bloco rac-sobre-bloco--inverso<?php echo ( $hist['img2'] && $hist['texto2'] !== '' ) ? '' : ' rac-sobre-bloco--sozinho'; ?>">
+                <?php if ( $hist['texto2'] !== '' ) : ?><div class="rac-sobre-bloco__texto"><?php echo wp_kses_post( $hist['texto2'] ); ?></div><?php endif; ?>
+                <?php echo $figura( $hist['img2'], $hist['leg2'], 'rac-sobre-figura--paisagem' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+            </div>
+            <?php endif; ?>
         </div>
     </section>
 
@@ -62,7 +78,6 @@ get_header();
                 <span class="rac-eyebrow">Quem faz</span>
                 <h2><?php echo esc_html( $t( 'sobre_equipe_titulo' ) ); ?></h2>
             </div>
-            <a href="<?php echo esc_url( rac_url_blog() ); ?>">Todos os textos →</a>
         </div>
         <?php foreach ( $pessoas as $i => $uid ) :
             $a     = rac_dados_autor( $uid );
@@ -77,10 +92,10 @@ get_header();
                             <h3><?php echo esc_html( $a['nome'] ); ?></h3>
                             <?php if ( $a['papel'] ) : ?><span><?php echo esc_html( $a['papel'] ); ?></span><?php endif; ?>
                         </div>
-                        <a class="rac-sobre-autor__ver rac-sobre-autor__ver--d" href="<?php echo esc_url( $a['url'] ); ?>">Página do autor →</a>
                     </div>
                     <?php if ( $bio ) : ?><p class="rac-sobre-autor__bio"><?php echo esc_html( implode( ' ', $bio ) ); ?></p><?php endif; ?>
                     <?php if ( $itens ) : ?>
+                    <span class="rac-sobre-autor__itens-titulo">Publicações recentes</span>
                     <div class="rac-sobre-autor__itens">
                         <?php foreach ( $itens as $it ) : ?>
                             <a class="rac-sobre-item<?php echo $it['tipo'] === 'Livro' ? ' rac-sobre-item--livro' : ''; ?>" href="<?php echo esc_url( $it['url'] ); ?>">
@@ -93,7 +108,7 @@ get_header();
                         <?php endforeach; ?>
                     </div>
                     <?php endif; ?>
-                    <a class="rac-sobre-autor__ver rac-sobre-autor__ver--m" href="<?php echo esc_url( $a['url'] ); ?>">Página do autor →</a>
+                    <a class="rac-sobre-autor__ver" href="<?php echo esc_url( $a['url'] ); ?>">Página do autor →</a>
                 </div>
             </article>
         <?php endforeach; ?>
@@ -107,6 +122,7 @@ get_header();
                     <span class="rac-destaque__kicker"><?php echo esc_html( $d['kicker'] ); ?></span>
                     <span class="rac-destaque__titulo"><?php echo esc_html( $d['titulo'] ); ?></span>
                     <span class="rac-destaque__texto"><?php echo esc_html( $d['texto'] ); ?></span>
+                    <a class="rac-destaque__link" href="<?php echo esc_url( $d['url'] ); ?>"><?php echo esc_html( $d['link'] ); ?> →</a>
                 </div>
             <?php endforeach; ?>
         </div>

@@ -1,6 +1,6 @@
 # Tema filho do Kadence — Rádio Agenda Cultural
 
-Versão 0.7.0 (Fases 1, 2, 3A, 3B-1, 3B-2, 4 e 5A). Requer o tema **Kadence** instalado (é o tema pai).
+Versão 0.7.1 (Fases 1, 2, 3A, 3B-1, 3B-2, 4 e 5A). Requer o tema **Kadence** instalado (é o tema pai).
 
 ## Instalação (site de desenvolvimento)
 
@@ -178,11 +178,16 @@ Podcasts (só se houver séries) e Recados dos ouvintes.
 
 - **Modelo** `page-sobre.php` (vale para o slug `sobre`; escolhendo o modelo **"Sobre"** em Atributos da página aparecem os campos
   de texto do grupo "Textos da página Sobre"; campo vazio = texto provisório do mockup). A foto do topo é a **Imagem destacada** da página.
-- **Nossa história:** campo "História — texto" (editor simples); o **1º parágrafo vira a abertura** (maior, Outfit leve).
+- **Nossa história (montada em blocos):** *abertura* (1º parágrafo do "Texto principal", em letra maior) → **Imagem 1** (em pé, 4:5) ao
+  lado do resto do texto principal → **continuação** ao lado da **Imagem 2** (deitada, 3:2). Campos na aba **"Nossa história"** da
+  página. Imagens e legendas são opcionais: sem imagem o texto ocupa a largura toda; só a Imagem 2, sem continuação, aparece em faixa
+  larga. Quem já preencheu o texto principal não ganha o parágrafo provisório de brinde. As fotos têm um bloco laranja suave atrás.
 - **Quem faz — N pessoas:** vêm dos **perfis dos usuários**: marque **"Aparecer na página Sobre"** e, se quiser, a **"Posição na página
-  Sobre"** (menor primeiro; sem posição ou em empate, ordem alfabética). O lado da foto alterna a cada pessoa. Cada uma mostra papel,
-  bio, o **livro mais recente** e os **textos mais recentes** (até 3 itens) e o botão "Página do autor". Ninguém marcado = a seção some.
-- **3 destaques:** os mesmos textos da Home (editados na página inicial). **Convite final** leva ao Contato (`/contato/`).
+  Sobre"** (menor primeiro; sem posição ou em empate, ordem alfabética). O lado da foto alterna a cada pessoa. Cada uma mostra foto (com borda laranja), papel,
+  bio, o título "Publicações recentes" com o **livro mais recente** e os **textos mais recentes** (até 3 itens) e, embaixo deles, o botão
+  "Página do autor". Ninguém marcado = a seção some.
+- **3 destaques:** os mesmos textos da Home (editados na página inicial), cada um com seu link: "Veja todas as estações", "Veja todos os
+  livros" e "Veja todas as publicações". **Convite final** leva ao Contato (`/contato/`).
 - No mobile: foto de 72px ao lado do nome, bio e itens em largura total, sem a faixa de destaques.
 
 ## Regras que não podem ser quebradas

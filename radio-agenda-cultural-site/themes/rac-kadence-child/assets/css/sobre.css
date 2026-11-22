@@ -20,28 +20,44 @@
 .rac-body .rac-sobre-hero__texto h1 { margin: 0; font-size: 50px; letter-spacing: -.025em; line-height: 1.06; text-wrap: balance; }
 .rac-sobre-hero__texto p { margin: 0; font-size: 16px; line-height: 1.75; color: var(--text-body); text-wrap: pretty; }
 
-/* ---------- Nossa história ---------- */
+/* ---------- Nossa história (blocos: abertura → Imagem 1 + texto → texto + Imagem 2) ---------- */
 .rac-sobre-historia { border-top: 1px solid var(--line); }
-.rac-sobre-historia__inner { max-width: 1280px; margin: 0 auto; padding: 80px 56px; display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 64px; }
+.rac-sobre-historia__inner { max-width: 1280px; margin: 0 auto; padding: 80px 56px; display: flex; flex-direction: column; gap: 72px; }
+.rac-sobre-historia__cab { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 64px; align-items: start; }
 .rac-sobre-historia__titulo { display: flex; flex-direction: column; gap: 10px; }
 .rac-body .rac-sobre-historia__titulo h2 { margin: 0; font-size: 30px; letter-spacing: -.015em; line-height: 1.15; }
-.rac-sobre-historia__texto { max-width: 680px; display: flex; flex-direction: column; gap: 20px; }
-.rac-sobre-historia__abertura { margin: 0; font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 300; line-height: 1.5; color: var(--text); }
-.rac-sobre-historia__corpo { display: flex; flex-direction: column; gap: 20px; }
-.rac-sobre-historia__corpo p { margin: 0; font-size: 17px; line-height: 1.85; color: var(--text-body); }
-.rac-sobre-historia__corpo a { color: var(--accent-text); text-decoration: underline; text-underline-offset: 3px; }
+.rac-sobre-historia__abertura { margin: 0; max-width: 680px; font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 300; line-height: 1.5; color: var(--text); }
+
+.rac-sobre-bloco { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 72px; align-items: center; }
+.rac-sobre-bloco--inverso { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+.rac-sobre-bloco--sozinho { grid-template-columns: minmax(0, 1fr); }
+.rac-sobre-bloco__texto { max-width: 600px; display: flex; flex-direction: column; gap: 20px; }
+.rac-sobre-bloco--inverso .rac-sobre-bloco__texto { justify-self: end; }
+.rac-sobre-bloco--sozinho .rac-sobre-bloco__texto { justify-self: start; max-width: 680px; }
+.rac-sobre-bloco__texto p { margin: 0; font-size: 17px; line-height: 1.85; color: var(--text-body); }
+.rac-sobre-bloco__texto a { color: var(--accent-text); text-decoration: underline; text-underline-offset: 3px; }
+
+/* Figura: foto com cantos arredondados e um bloco laranja suave deslocado atrás (só decoração) */
+.rac-sobre-figura { position: relative; margin: 0; }
+.rac-sobre-figura::before { content: ''; position: absolute; z-index: 0; border-radius: 22px; background: var(--accent-soft); inset: 16px -16px -16px 16px; }
+.rac-sobre-figura--paisagem::before { inset: 16px 16px -16px -16px; }
+.rac-sobre-figura__img { position: relative; z-index: 1; overflow: hidden; border-radius: 20px; background: var(--surface2); aspect-ratio: 4 / 5; }
+.rac-sobre-figura--paisagem .rac-sobre-figura__img { aspect-ratio: 3 / 2; }
+.rac-body .rac-sobre-figura__img img { display: block; width: 100%; height: 100%; max-width: none; object-fit: cover; }
+.rac-sobre-figura figcaption { position: relative; z-index: 1; margin-top: 26px; font-size: 12px; line-height: 1.5; color: var(--muted); }
+.rac-sobre-bloco--sozinho .rac-sobre-figura__img { aspect-ratio: 21 / 9; }
 
 /* ---------- Quem faz ---------- */
 .rac-sobre-equipe { max-width: 1280px; margin: 0 auto; padding: 0 56px; border-top: 0; }
 .rac-sobre-equipe__topo { border-top: 1px solid var(--line); margin: 0 -56px; padding: 48px 56px 20px; display: flex; align-items: baseline; justify-content: space-between; gap: 20px; }
 .rac-sobre-equipe__topo > div { display: flex; flex-direction: column; gap: 6px; }
 .rac-body .rac-sobre-equipe__topo h2 { margin: 0; font-size: 30px; letter-spacing: -.015em; }
-.rac-body .rac-sobre-equipe__topo > a { font-size: 14px; font-weight: 500; white-space: nowrap; }
 
 .rac-sobre-autor { padding: 28px 0; border-top: 1px solid var(--line); display: flex; flex-direction: row; gap: 48px; align-items: center; }
 .rac-sobre-autor--inverso { flex-direction: row-reverse; }
 .rac-sobre-autor__foto {
-  position: relative; display: flex; align-items: center; justify-content: center; flex: none; width: 280px; height: 240px; overflow: hidden; border-radius: 16px;
+  position: relative; display: flex; align-items: center; justify-content: center; flex: none; width: 256px; height: 220px; overflow: hidden; border-radius: 16px;
+  box-sizing: border-box; border: 3px solid var(--accent);
 }
 .rac-body .rac-sobre-autor__foto img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; max-width: none; object-fit: cover; }
 .rac-sobre-autor__foto b { font-family: 'Outfit', sans-serif; font-size: 72px; font-weight: 400; color: var(--accent-text); }
@@ -50,14 +66,15 @@
 .rac-sobre-autor__nome { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .rac-body .rac-sobre-autor__nome h3 { margin: 0; font-size: 26px; font-weight: 400; letter-spacing: -.015em; }
 .rac-sobre-autor__nome span { font-size: 13px; color: var(--muted); }
-.rac-body .rac-sobre-autor__ver--d {
-  white-space: nowrap; padding: 9px 18px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface);
+/* título pequeno acima dos itens e botão "Página do autor" embaixo deles */
+.rac-sobre-autor__itens-titulo { margin-top: 6px; font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.rac-body .rac-sobre-autor__ver {
+  align-self: flex-start; margin-top: 6px; white-space: nowrap; padding: 9px 18px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface);
   font-size: 13px; font-weight: 500; color: var(--text);
 }
-.rac-body .rac-sobre-autor__ver--d:hover { border-color: var(--text); color: var(--text); }
-.rac-sobre-autor__ver--m { display: none; }
+.rac-body .rac-sobre-autor__ver:hover { border-color: var(--text); color: var(--text); }
 .rac-sobre-autor__bio { margin: 0; max-width: 620px; font-size: 15px; line-height: 1.7; color: var(--text-body); }
-.rac-sobre-autor__itens { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 4px; }
+.rac-sobre-autor__itens { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: -4px; }
 
 .rac-body .rac-sobre-item {
   display: flex; align-items: center; gap: 12px; padding: 8px 12px 8px 8px; min-width: 0;
@@ -75,6 +92,8 @@
 .rac-sobre-destaques { margin-top: 28px; padding: 48px 56px; border-top: 1px solid var(--line); background: var(--surface2); }
 .rac-sobre-destaques__grade { max-width: 1168px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .rac-sobre-destaques .rac-destaque__texto { display: block; font-size: 13px; line-height: 1.6; color: var(--muted); }
+.rac-body .rac-sobre-destaques .rac-destaque__link { align-self: flex-start; margin-top: 8px; font-size: 13px; font-weight: 500; color: var(--accent-text); }
+.rac-body .rac-sobre-destaques .rac-destaque__link:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 /* ---------- Convite para o Contato ---------- */
 .rac-sobre-cta { padding: 72px 40px 80px; border-top: 1px solid var(--line); display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; }
@@ -93,36 +112,42 @@
   .rac-body .rac-sobre-hero__texto h1 { font-size: 31px; letter-spacing: -.02em; line-height: 1.08; }
   .rac-sobre-hero__texto p { font-size: 14px; line-height: 1.65; }
 
-  .rac-sobre-historia__inner { display: flex; flex-direction: column; gap: 14px; padding: 32px 18px; }
+  .rac-sobre-historia__inner { gap: 28px; padding: 32px 18px; }
+  .rac-sobre-historia__cab { display: flex; flex-direction: column; gap: 14px; }
   .rac-sobre-historia__titulo { gap: 0; }
   .rac-sobre-historia__titulo .rac-eyebrow { font-size: 10px; }
   .rac-body .rac-sobre-historia__titulo h2 { display: none; }
-  .rac-sobre-historia__texto { gap: 14px; }
   .rac-sobre-historia__abertura { font-size: 19px; }
-  .rac-sobre-historia__corpo { gap: 14px; }
-  .rac-sobre-historia__corpo p { font-size: 15px; line-height: 1.8; }
+  .rac-sobre-bloco, .rac-sobre-bloco--inverso { grid-template-columns: minmax(0, 1fr); gap: 22px; }
+  .rac-sobre-bloco--inverso .rac-sobre-figura { order: -1; }
+  .rac-sobre-bloco__texto, .rac-sobre-bloco--inverso .rac-sobre-bloco__texto { max-width: none; justify-self: stretch; gap: 14px; }
+  .rac-sobre-bloco__texto p { font-size: 15px; line-height: 1.8; }
+  .rac-sobre-figura::before, .rac-sobre-figura--paisagem::before { inset: 10px -10px -10px 10px; border-radius: 16px; }
+  .rac-sobre-figura--paisagem::before { inset: 10px 10px -10px -10px; }
+  .rac-sobre-figura__img, .rac-sobre-figura--paisagem .rac-sobre-figura__img { aspect-ratio: 4 / 3; border-radius: 14px; }
+  .rac-sobre-bloco--sozinho .rac-sobre-figura__img { aspect-ratio: 16 / 9; }
+  .rac-sobre-figura figcaption { margin-top: 18px; }
 
   .rac-sobre-equipe { padding: 0 18px; }
   .rac-sobre-equipe__topo { margin: 0 -18px; padding: 28px 18px 8px; }
   .rac-body .rac-sobre-equipe__topo h2 { font-size: 22px; }
-  .rac-body .rac-sobre-equipe__topo > a { display: none; }
 
   /* foto pequena ao lado do nome; bio, itens e link ocupam a largura toda */
   .rac-sobre-autor, .rac-sobre-autor--inverso { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 12px 14px; align-items: center; padding: 20px 0; border-top: 0; border-bottom: 1px solid var(--line); }
   .rac-sobre-autor__corpo { display: contents; }
-  .rac-sobre-autor__foto { width: 72px; height: 72px; border-radius: 12px; }
+  .rac-sobre-autor__foto { width: 72px; height: 72px; border-radius: 12px; border-width: 2px; }
   .rac-sobre-autor__foto b { font-size: 30px; }
   .rac-sobre-autor__cab { grid-column: 2; grid-row: 1; }
   .rac-body .rac-sobre-autor__nome h3 { font-size: 20px; }
   .rac-sobre-autor__nome span { font-size: 12px; }
-  .rac-body .rac-sobre-autor__ver--d { display: none; }
   .rac-sobre-autor__bio { grid-column: 1 / -1; font-size: 14px; line-height: 1.65; max-width: none; }
-  .rac-sobre-autor__itens { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 6px; margin-top: 0; }
+  .rac-sobre-autor__itens-titulo { grid-column: 1 / -1; margin-top: 2px; font-size: 10px; }
+  .rac-sobre-autor__itens { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 6px; margin-top: -4px; }
   .rac-body .rac-sobre-item { gap: 10px; padding: 6px 10px 6px 6px; border-radius: 10px; min-height: 52px; }
   .rac-sobre-item__capa { width: 40px; height: 40px; border-radius: 5px; }
   .rac-sobre-item--livro .rac-sobre-item__capa { width: 30px; }
   .rac-sobre-item__titulo { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .rac-body .rac-sobre-autor__ver--m { display: inline; grid-column: 1 / -1; font-size: 13px; font-weight: 500; }
+  .rac-body .rac-sobre-autor__ver { grid-column: 1 / -1; justify-self: start; margin-top: 0; padding: 0; border: 0; background: none; border-radius: 0; font-size: 13px; }
 
   .rac-sobre-destaques { display: none; }
 

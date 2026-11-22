@@ -18,6 +18,11 @@ if ($base==='/f4/blog/') { $GLOBALS['title']='Blog'; f4_principal('home',(object
 if ($base==='/f4/sobre/') {
   $GLOBALS['title']='Sobre';
   if (isset($_GET['textos'])) $GLOBALS['fields'][3000]=['sobre_selo'=>'Selo editado','sobre_titulo'=>'Título editado no painel','sobre_texto'=>'Texto do topo editado.','sobre_historia_rotulo'=>'Rótulo editado','sobre_historia_titulo'=>'História editada','sobre_historia_texto'=>'<p>Abertura <b>editada</b>.</p><p>Primeiro parágrafo do corpo.</p><p>Segundo parágrafo do corpo.</p>','sobre_equipe_titulo'=>'Equipe editada','sobre_cta_titulo'=>'Convite editado','sobre_cta_texto'=>'Texto do convite editado.'];
+  if (isset($_GET['imagens'])) $GLOBALS['fields'][3000]=(array)($GLOBALS['fields'][3000] ?? [])+['sobre_imagem_1'=>56,'sobre_imagem_1_legenda'=>'Legenda da imagem 1','sobre_imagem_2'=>55,'sobre_imagem_2_legenda'=>'Legenda da imagem 2'];
+  if (isset($_GET['img1'])) $GLOBALS['fields'][3000]=(array)($GLOBALS['fields'][3000] ?? [])+['sobre_imagem_1'=>56];
+  if (isset($_GET['img2'])) $GLOBALS['fields'][3000]=(array)($GLOBALS['fields'][3000] ?? [])+['sobre_imagem_2'=>55];
+  if (isset($_GET['textocheio'])) $GLOBALS['fields'][3000]=(array)($GLOBALS['fields'][3000] ?? [])+['sobre_historia_texto'=>'<p>Abertura própria.</p><p>Parágrafo A.</p><p>Parágrafo B.</p>'];
+  if (isset($_GET['continuacao'])) $GLOBALS['fields'][3000]=(array)($GLOBALS['fields'][3000] ?? [])+['sobre_historia_texto'=>'<p>Abertura própria.</p><p>Parágrafo A.</p>','sobre_historia_texto_2'=>'<p>Continuação própria.</p>'];
   if (isset($_GET['semequipe'])) foreach ($GLOBALS['usuarios'] as $i=>$u) unset($GLOBALS['usuarios'][$i]['meta']['autor_no_sobre']);
   if (isset($_GET['muitos'])) { for ($k=7;$k<=9;$k++) $GLOBALS['usuarios'][$k]=['login'=>'u'.$k,'slug'=>'pessoa-'.$k,'nome'=>'Pessoa '.$k,'bio'=>'Bio da pessoa '.$k.'.','meta'=>['autor_no_sobre'=>'1','autor_ordem_sobre'=>(string)(10+$k)],'avatar'=>'','campos'=>[]]; }
   f4_principal('page',(object)['ID'=>3000],[],1,'page-sobre.php'); return; }
